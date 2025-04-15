@@ -31,7 +31,7 @@ QString DialogBrick::showImportDialog() {
     if (dialog.exec() == QDialog::Accepted) {
         QStringList files = dialog.selectedFiles();
         if (!files.isEmpty()) {
-            QString filePath = files.first();
+            QString filePath = files.first().trimmed();
             QStringList validExts = {".txt", ".md", ".pdf", ".docx", ".html", ".epub", ".odt"};
             QString ext = QFileInfo(filePath).suffix().toLower();
             if (!validExts.contains("." + ext)) {
@@ -48,7 +48,7 @@ QString DialogBrick::showImportDialog() {
 
 QString DialogBrick::showExportDialog() {
     QFileDialog dialog(nullptr, "Export File");
-    dialog.setDirectory("/home/ares/QxSeries/test");
+    dialog.setDirectory("/home/ares/test1");
     dialog.setFileMode(QFileDialog::AnyFile);
     dialog.setAcceptMode(QFileDialog::AcceptSave);
     dialog.setNameFilter("PDF (*.pdf);;Word (*.docx);;HTML (*.html);;EPUB (*.epub);;OpenDocument (*.odt)");
@@ -71,7 +71,7 @@ QString DialogBrick::showExportDialog() {
     if (dialog.exec() == QDialog::Accepted) {
         QStringList files = dialog.selectedFiles();
         if (!files.isEmpty()) {
-            QString filePath = files.first();
+            QString filePath = files.first().trimmed();
             QString selectedFilter = dialog.selectedNameFilter();
             QStringList validExts = {".pdf", ".docx", ".html", ".epub", ".odt"};
             QString ext = QFileInfo(filePath).suffix().toLower();
