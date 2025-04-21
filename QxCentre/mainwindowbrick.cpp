@@ -1,7 +1,7 @@
 #include "mainwindowbrick.h"
 #include "themebrick.h"
-#include "QxWrite/qxwritewindowbrick.h"
-#include "QxSheet/qxsheetwindowbrick.h"
+#include "qxwritewindowbrick.h"
+#include "qxsheetwindowbrick.h"
 #include <QDebug>
 
 MainWindowBrick::MainWindowBrick(QWidget *parent) : QMainWindow(parent) {

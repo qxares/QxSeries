@@ -1,0 +1,9 @@
+*.o
+moc_*.cpp
+moc_predefs.h
+Makefile
+QxCentre
+qrc_*.cpp
+*.qrc
+build/
+

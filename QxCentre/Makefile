@@ -417,7 +417,9 @@ main.o: main.cpp mainwindowbrick.h \
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
 
 mainwindowbrick.o: mainwindowbrick.cpp mainwindowbrick.h \
-		themebrick.h
+		themebrick.h \
+		../QxWrite/qxwritewindowbrick.h \
+		../QxSheet/qxsheetwindowbrick.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindowbrick.o mainwindowbrick.cpp
 
 qxwritewindowbrick.o: ../QxWrite/qxwritewindowbrick.cpp ../QxWrite/qxwritewindowbrick.h \
