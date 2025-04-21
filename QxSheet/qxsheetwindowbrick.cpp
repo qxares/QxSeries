@@ -148,7 +148,7 @@ void QxSheetWindowBrick::contextMenuEvent(QContextMenuEvent *event) {
     contextMenu.addAction("Insert Row");
     contextMenu.addAction("Insert Column");
     contextMenu.addAction("Delete Row");
-    contextMenu->addAction("Delete Column");
+    contextMenu.addAction("Delete Column");
     contextMenu.addAction("Format Cells");
     contextMenu.addAction("Sort Ascending");
     contextMenu.addAction("Filter");
