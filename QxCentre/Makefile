@@ -57,8 +57,6 @@ SOURCES       = main.cpp \
 		../QxWrite/qxwritewindowbrick.cpp \
 		../QxSheet/qxsheetwindowbrick.cpp \
 		themebrick.cpp moc_mainwindowbrick.cpp \
-		moc_qxwritewindowbrick.cpp \
-		moc_qxsheetwindowbrick.cpp \
 		moc_themebrick.cpp
 OBJECTS       = main.o \
 		mainwindowbrick.o \
@@ -66,8 +64,6 @@ OBJECTS       = main.o \
 		qxsheetwindowbrick.o \
 		themebrick.o \
 		moc_mainwindowbrick.o \
-		moc_qxwritewindowbrick.o \
-		moc_qxsheetwindowbrick.o \
 		moc_themebrick.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
@@ -372,24 +368,14 @@ compiler_moc_predefs_clean:
 moc_predefs.h: /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 	g++ -pipe -Wall -Wextra -g -std=gnu++11 -Wall -Wextra -dM -E -o moc_predefs.h /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_mainwindowbrick.cpp moc_qxwritewindowbrick.cpp moc_qxsheetwindowbrick.cpp moc_themebrick.cpp
+compiler_moc_header_make_all: moc_mainwindowbrick.cpp moc_themebrick.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_mainwindowbrick.cpp moc_qxwritewindowbrick.cpp moc_qxsheetwindowbrick.cpp moc_themebrick.cpp
+	-$(DEL_FILE) moc_mainwindowbrick.cpp moc_themebrick.cpp
 moc_mainwindowbrick.cpp: mainwindowbrick.h \
 		themebrick.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
 	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/ares/QxCentre/QxCentre/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/ares/QxCentre/QxCentre -I/home/ares/QxCentre/QxWrite -I/home/ares/QxCentre/QxSheet -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/13 -I/usr/include/x86_64-linux-gnu/c++/13 -I/usr/include/c++/13/backward -I/usr/lib/gcc/x86_64-linux-gnu/13/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include mainwindowbrick.h -o moc_mainwindowbrick.cpp
-
-moc_qxwritewindowbrick.cpp: ../QxWrite/qxwritewindowbrick.h \
-		moc_predefs.h \
-		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/ares/QxCentre/QxCentre/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/ares/QxCentre/QxCentre -I/home/ares/QxCentre/QxWrite -I/home/ares/QxCentre/QxSheet -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/13 -I/usr/include/x86_64-linux-gnu/c++/13 -I/usr/include/c++/13/backward -I/usr/lib/gcc/x86_64-linux-gnu/13/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../QxWrite/qxwritewindowbrick.h -o moc_qxwritewindowbrick.cpp
-
-moc_qxsheetwindowbrick.cpp: ../QxSheet/qxsheetwindowbrick.h \
-		moc_predefs.h \
-		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/ares/QxCentre/QxCentre/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/ares/QxCentre/QxCentre -I/home/ares/QxCentre/QxWrite -I/home/ares/QxCentre/QxSheet -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/13 -I/usr/include/x86_64-linux-gnu/c++/13 -I/usr/include/c++/13/backward -I/usr/lib/gcc/x86_64-linux-gnu/13/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../QxSheet/qxsheetwindowbrick.h -o moc_qxsheetwindowbrick.cpp
 
 moc_themebrick.cpp: themebrick.h \
 		moc_predefs.h \
@@ -417,17 +403,13 @@ main.o: main.cpp mainwindowbrick.h \
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
 
 mainwindowbrick.o: mainwindowbrick.cpp mainwindowbrick.h \
-		themebrick.h \
-		../QxWrite/qxwritewindowbrick.h \
-		../QxSheet/qxsheetwindowbrick.h
+		themebrick.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindowbrick.o mainwindowbrick.cpp
 
-qxwritewindowbrick.o: ../QxWrite/qxwritewindowbrick.cpp ../QxWrite/qxwritewindowbrick.h \
-		themebrick.h \
-		mainwindowbrick.h
+qxwritewindowbrick.o: ../QxWrite/qxwritewindowbrick.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qxwritewindowbrick.o ../QxWrite/qxwritewindowbrick.cpp
 
-qxsheetwindowbrick.o: ../QxSheet/qxsheetwindowbrick.cpp ../QxSheet/qxsheetwindowbrick.h
+qxsheetwindowbrick.o: ../QxSheet/qxsheetwindowbrick.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qxsheetwindowbrick.o ../QxSheet/qxsheetwindowbrick.cpp
 
 themebrick.o: themebrick.cpp themebrick.h
@@ -435,12 +417,6 @@ themebrick.o: themebrick.cpp themebrick.h
 
 moc_mainwindowbrick.o: moc_mainwindowbrick.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindowbrick.o moc_mainwindowbrick.cpp
-
-moc_qxwritewindowbrick.o: moc_qxwritewindowbrick.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_qxwritewindowbrick.o moc_qxwritewindowbrick.cpp
-
-moc_qxsheetwindowbrick.o: moc_qxsheetwindowbrick.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_qxsheetwindowbrick.o moc_qxsheetwindowbrick.cpp
 
 moc_themebrick.o: moc_themebrick.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_themebrick.o moc_themebrick.cpp
