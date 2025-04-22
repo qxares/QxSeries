@@ -150,9 +150,7 @@ void QxWriteWindowBrick::setupMenus() {
 
 void QxWriteWindowBrick::setupCentralWidget() {
     mdiArea = new QMdiArea(this);
-    mdiArea->setViewMode(QMdiArea::TabbedView);
-    mdiArea->setTabsClosable(true);
-    mdiArea->setTabsMovable(true);
+    mdiArea->setViewMode(QMdiArea::SubWindowView);
     setCentralWidget(mdiArea);
     connect(mdiArea, &QMdiArea::subWindowActivated, this, &QxWriteWindowBrick::resizeSubWindow);
     createNewDocument();
@@ -186,7 +184,14 @@ void QxWriteWindowBrick::createNewDocument() {
     QMdiSubWindow *subWindow = mdiArea->addSubWindow(textEdit);
     subWindow->setWindowFlags(Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint);
     subWindow->setWindowTitle("Document " + QString::number(mdiArea->subWindowList().size()));
-    subWindow->setStyleSheet(QString("background-color: %1;").arg(isDarkTheme ? "#272822" : "#ECECEC"));
+    // Apply theme to subwindow frame and title bar
+    QString bgColor = isDarkTheme ? "#272822" : "#ECECEC";
+    QString textColor = isDarkTheme ? "#F8F8F2" : "black";
+    subWindow->setStyleSheet(
+        QString("QMdiSubWindow { background-color: %1; color: %2; }"
+                "QMdiSubWindow:title { background-color: %1; color: %2; }")
+        .arg(bgColor, textColor)
+    );
     subWindow->resize(mdiArea->viewport()->size());
     subWindow->showMaximized();
     mdiArea->setActiveSubWindow(subWindow);
@@ -233,7 +238,11 @@ void QxWriteWindowBrick::applyTheme(bool dark) {
     setStyleSheet(QString("QMainWindow { background-color: %1; color: %2; }").arg(bgColor, textColor));
     mdiArea->setStyleSheet("background-color: " + bgColor + ";");
     for (QMdiSubWindow *subWindow : mdiArea->subWindowList()) {
-        subWindow->setStyleSheet("background-color: " + bgColor + ";");
+        subWindow->setStyleSheet(
+            QString("QMdiSubWindow { background-color: %1; color: %2; }"
+                    "QMdiSubWindow:title { background-color: %1; color: %2; }")
+            .arg(bgColor, textColor)
+        );
     }
 }
 
