@@ -151,6 +151,7 @@ void QxWriteWindowBrick::setupMenus() {
 void QxWriteWindowBrick::setupCentralWidget() {
     mdiArea = new QMdiArea(this);
     mdiArea->setViewMode(QMdiArea::SubWindowView);
+    mdiArea->setOption(QMdiArea::DontMaximizeSubWindowOnActivation, true);
     setCentralWidget(mdiArea);
     connect(mdiArea, &QMdiArea::subWindowActivated, this, &QxWriteWindowBrick::resizeSubWindow);
     createNewDocument();
@@ -182,15 +183,17 @@ void QxWriteWindowBrick::createNewDocument() {
         "padding: 10px;"              // 10pt cursor margin
     );
     QMdiSubWindow *subWindow = mdiArea->addSubWindow(textEdit);
-    subWindow->setWindowFlags(Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint);
+    subWindow->setWindowFlags(Qt::SubWindow | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint);
     subWindow->setWindowTitle("Document " + QString::number(mdiArea->subWindowList().size()));
-    // Apply theme to subwindow frame and title bar
+    // Apply theme to subwindow frame, title bar, and minimized state
     QString bgColor = isDarkTheme ? "#272822" : "#ECECEC";
     QString textColor = isDarkTheme ? "#F8F8F2" : "black";
+    QString borderColor = isDarkTheme ? "#555753" : "#D3D3D3";
     subWindow->setStyleSheet(
-        QString("QMdiSubWindow { background-color: %1; color: %2; }"
-                "QMdiSubWindow:title { background-color: %1; color: %2; }")
-        .arg(bgColor, textColor)
+        QString("QMdiSubWindow { background-color: %1; color: %2; border: 1px solid %3; }"
+                "QMdiSubWindow:title { background-color: %1; color: %2; padding: 2px; }"
+                "QMdiSubWindow:minimized { background-color: %1; color: %2; border: 1px solid %3; }")
+        .arg(bgColor, textColor, borderColor)
     );
     subWindow->resize(mdiArea->viewport()->size());
     subWindow->showMaximized();
@@ -235,13 +238,15 @@ void QxWriteWindowBrick::applyTheme(bool dark) {
     isDarkTheme = dark;
     QString bgColor = dark ? "#272822" : "#ECECEC";
     QString textColor = dark ? "#F8F8F2" : "black";
+    QString borderColor = dark ? "#555753" : "#D3D3D3";
     setStyleSheet(QString("QMainWindow { background-color: %1; color: %2; }").arg(bgColor, textColor));
     mdiArea->setStyleSheet("background-color: " + bgColor + ";");
     for (QMdiSubWindow *subWindow : mdiArea->subWindowList()) {
         subWindow->setStyleSheet(
-            QString("QMdiSubWindow { background-color: %1; color: %2; }"
-                    "QMdiSubWindow:title { background-color: %1; color: %2; }")
-            .arg(bgColor, textColor)
+            QString("QMdiSubWindow { background-color: %1; color: %2; border: 1px solid %3; }"
+                    "QMdiSubWindow:title { background-color: %1; color: %2; padding: 2px; }"
+                    "QMdiSubWindow:minimized { background-color: %1; color: %2; border: 1px solid %3; }")
+            .arg(bgColor, textColor, borderColor)
         );
     }
 }
