@@ -7,9 +7,8 @@
 #include <QTextEdit>
 #include <QDockWidget>
 #include <QSlider>
-#include <QVBoxLayout>
-#include "../QxCentre/themebrick.h"
-#include "../QxCentre/mainwindowbrick.h"
+#include <QHBoxLayout>
+#include "../../QxCentre/mainwindowbrick.h"
 
 QxWriteWindowBrick::QxWriteWindowBrick(QWidget *parent) : QMainWindow(parent) {
     setWindowTitle("QxWrite");
@@ -17,6 +16,11 @@ QxWriteWindowBrick::QxWriteWindowBrick(QWidget *parent) : QMainWindow(parent) {
     setupMenus();
     setupCentralWidget();
     setupZoomDock();
+    if (MainWindowBrick *mainWindow = qobject_cast<MainWindowBrick*>(parent)) {
+        themeBrick = mainWindow->getThemeBrick();
+        connect(themeBrick, &ThemeBrick::themeChanged, this, &QxWriteWindowBrick::applyTheme);
+        initializeTheme(themeBrick->isDarkTheme());
+    }
     qDebug() << "QxWrite window initialized";
 }
 
@@ -104,7 +108,7 @@ void QxWriteWindowBrick::setupMenus() {
     QMenu *tablePropsMenu = tableMenu->addMenu("Table Properties");
     tablePropsMenu->addAction("Border Style");
     tablePropsMenu->addAction("Cell Padding");
-    tablePropsMenu->addAction("Background Color");
+    tableMenu->addAction("Background Color");
     QMenu *sheetIntegrationMenu = tableMenu->addMenu("QxSheet Integration");
     sheetIntegrationMenu->addAction("Insert QxSheet Table");
     sheetIntegrationMenu->addAction("Edit in QxSheet");
@@ -164,8 +168,8 @@ void QxWriteWindowBrick::setupZoomDock() {
     QWidget *zoomWidget = new QWidget(zoomDock);
     QHBoxLayout *zoomLayout = new QHBoxLayout(zoomWidget);
     zoomSlider = new QSlider(Qt::Horizontal, zoomWidget);
-    zoomSlider->setRange(50, 200); // 50% to 200%
-    zoomSlider->setValue(100);     // Default 100%
+    zoomSlider->setRange(50, 200);
+    zoomSlider->setValue(100);
     zoomSlider->setFixedWidth(100);
     zoomLayout->addWidget(zoomSlider);
     zoomLayout->addStretch();
@@ -176,25 +180,9 @@ void QxWriteWindowBrick::setupZoomDock() {
 
 void QxWriteWindowBrick::createNewDocument() {
     QTextEdit *textEdit = new QTextEdit();
-    textEdit->setStyleSheet(
-        "background-color: white;"
-        "color: black;"
-        "border: 15px solid #D3D3D3;" // 15pt border
-        "padding: 10px;"              // 10pt cursor margin
-    );
     QMdiSubWindow *subWindow = mdiArea->addSubWindow(textEdit);
     subWindow->setWindowFlags(Qt::SubWindow | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint);
     subWindow->setWindowTitle("Document " + QString::number(mdiArea->subWindowList().size()));
-    // Apply theme to subwindow frame, title bar, and minimized state
-    QString bgColor = isDarkTheme ? "#272822" : "#ECECEC";
-    QString textColor = isDarkTheme ? "#F8F8F2" : "black";
-    QString borderColor = isDarkTheme ? "#555753" : "#D3D3D3";
-    subWindow->setStyleSheet(
-        QString("QMdiSubWindow { background-color: %1; color: %2; border: 1px solid %3; }"
-                "QMdiSubWindow:title { background-color: %1; color: %2; padding: 2px; }"
-                "QMdiSubWindow:minimized { background-color: %1; color: %2; border: 1px solid %3; }")
-        .arg(bgColor, textColor, borderColor)
-    );
     subWindow->resize(mdiArea->viewport()->size());
     subWindow->showMaximized();
     mdiArea->setActiveSubWindow(subWindow);
@@ -219,36 +207,26 @@ void QxWriteWindowBrick::updateZoom(int value) {
     if (QMdiSubWindow *activeSubWindow = mdiArea->activeSubWindow()) {
         if (QTextEdit *textEdit = qobject_cast<QTextEdit*>(activeSubWindow->widget())) {
             QFont font = textEdit->font();
-            font.setPointSizeF(12.0 * value / 100.0); // Base 12pt, scale with zoom
+            font.setPointSizeF(12.0 * value / 100.0);
             textEdit->setFont(font);
         }
     }
 }
 
 void QxWriteWindowBrick::initializeTheme(bool dark) {
-    isDarkTheme = dark;
-    applyTheme();
-    // Connect to theme changes from ThemeBrick
-    if (MainWindowBrick *mainWindow = qobject_cast<MainWindowBrick*>(parent())) {
-        connect(mainWindow->getThemeBrick(), &ThemeBrick::themeChanged, this, &QxWriteWindowBrick::applyTheme);
-    }
+    applyTheme(dark);
 }
 
 void QxWriteWindowBrick::applyTheme(bool dark) {
-    isDarkTheme = dark;
-    QString bgColor = dark ? "#272822" : "#ECECEC";
-    QString textColor = dark ? "#F8F8F2" : "black";
-    QString borderColor = dark ? "#555753" : "#D3D3D3";
-    setStyleSheet(QString("QMainWindow { background-color: %1; color: %2; }").arg(bgColor, textColor));
-    mdiArea->setStyleSheet("background-color: " + bgColor + ";");
+    QPalette palette = qApp->palette();
+    setPalette(palette);
+    mdiArea->setPalette(palette);
     for (QMdiSubWindow *subWindow : mdiArea->subWindowList()) {
-        subWindow->setStyleSheet(
-            QString("QMdiSubWindow { background-color: %1; color: %2; border: 1px solid %3; }"
-                    "QMdiSubWindow:title { background-color: %1; color: %2; padding: 2px; }"
-                    "QMdiSubWindow:minimized { background-color: %1; color: %2; border: 1px solid %3; }")
-            .arg(bgColor, textColor, borderColor)
-        );
+        if (QWidget *widget = subWindow->widget()) {
+            widget->setPalette(palette);
+        }
     }
+    qDebug() << "QxWrite theme applied: " << (dark ? "dark" : "light");
 }
 
 void QxWriteWindowBrick::contextMenuEvent(QContextMenuEvent *event) {

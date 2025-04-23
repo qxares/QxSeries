@@ -4,14 +4,18 @@
 #include <QMenuBar>
 #include <QTableView>
 #include <QStandardItemModel>
-#include "../QxCentre/mainwindowbrick.h"
-#include "../../QxCentre/themebrick.h"
+#include "../../QxCentre/mainwindowbrick.h"
 
 QxSheetWindowBrick::QxSheetWindowBrick(QWidget *parent) : QMainWindow(parent) {
     setWindowTitle("QxSheet");
     setWindowFlags(Qt::Window | Qt::WindowStaysOnTopHint);
     setupMenus();
     setupCentralWidget();
+    if (MainWindowBrick *mainWindow = qobject_cast<MainWindowBrick*>(parent)) {
+        themeBrick = mainWindow->getThemeBrick();
+        connect(themeBrick, &ThemeBrick::themeChanged, this, &QxSheetWindowBrick::applyTheme);
+        initializeTheme(themeBrick->isDarkTheme());
+    }
     qDebug() << "QxSheet window initialized";
 }
 
@@ -138,7 +142,6 @@ void QxSheetWindowBrick::setupCentralWidget() {
     tableView = new QTableView(this);
     QStandardItemModel *model = new QStandardItemModel(this);
     tableView->setModel(model);
-    tableView->setStyleSheet("background-color: white; color: black;");
     setCentralWidget(tableView);
 }
 
@@ -159,21 +162,12 @@ void QxSheetWindowBrick::contextMenuEvent(QContextMenuEvent *event) {
 }
 
 void QxSheetWindowBrick::initializeTheme(bool dark) {
-    isDarkTheme = dark;
     applyTheme(dark);
-    if (MainWindowBrick *mainWindow = qobject_cast<MainWindowBrick*>(parent())) {
-        connect(mainWindow->getThemeBrick(), &ThemeBrick::themeChanged, this, &QxSheetWindowBrick::applyTheme);
-    }
 }
 
 void QxSheetWindowBrick::applyTheme(bool dark) {
-    isDarkTheme = dark;
-    QString bgColor = dark ? "#272822" : "#ECECEC";
-    QString textColor = dark ? "#F8F8F2" : "black";
-    tableView->setStyleSheet(
-        QString("background-color: %1; color: %2;").arg(bgColor, textColor)
-    );
-    setStyleSheet(
-        QString("QMainWindow { background-color: %1; color: %2; }").arg(bgColor, textColor)
-    );
+    QPalette palette = qApp->palette();
+    setPalette(palette);
+    tableView->setPalette(palette);
+    qDebug() << "QxSheet theme applied: " << (dark ? "dark" : "light");
 }

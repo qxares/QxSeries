@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QMenu>
 #include <QTableView>
+#include "../../QxCentre/themebrick.h"
 
 class QxSheetWindowBrick : public QMainWindow {
     Q_OBJECT
@@ -20,7 +21,6 @@ private:
     void setupMenus();
     void setupCentralWidget();
     void applyTheme(bool dark);
-
     QMenu *fileMenu;
     QMenu *editMenu;
     QMenu *dataMenu;
@@ -30,7 +30,7 @@ private:
     QMenu *toolsMenu;
     QMenu *helpMenu;
     QTableView *tableView;
-    bool isDarkTheme;
+    ThemeBrick *themeBrick;
 };
 
 #endif // QXSHEETWINDOWBRICK_H

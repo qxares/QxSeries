@@ -386,11 +386,13 @@ moc_themebrick.cpp: themebrick.h \
 	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/ares/QxCentre/QxCentre/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/ares/QxCentre/QxCentre -I/home/ares/QxCentre/QxText/QxWrite -I/home/ares/QxCentre/QxText/QxSheet -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/13 -I/usr/include/x86_64-linux-gnu/c++/13 -I/usr/include/c++/13/backward -I/usr/lib/gcc/x86_64-linux-gnu/13/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include themebrick.h -o moc_themebrick.cpp
 
 moc_qxwritewindowbrick.cpp: ../QxText/QxWrite/qxwritewindowbrick.h \
+		themebrick.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
 	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/ares/QxCentre/QxCentre/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/ares/QxCentre/QxCentre -I/home/ares/QxCentre/QxText/QxWrite -I/home/ares/QxCentre/QxText/QxSheet -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/13 -I/usr/include/x86_64-linux-gnu/c++/13 -I/usr/include/c++/13/backward -I/usr/lib/gcc/x86_64-linux-gnu/13/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../QxText/QxWrite/qxwritewindowbrick.h -o moc_qxwritewindowbrick.cpp
 
 moc_qxsheetwindowbrick.cpp: ../QxText/QxSheet/qxsheetwindowbrick.h \
+		themebrick.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
 	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/ares/QxCentre/QxCentre/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/ares/QxCentre/QxCentre -I/home/ares/QxCentre/QxText/QxWrite -I/home/ares/QxCentre/QxText/QxSheet -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/13 -I/usr/include/x86_64-linux-gnu/c++/13 -I/usr/include/c++/13/backward -I/usr/lib/gcc/x86_64-linux-gnu/13/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../QxText/QxSheet/qxsheetwindowbrick.h -o moc_qxsheetwindowbrick.cpp
@@ -416,21 +418,21 @@ main.o: main.cpp mainwindowbrick.h
 
 mainwindowbrick.o: mainwindowbrick.cpp mainwindowbrick.h \
 		../QxText/QxWrite/qxwritewindowbrick.h \
-		../QxText/QxSheet/qxsheetwindowbrick.h \
-		themebrick.h
+		themebrick.h \
+		../QxText/QxSheet/qxsheetwindowbrick.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindowbrick.o mainwindowbrick.cpp
 
 themebrick.o: themebrick.cpp themebrick.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o themebrick.o themebrick.cpp
 
 qxwritewindowbrick.o: ../QxText/QxWrite/qxwritewindowbrick.cpp ../QxText/QxWrite/qxwritewindowbrick.h \
-		../QxCentre/themebrick.h \
-		../QxCentre/mainwindowbrick.h
+		themebrick.h \
+		mainwindowbrick.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qxwritewindowbrick.o ../QxText/QxWrite/qxwritewindowbrick.cpp
 
 qxsheetwindowbrick.o: ../QxText/QxSheet/qxsheetwindowbrick.cpp ../QxText/QxSheet/qxsheetwindowbrick.h \
-		../QxCentre/mainwindowbrick.h \
-		themebrick.h
+		themebrick.h \
+		mainwindowbrick.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qxsheetwindowbrick.o ../QxText/QxSheet/qxsheetwindowbrick.cpp
 
 moc_mainwindowbrick.o: moc_mainwindowbrick.cpp 

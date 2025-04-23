@@ -6,6 +6,7 @@
 #include <QMdiArea>
 #include <QSlider>
 #include <QAction>
+#include "../../QxCentre/themebrick.h"
 
 class QxWriteWindowBrick : public QMainWindow {
     Q_OBJECT
@@ -19,7 +20,7 @@ protected:
 private slots:
     void updateZoom(int value);
     void createNewDocument();
-    void applyTheme(bool dark = false);
+    void applyTheme(bool dark);
     void resizeSubWindow(QMdiSubWindow *subWindow);
 
 public slots:
@@ -29,7 +30,6 @@ private:
     void setupMenus();
     void setupCentralWidget();
     void setupZoomDock();
-
     QMenu *fileMenu;
     QMenu *editMenu;
     QMenu *formatMenu;
@@ -41,7 +41,7 @@ private:
     QMdiArea *mdiArea;
     QSlider *zoomSlider;
     QAction *newAction;
-    bool isDarkTheme;
+    ThemeBrick *themeBrick;
 };
 
 #endif // QXWRITEWINDOWBRICK_H

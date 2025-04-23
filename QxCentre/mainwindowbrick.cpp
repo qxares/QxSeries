@@ -1,11 +1,7 @@
 #include "mainwindowbrick.h"
 #include <QMenuBar>
 #include <QDebug>
-#include <QFileDialog>
 #include <QMessageBox>
-#include <QComboBox>
-#include <QDialog>
-#include <QVBoxLayout>
 #include "../QxText/QxWrite/qxwritewindowbrick.h"
 #include "../QxText/QxSheet/qxsheetwindowbrick.h"
 #include "themebrick.h"
@@ -28,6 +24,8 @@ void MainWindowBrick::setupMenus() {
     QMenu *preferencesMenu = fileMenu->addMenu("Preferences");
     QMenu *themesMenu = preferencesMenu->addMenu("Themes");
     darkThemeAction = themesMenu->addAction("Dark");
+    darkThemeAction->setCheckable(true);
+    darkThemeAction->setChecked(themeBrick->isDarkTheme());
     fileMenu->addSeparator();
     fileMenu->addAction("Exit");
 
@@ -57,7 +55,6 @@ void MainWindowBrick::setupMenus() {
     QMenu *toolsMenu = appsMenu->addMenu("Tools");
     toolsMenu->addAction("QxCalc");
     toolsMenu->addAction("QxConvert");
-    toolsMenu->addAction("QxDatabase");
 
     helpMenu = menuBar()->addMenu("&Help");
     helpMenu->addAction("About QxCentre");
@@ -90,7 +87,7 @@ void MainWindowBrick::openQxSheet() {
 }
 
 void MainWindowBrick::toggleDarkTheme() {
-    themeBrick->toggleDarkTheme(true);
+    themeBrick->toggleDarkTheme(darkThemeAction->isChecked());
 }
 
 void MainWindowBrick::setupCentralWidget() {
