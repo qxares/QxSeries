@@ -4,6 +4,7 @@
 #include <QMessageBox>
 #include "../QxText/QxWrite/qxwritewindowbrick.h"
 #include "../QxText/QxSheet/qxsheetwindowbrick.h"
+#include "../QxAudio/QxAudioPlayer/qxmusicplayerwindow.h"
 #include "themebrick.h"
 
 MainWindowBrick::MainWindowBrick(QWidget *parent) : QMainWindow(parent) {
@@ -31,7 +32,7 @@ void MainWindowBrick::setupMenus() {
 
     appsMenu = menuBar()->addMenu("&Apps");
     QMenu *audioMenu = appsMenu->addMenu("QxAudio");
-    audioMenu->addAction("QxAudio player");
+    qxMusicPlayerAction = audioMenu->addAction("QxMusicPlayer");
     audioMenu->addAction("Music");
     audioMenu->addAction("Books");
     audioMenu->addAction("Recordings");
@@ -63,6 +64,7 @@ void MainWindowBrick::setupMenus() {
 
     connect(qxWriteAction, &QAction::triggered, this, &MainWindowBrick::openQxWrite);
     connect(qxSheetAction, &QAction::triggered, this, &MainWindowBrick::openQxSheet);
+    connect(qxMusicPlayerAction, &QAction::triggered, this, &MainWindowBrick::openQxMusicPlayer);
     connect(darkThemeAction, &QAction::triggered, this, &MainWindowBrick::toggleDarkTheme);
 }
 
@@ -84,6 +86,16 @@ void MainWindowBrick::openQxSheet() {
     sheetWindow->initializeTheme(themeBrick->isDarkTheme());
     sheetWindow->show();
     qDebug() << "QxSheet window opened";
+}
+
+void MainWindowBrick::openQxMusicPlayer() {
+    QxMusicPlayerWindow *musicWindow = new QxMusicPlayerWindow(this);
+    musicWindow->setAttribute(Qt::WA_DeleteOnClose);
+    musicWindow->move(0, 50);
+    musicWindow->resize(400, 600);
+    musicWindow->initializeTheme(themeBrick->isDarkTheme());
+    musicWindow->show();
+    qDebug() << "QxMusicPlayer window opened";
 }
 
 void MainWindowBrick::toggleDarkTheme() {

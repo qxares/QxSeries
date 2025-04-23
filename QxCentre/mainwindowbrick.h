@@ -7,6 +7,7 @@
 class ThemeBrick;
 class QxWriteWindowBrick;
 class QxSheetWindowBrick;
+class QxMusicPlayerWindow;
 
 class MainWindowBrick : public QMainWindow {
     Q_OBJECT
@@ -17,6 +18,7 @@ public:
 private slots:
     void openQxWrite();
     void openQxSheet();
+    void openQxMusicPlayer();
     void toggleDarkTheme();
 
 private:
@@ -29,6 +31,7 @@ private:
     QAction *darkThemeAction;
     QAction *qxWriteAction;
     QAction *qxSheetAction;
+    QAction *qxMusicPlayerAction;
 };
 
 #endif // MAINWINDOWBRICK_H
