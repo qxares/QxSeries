@@ -4,6 +4,8 @@
 #include <QMenuBar>
 #include <QTableView>
 #include <QStandardItemModel>
+#include "../QxCentre/mainwindowbrick.h"
+#include "../../QxCentre/themebrick.h"
 
 QxSheetWindowBrick::QxSheetWindowBrick(QWidget *parent) : QMainWindow(parent) {
     setWindowTitle("QxSheet");
@@ -154,4 +156,24 @@ void QxSheetWindowBrick::contextMenuEvent(QContextMenuEvent *event) {
     contextMenu.addAction("Filter");
     contextMenu.addAction("Insert Chart");
     contextMenu.exec(event->globalPos());
+}
+
+void QxSheetWindowBrick::initializeTheme(bool dark) {
+    isDarkTheme = dark;
+    applyTheme(dark);
+    if (MainWindowBrick *mainWindow = qobject_cast<MainWindowBrick*>(parent())) {
+        connect(mainWindow->getThemeBrick(), &ThemeBrick::themeChanged, this, &QxSheetWindowBrick::applyTheme);
+    }
+}
+
+void QxSheetWindowBrick::applyTheme(bool dark) {
+    isDarkTheme = dark;
+    QString bgColor = dark ? "#272822" : "#ECECEC";
+    QString textColor = dark ? "#F8F8F2" : "black";
+    tableView->setStyleSheet(
+        QString("background-color: %1; color: %2;").arg(bgColor, textColor)
+    );
+    setStyleSheet(
+        QString("QMainWindow { background-color: %1; color: %2; }").arg(bgColor, textColor)
+    );
 }

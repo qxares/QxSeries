@@ -10,12 +10,16 @@ class QxSheetWindowBrick : public QMainWindow {
 public:
     explicit QxSheetWindowBrick(QWidget *parent = nullptr);
 
+public slots:
+    void initializeTheme(bool dark);
+
 protected:
     void contextMenuEvent(QContextMenuEvent *event) override;
 
 private:
     void setupMenus();
     void setupCentralWidget();
+    void applyTheme(bool dark);
 
     QMenu *fileMenu;
     QMenu *editMenu;
@@ -26,6 +30,7 @@ private:
     QMenu *toolsMenu;
     QMenu *helpMenu;
     QTableView *tableView;
+    bool isDarkTheme;
 };
 
 #endif // QXSHEETWINDOWBRICK_H

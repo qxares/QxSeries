@@ -1,8 +1,14 @@
 #include "mainwindowbrick.h"
-#include "themebrick.h"
-#include "qxwritewindowbrick.h"
-#include "qxsheetwindowbrick.h"
+#include <QMenuBar>
 #include <QDebug>
+#include <QFileDialog>
+#include <QMessageBox>
+#include <QComboBox>
+#include <QDialog>
+#include <QVBoxLayout>
+#include "../QxText/QxWrite/qxwritewindowbrick.h"
+#include "../QxText/QxSheet/qxsheetwindowbrick.h"
+#include "themebrick.h"
 
 MainWindowBrick::MainWindowBrick(QWidget *parent) : QMainWindow(parent) {
     setWindowTitle("QxCentre");
@@ -22,13 +28,10 @@ void MainWindowBrick::setupMenus() {
     QMenu *preferencesMenu = fileMenu->addMenu("Preferences");
     QMenu *themesMenu = preferencesMenu->addMenu("Themes");
     darkThemeAction = themesMenu->addAction("Dark");
-    darkThemeAction->setCheckable(true);
-    connect(darkThemeAction, &QAction::toggled, themeBrick, &ThemeBrick::toggleDarkTheme);
     fileMenu->addSeparator();
     fileMenu->addAction("Exit");
 
     appsMenu = menuBar()->addMenu("&Apps");
-
     QMenu *audioMenu = appsMenu->addMenu("QxAudio");
     audioMenu->addAction("QxAudio player");
     audioMenu->addAction("Music");
@@ -45,8 +48,6 @@ void MainWindowBrick::setupMenus() {
     qxWriteAction = textMenu->addAction("QxWrite");
     qxSheetAction = textMenu->addAction("QxSheet");
     textMenu->addAction("QxNotes");
-    connect(qxWriteAction, &QAction::triggered, this, &MainWindowBrick::openQxWrite);
-    connect(qxSheetAction, &QAction::triggered, this, &MainWindowBrick::openQxSheet);
 
     QMenu *graphicsMenu = appsMenu->addMenu("QxGraphics");
     graphicsMenu->addAction("QxDraw");
@@ -62,22 +63,37 @@ void MainWindowBrick::setupMenus() {
     helpMenu->addAction("About QxCentre");
     helpMenu->addAction("Documentation");
     helpMenu->addAction("Check for Updates");
-}
 
-void MainWindowBrick::setupCentralWidget() {
-    centralWidget = new QWidget(this);
-    setCentralWidget(centralWidget);
+    connect(qxWriteAction, &QAction::triggered, this, &MainWindowBrick::openQxWrite);
+    connect(qxSheetAction, &QAction::triggered, this, &MainWindowBrick::openQxSheet);
+    connect(darkThemeAction, &QAction::triggered, this, &MainWindowBrick::toggleDarkTheme);
 }
 
 void MainWindowBrick::openQxWrite() {
     QxWriteWindowBrick *writeWindow = new QxWriteWindowBrick(this);
-    writeWindow->setGeometry(0, 50, 525, 750);
-    writeWindow->initializeTheme(darkThemeAction->isChecked());
+    writeWindow->setAttribute(Qt::WA_DeleteOnClose);
+    writeWindow->move(0, 50);
+    writeWindow->resize(525, 750);
+    writeWindow->initializeTheme(themeBrick->isDarkTheme());
     writeWindow->show();
+    qDebug() << "QxWrite window opened";
 }
 
 void MainWindowBrick::openQxSheet() {
     QxSheetWindowBrick *sheetWindow = new QxSheetWindowBrick(this);
-    sheetWindow->setGeometry(525, 50, 525, 750);
+    sheetWindow->setAttribute(Qt::WA_DeleteOnClose);
+    sheetWindow->move(0, 50);
+    sheetWindow->resize(525, 750);
+    sheetWindow->initializeTheme(themeBrick->isDarkTheme());
     sheetWindow->show();
+    qDebug() << "QxSheet window opened";
+}
+
+void MainWindowBrick::toggleDarkTheme() {
+    themeBrick->toggleDarkTheme(true);
+}
+
+void MainWindowBrick::setupCentralWidget() {
+    QWidget *central = new QWidget(this);
+    setCentralWidget(central);
 }

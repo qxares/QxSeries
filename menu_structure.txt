@@ -1,3 +1,4 @@
+---
 File
   New Database
   Open Database
@@ -35,3 +36,4 @@ Help
   About QxCentre
   Documentation
   Check for Updates
+---

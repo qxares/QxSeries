@@ -60,6 +60,7 @@ void ThemeBrick::applyDarkTheme() {
 }
 
 void ThemeBrick::toggleDarkTheme(bool checked) {
+    isDark = checked;
     if (checked) {
         applyDarkTheme();
     } else {

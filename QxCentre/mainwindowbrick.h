@@ -2,34 +2,33 @@
 #define MAINWINDOWBRICK_H
 
 #include <QMainWindow>
-#include <QMenuBar>
-#include <QMenu>
-#include <QWidget>
-#include <QAction>
-#include "themebrick.h"
+#include <QApplication>
+
+class ThemeBrick;
+class QxWriteWindowBrick;
+class QxSheetWindowBrick;
 
 class MainWindowBrick : public QMainWindow {
     Q_OBJECT
 public:
     explicit MainWindowBrick(QWidget *parent = nullptr);
-    ThemeBrick* getThemeBrick() const { return themeBrick; }
+    ThemeBrick* getThemeBrick() { return themeBrick; }
 
 private slots:
     void openQxWrite();
     void openQxSheet();
+    void toggleDarkTheme();
 
 private:
     void setupMenus();
     void setupCentralWidget();
-
+    ThemeBrick *themeBrick;
     QMenu *fileMenu;
     QMenu *appsMenu;
     QMenu *helpMenu;
-    QWidget *centralWidget;
     QAction *darkThemeAction;
     QAction *qxWriteAction;
     QAction *qxSheetAction;
-    ThemeBrick *themeBrick;
 };
 
 #endif // MAINWINDOWBRICK_H
