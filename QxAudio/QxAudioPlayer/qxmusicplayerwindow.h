@@ -2,8 +2,12 @@
 #define QXMUSICPLAYERWINDOW_H
 
 #include <QMainWindow>
+#include <QMediaPlayer>
+#include <QMediaPlaylist>
+#include <QLineEdit>
+#include <QFileDialog>
 #include "themebrick.h"
-#include "windowmanagerbrick.h"
+#include "interlinkbrick.h"
 
 class QAction;
 class QMenu;
@@ -20,16 +24,33 @@ private:
     void setupMenus();
     void setupCentralWidget();
     ThemeBrick *themeBrick;
-    WindowManagerBrick *windowManagerBrick;
+    InterlinkBrick *interlinkBrick;
     QMenu *fileMenu;
     QAction *darkThemeAction;
+    QAction *openFileAction;
+    QAction *openUrlAction;
+    QAction *openDirectoryAction;
     QPushButton *playPauseButton;
     QPushButton *stopButton;
     QPushButton *nextButton;
     QPushButton *prevButton;
     QListWidget *playlistWidget;
+    QLineEdit *urlBar;
+    QMediaPlayer *player;
+    QMediaPlaylist *playlist;
+
 private slots:
     void toggleDarkTheme();
+    void handleWindowStateChange(bool minimized);
+    void playPause();
+    void stop();
+    void next();
+    void prev();
+    void openFile();
+    void openUrl();
+    void openDirectory();
+    void handleMediaError();
+    void playlistSelectionChanged();
 };
 
 #endif // QXMUSICPLAYERWINDOW_H
