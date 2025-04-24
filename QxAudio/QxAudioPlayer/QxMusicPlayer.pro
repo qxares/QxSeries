@@ -11,6 +11,6 @@ HEADERS += \
 
 INCLUDEPATH += /home/ares/QxCentre/QxCentre
 SOURCES += /home/ares/QxCentre/QxCentre/themebrick.cpp
-SOURCES += /home/ares/QxCentre/QxCentre/windowmanagerbrick.cpp
+SOURCES += /home/ares/QxCentre/QxCentre/interlinkbrick.cpp
 HEADERS += /home/ares/QxCentre/QxCentre/themebrick.h
-HEADERS += /home/ares/QxCentre/QxCentre/windowmanagerbrick.h
+HEADERS += /home/ares/QxCentre/QxCentre/interlinkbrick.h

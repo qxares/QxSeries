@@ -14,10 +14,10 @@ EQ            = =
 
 CC            = gcc
 CXX           = g++
-DEFINES       = -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
+DEFINES       = -DQT_MULTIMEDIA_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -g -Wall -Wextra -D_REENTRANT -fPIC $(DEFINES)
-CXXFLAGS      = -pipe -g -Wall -Wextra -D_REENTRANT -fPIC $(DEFINES)
-INCPATH       = -I. -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++
+CXXFLAGS      = -pipe -g -std=gnu++1z -Wall -Wextra -D_REENTRANT -fPIC $(DEFINES)
+INCPATH       = -I. -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtMultimedia -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++
 QMAKE         = /usr/lib/qt5/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -40,7 +40,7 @@ DISTNAME      = QxCentre1.0.0
 DISTDIR = /home/ares/QxCentre/QxCentre/.tmp/QxCentre1.0.0
 LINK          = g++
 LFLAGS        = 
-LIBS          = $(SUBLIBS) /usr/lib/x86_64-linux-gnu/libQt5Widgets.so /usr/lib/x86_64-linux-gnu/libQt5Gui.so /usr/lib/x86_64-linux-gnu/libQt5Core.so -lGL -lpthread   
+LIBS          = $(SUBLIBS) -ltag /usr/lib/x86_64-linux-gnu/libQt5Multimedia.so /usr/lib/x86_64-linux-gnu/libQt5Widgets.so /usr/lib/x86_64-linux-gnu/libQt5Gui.so /usr/lib/x86_64-linux-gnu/libQt5Network.so /usr/lib/x86_64-linux-gnu/libQt5Core.so -lGL -lpthread   
 AR            = ar cqs
 RANLIB        = 
 SED           = sed
@@ -55,28 +55,32 @@ OBJECTS_DIR   = ./
 SOURCES       = main.cpp \
 		mainwindowbrick.cpp \
 		themebrick.cpp \
-		windowmanagerbrick.cpp \
+		interlinkbrick.cpp \
 		../QxText/QxWrite/qxwritewindowbrick.cpp \
 		../QxText/QxSheet/qxsheetwindowbrick.cpp \
-		../QxAudio/QxAudioPlayer/qxmusicplayerwindow.cpp moc_mainwindowbrick.cpp \
+		../QxAudio/QxAudioPlayer/qxmusicplayerwindow.cpp \
+		../QxAudio/QxAudioPlayer/visualizerwidget.cpp moc_mainwindowbrick.cpp \
 		moc_themebrick.cpp \
-		moc_windowmanagerbrick.cpp \
+		moc_interlinkbrick.cpp \
 		moc_qxwritewindowbrick.cpp \
 		moc_qxsheetwindowbrick.cpp \
-		moc_qxmusicplayerwindow.cpp
+		moc_qxmusicplayerwindow.cpp \
+		moc_visualizerwidget.cpp
 OBJECTS       = main.o \
 		mainwindowbrick.o \
 		themebrick.o \
-		windowmanagerbrick.o \
+		interlinkbrick.o \
 		qxwritewindowbrick.o \
 		qxsheetwindowbrick.o \
 		qxmusicplayerwindow.o \
+		visualizerwidget.o \
 		moc_mainwindowbrick.o \
 		moc_themebrick.o \
-		moc_windowmanagerbrick.o \
+		moc_interlinkbrick.o \
 		moc_qxwritewindowbrick.o \
 		moc_qxsheetwindowbrick.o \
-		moc_qxmusicplayerwindow.o
+		moc_qxmusicplayerwindow.o \
+		moc_visualizerwidget.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/linux.conf \
@@ -108,6 +112,8 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_input_support_private.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_kms_support_private.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_linuxaccessibility_support_private.pri \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_multimedia.pri \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_multimediawidgets.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_network.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_network_private.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_opengl.pri \
@@ -157,16 +163,18 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
 		QxCentre.pro mainwindowbrick.h \
 		themebrick.h \
-		windowmanagerbrick.h \
+		interlinkbrick.h \
 		../QxText/QxWrite/qxwritewindowbrick.h \
 		../QxText/QxSheet/qxsheetwindowbrick.h \
-		../QxAudio/QxAudioPlayer/qxmusicplayerwindow.h main.cpp \
+		../QxAudio/QxAudioPlayer/qxmusicplayerwindow.h \
+		../QxAudio/QxAudioPlayer/visualizerwidget.h main.cpp \
 		mainwindowbrick.cpp \
 		themebrick.cpp \
-		windowmanagerbrick.cpp \
+		interlinkbrick.cpp \
 		../QxText/QxWrite/qxwritewindowbrick.cpp \
 		../QxText/QxSheet/qxsheetwindowbrick.cpp \
-		../QxAudio/QxAudioPlayer/qxmusicplayerwindow.cpp
+		../QxAudio/QxAudioPlayer/qxmusicplayerwindow.cpp \
+		../QxAudio/QxAudioPlayer/visualizerwidget.cpp
 QMAKE_TARGET  = QxCentre
 DESTDIR       = 
 TARGET        = QxCentre
@@ -209,6 +217,8 @@ Makefile: QxCentre.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.con
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_input_support_private.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_kms_support_private.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_linuxaccessibility_support_private.pri \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_multimedia.pri \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_multimediawidgets.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_network.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_network_private.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_opengl.pri \
@@ -289,6 +299,8 @@ Makefile: QxCentre.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.con
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_input_support_private.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_kms_support_private.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_linuxaccessibility_support_private.pri:
+/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_multimedia.pri:
+/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_multimediawidgets.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_network.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_network_private.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_opengl.pri:
@@ -352,8 +364,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents mainwindowbrick.h themebrick.h windowmanagerbrick.h ../QxText/QxWrite/qxwritewindowbrick.h ../QxText/QxSheet/qxsheetwindowbrick.h ../QxAudio/QxAudioPlayer/qxmusicplayerwindow.h $(DISTDIR)/
-	$(COPY_FILE) --parents main.cpp mainwindowbrick.cpp themebrick.cpp windowmanagerbrick.cpp ../QxText/QxWrite/qxwritewindowbrick.cpp ../QxText/QxSheet/qxsheetwindowbrick.cpp ../QxAudio/QxAudioPlayer/qxmusicplayerwindow.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents mainwindowbrick.h themebrick.h interlinkbrick.h ../QxText/QxWrite/qxwritewindowbrick.h ../QxText/QxSheet/qxsheetwindowbrick.h ../QxAudio/QxAudioPlayer/qxmusicplayerwindow.h ../QxAudio/QxAudioPlayer/visualizerwidget.h $(DISTDIR)/
+	$(COPY_FILE) --parents main.cpp mainwindowbrick.cpp themebrick.cpp interlinkbrick.cpp ../QxText/QxWrite/qxwritewindowbrick.cpp ../QxText/QxSheet/qxsheetwindowbrick.cpp ../QxAudio/QxAudioPlayer/qxmusicplayerwindow.cpp ../QxAudio/QxAudioPlayer/visualizerwidget.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -382,44 +394,52 @@ compiler_moc_predefs_make_all: moc_predefs.h
 compiler_moc_predefs_clean:
 	-$(DEL_FILE) moc_predefs.h
 moc_predefs.h: /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
-	g++ -pipe -g -Wall -Wextra -dM -E -o moc_predefs.h /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
+	g++ -pipe -g -std=gnu++1z -Wall -Wextra -dM -E -o moc_predefs.h /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_mainwindowbrick.cpp moc_themebrick.cpp moc_windowmanagerbrick.cpp moc_qxwritewindowbrick.cpp moc_qxsheetwindowbrick.cpp moc_qxmusicplayerwindow.cpp
+compiler_moc_header_make_all: moc_mainwindowbrick.cpp moc_themebrick.cpp moc_interlinkbrick.cpp moc_qxwritewindowbrick.cpp moc_qxsheetwindowbrick.cpp moc_qxmusicplayerwindow.cpp moc_visualizerwidget.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_mainwindowbrick.cpp moc_themebrick.cpp moc_windowmanagerbrick.cpp moc_qxwritewindowbrick.cpp moc_qxsheetwindowbrick.cpp moc_qxmusicplayerwindow.cpp
+	-$(DEL_FILE) moc_mainwindowbrick.cpp moc_themebrick.cpp moc_interlinkbrick.cpp moc_qxwritewindowbrick.cpp moc_qxsheetwindowbrick.cpp moc_qxmusicplayerwindow.cpp moc_visualizerwidget.cpp
 moc_mainwindowbrick.cpp: mainwindowbrick.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/ares/QxCentre/QxCentre/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/ares/QxCentre/QxCentre -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/13 -I/usr/include/x86_64-linux-gnu/c++/13 -I/usr/include/c++/13/backward -I/usr/lib/gcc/x86_64-linux-gnu/13/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include mainwindowbrick.h -o moc_mainwindowbrick.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/ares/QxCentre/QxCentre/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/ares/QxCentre/QxCentre -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtMultimedia -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/13 -I/usr/include/x86_64-linux-gnu/c++/13 -I/usr/include/c++/13/backward -I/usr/lib/gcc/x86_64-linux-gnu/13/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include mainwindowbrick.h -o moc_mainwindowbrick.cpp
 
 moc_themebrick.cpp: themebrick.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/ares/QxCentre/QxCentre/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/ares/QxCentre/QxCentre -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/13 -I/usr/include/x86_64-linux-gnu/c++/13 -I/usr/include/c++/13/backward -I/usr/lib/gcc/x86_64-linux-gnu/13/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include themebrick.h -o moc_themebrick.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/ares/QxCentre/QxCentre/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/ares/QxCentre/QxCentre -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtMultimedia -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/13 -I/usr/include/x86_64-linux-gnu/c++/13 -I/usr/include/c++/13/backward -I/usr/lib/gcc/x86_64-linux-gnu/13/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include themebrick.h -o moc_themebrick.cpp
 
-moc_windowmanagerbrick.cpp: windowmanagerbrick.h \
+moc_interlinkbrick.cpp: interlinkbrick.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/ares/QxCentre/QxCentre/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/ares/QxCentre/QxCentre -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/13 -I/usr/include/x86_64-linux-gnu/c++/13 -I/usr/include/c++/13/backward -I/usr/lib/gcc/x86_64-linux-gnu/13/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include windowmanagerbrick.h -o moc_windowmanagerbrick.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/ares/QxCentre/QxCentre/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/ares/QxCentre/QxCentre -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtMultimedia -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/13 -I/usr/include/x86_64-linux-gnu/c++/13 -I/usr/include/c++/13/backward -I/usr/lib/gcc/x86_64-linux-gnu/13/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include interlinkbrick.h -o moc_interlinkbrick.cpp
 
 moc_qxwritewindowbrick.cpp: ../QxText/QxWrite/qxwritewindowbrick.h \
 		themebrick.h \
+		interlinkbrick.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/ares/QxCentre/QxCentre/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/ares/QxCentre/QxCentre -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/13 -I/usr/include/x86_64-linux-gnu/c++/13 -I/usr/include/c++/13/backward -I/usr/lib/gcc/x86_64-linux-gnu/13/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../QxText/QxWrite/qxwritewindowbrick.h -o moc_qxwritewindowbrick.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/ares/QxCentre/QxCentre/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/ares/QxCentre/QxCentre -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtMultimedia -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/13 -I/usr/include/x86_64-linux-gnu/c++/13 -I/usr/include/c++/13/backward -I/usr/lib/gcc/x86_64-linux-gnu/13/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../QxText/QxWrite/qxwritewindowbrick.h -o moc_qxwritewindowbrick.cpp
 
 moc_qxsheetwindowbrick.cpp: ../QxText/QxSheet/qxsheetwindowbrick.h \
 		themebrick.h \
+		interlinkbrick.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/ares/QxCentre/QxCentre/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/ares/QxCentre/QxCentre -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/13 -I/usr/include/x86_64-linux-gnu/c++/13 -I/usr/include/c++/13/backward -I/usr/lib/gcc/x86_64-linux-gnu/13/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../QxText/QxSheet/qxsheetwindowbrick.h -o moc_qxsheetwindowbrick.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/ares/QxCentre/QxCentre/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/ares/QxCentre/QxCentre -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtMultimedia -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/13 -I/usr/include/x86_64-linux-gnu/c++/13 -I/usr/include/c++/13/backward -I/usr/lib/gcc/x86_64-linux-gnu/13/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../QxText/QxSheet/qxsheetwindowbrick.h -o moc_qxsheetwindowbrick.cpp
 
 moc_qxmusicplayerwindow.cpp: ../QxAudio/QxAudioPlayer/qxmusicplayerwindow.h \
 		themebrick.h \
-		windowmanagerbrick.h \
+		interlinkbrick.h \
+		../QxAudio/QxAudioPlayer/visualizerwidget.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/ares/QxCentre/QxCentre/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/ares/QxCentre/QxCentre -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/13 -I/usr/include/x86_64-linux-gnu/c++/13 -I/usr/include/c++/13/backward -I/usr/lib/gcc/x86_64-linux-gnu/13/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../QxAudio/QxAudioPlayer/qxmusicplayerwindow.h -o moc_qxmusicplayerwindow.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/ares/QxCentre/QxCentre/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/ares/QxCentre/QxCentre -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtMultimedia -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/13 -I/usr/include/x86_64-linux-gnu/c++/13 -I/usr/include/c++/13/backward -I/usr/lib/gcc/x86_64-linux-gnu/13/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../QxAudio/QxAudioPlayer/qxmusicplayerwindow.h -o moc_qxmusicplayerwindow.cpp
+
+moc_visualizerwidget.cpp: ../QxAudio/QxAudioPlayer/visualizerwidget.h \
+		moc_predefs.h \
+		/usr/lib/qt5/bin/moc
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/ares/QxCentre/QxCentre/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/ares/QxCentre/QxCentre -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtMultimedia -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/13 -I/usr/include/x86_64-linux-gnu/c++/13 -I/usr/include/c++/13/backward -I/usr/lib/gcc/x86_64-linux-gnu/13/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../QxAudio/QxAudioPlayer/visualizerwidget.h -o moc_visualizerwidget.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -441,34 +461,41 @@ main.o: main.cpp mainwindowbrick.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
 
 mainwindowbrick.o: mainwindowbrick.cpp mainwindowbrick.h \
-		windowmanagerbrick.h \
+		interlinkbrick.h \
 		../QxText/QxWrite/qxwritewindowbrick.h \
 		themebrick.h \
 		../QxText/QxSheet/qxsheetwindowbrick.h \
-		../QxAudio/QxAudioPlayer/qxmusicplayerwindow.h
+		../QxAudio/QxAudioPlayer/qxmusicplayerwindow.h \
+		../QxAudio/QxAudioPlayer/visualizerwidget.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindowbrick.o mainwindowbrick.cpp
 
 themebrick.o: themebrick.cpp themebrick.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o themebrick.o themebrick.cpp
 
-windowmanagerbrick.o: windowmanagerbrick.cpp windowmanagerbrick.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o windowmanagerbrick.o windowmanagerbrick.cpp
+interlinkbrick.o: interlinkbrick.cpp interlinkbrick.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o interlinkbrick.o interlinkbrick.cpp
 
 qxwritewindowbrick.o: ../QxText/QxWrite/qxwritewindowbrick.cpp ../QxText/QxWrite/qxwritewindowbrick.h \
 		themebrick.h \
+		interlinkbrick.h \
 		mainwindowbrick.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qxwritewindowbrick.o ../QxText/QxWrite/qxwritewindowbrick.cpp
 
 qxsheetwindowbrick.o: ../QxText/QxSheet/qxsheetwindowbrick.cpp ../QxText/QxSheet/qxsheetwindowbrick.h \
 		themebrick.h \
+		interlinkbrick.h \
 		mainwindowbrick.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qxsheetwindowbrick.o ../QxText/QxSheet/qxsheetwindowbrick.cpp
 
 qxmusicplayerwindow.o: ../QxAudio/QxAudioPlayer/qxmusicplayerwindow.cpp ../QxAudio/QxAudioPlayer/qxmusicplayerwindow.h \
 		themebrick.h \
-		windowmanagerbrick.h \
+		interlinkbrick.h \
+		../QxAudio/QxAudioPlayer/visualizerwidget.h \
 		mainwindowbrick.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qxmusicplayerwindow.o ../QxAudio/QxAudioPlayer/qxmusicplayerwindow.cpp
+
+visualizerwidget.o: ../QxAudio/QxAudioPlayer/visualizerwidget.cpp ../QxAudio/QxAudioPlayer/visualizerwidget.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o visualizerwidget.o ../QxAudio/QxAudioPlayer/visualizerwidget.cpp
 
 moc_mainwindowbrick.o: moc_mainwindowbrick.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindowbrick.o moc_mainwindowbrick.cpp
@@ -476,8 +503,8 @@ moc_mainwindowbrick.o: moc_mainwindowbrick.cpp
 moc_themebrick.o: moc_themebrick.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_themebrick.o moc_themebrick.cpp
 
-moc_windowmanagerbrick.o: moc_windowmanagerbrick.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_windowmanagerbrick.o moc_windowmanagerbrick.cpp
+moc_interlinkbrick.o: moc_interlinkbrick.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_interlinkbrick.o moc_interlinkbrick.cpp
 
 moc_qxwritewindowbrick.o: moc_qxwritewindowbrick.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_qxwritewindowbrick.o moc_qxwritewindowbrick.cpp
@@ -488,11 +515,23 @@ moc_qxsheetwindowbrick.o: moc_qxsheetwindowbrick.cpp
 moc_qxmusicplayerwindow.o: moc_qxmusicplayerwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_qxmusicplayerwindow.o moc_qxmusicplayerwindow.cpp
 
+moc_visualizerwidget.o: moc_visualizerwidget.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_visualizerwidget.o moc_visualizerwidget.cpp
+
 ####### Install
 
-install:  FORCE
+install_target: first FORCE
+	@test -d $(INSTALL_ROOT)/opt/QxCentre/bin || mkdir -p $(INSTALL_ROOT)/opt/QxCentre/bin
+	$(QINSTALL_PROGRAM) $(QMAKE_TARGET) $(INSTALL_ROOT)/opt/QxCentre/bin/$(QMAKE_TARGET)
 
-uninstall:  FORCE
+uninstall_target: FORCE
+	-$(DEL_FILE) $(INSTALL_ROOT)/opt/QxCentre/bin/$(QMAKE_TARGET)
+	-$(DEL_DIR) $(INSTALL_ROOT)/opt/QxCentre/bin/ 
+
+
+install: install_target  FORCE
+
+uninstall: uninstall_target  FORCE
 
 FORCE:
 

@@ -12,12 +12,17 @@
 
 QxWriteWindowBrick::QxWriteWindowBrick(QWidget *parent) : QMainWindow(parent) {
     setWindowTitle("QxWrite");
-    setWindowFlags(Qt::Window | Qt::WindowStaysOnTopHint);
     setupMenus();
     setupCentralWidget();
     setupZoomDock();
-    if (MainWindowBrick *mainWindow = qobject_cast<MainWindowBrick*>(parent)) {
+    MainWindowBrick *mainWindow = qobject_cast<MainWindowBrick*>(parent);
+    if (mainWindow) {
         themeBrick = mainWindow->getThemeBrick();
+        interlinkBrick = mainWindow->getInterlinkBrick();
+        if (interlinkBrick) {
+            interlinkBrick->registerAppWindow(this);
+            connect(interlinkBrick, &InterlinkBrick::windowStateChanged, this, &QxWriteWindowBrick::handleWindowStateChange);
+        }
         connect(themeBrick, &ThemeBrick::themeChanged, this, &QxWriteWindowBrick::applyTheme);
         initializeTheme(themeBrick->isDarkTheme());
     }
@@ -244,4 +249,19 @@ void QxWriteWindowBrick::contextMenuEvent(QContextMenuEvent *event) {
     contextMenu.addAction("Find");
     contextMenu.addAction("Spell Check");
     contextMenu.exec(event->globalPos());
+}
+
+void QxWriteWindowBrick::handleWindowStateChange(bool minimized) {
+    if (minimized) {
+        showMinimized();
+        qDebug() << "QxWrite minimized via InterlinkBrick";
+    } else {
+        if (windowState() & Qt::WindowMaximized) {
+            showMaximized();
+        } else {
+            showNormal();
+        }
+        raise(); // Ensure QxWrite stays above QxCentre
+        qDebug() << "QxWrite restored via InterlinkBrick";
+    }
 }

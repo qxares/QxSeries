@@ -7,6 +7,7 @@
 #include <QSlider>
 #include <QAction>
 #include "../../QxCentre/themebrick.h"
+#include "../../QxCentre/interlinkbrick.h"
 
 class QxWriteWindowBrick : public QMainWindow {
     Q_OBJECT
@@ -22,6 +23,7 @@ private slots:
     void createNewDocument();
     void applyTheme(bool dark);
     void resizeSubWindow(QMdiSubWindow *subWindow);
+    void handleWindowStateChange(bool minimized);
 
 public slots:
     void initializeTheme(bool dark);
@@ -42,6 +44,7 @@ private:
     QSlider *zoomSlider;
     QAction *newAction;
     ThemeBrick *themeBrick;
+    InterlinkBrick *interlinkBrick;
 };
 
 #endif // QXWRITEWINDOWBRICK_H

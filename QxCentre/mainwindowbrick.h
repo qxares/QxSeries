@@ -5,7 +5,7 @@
 #include <QApplication>
 
 class ThemeBrick;
-class WindowManagerBrick;
+class InterlinkBrick;
 class QxWriteWindowBrick;
 class QxSheetWindowBrick;
 class QxMusicPlayerWindow;
@@ -15,6 +15,7 @@ class MainWindowBrick : public QMainWindow {
 public:
     explicit MainWindowBrick(QWidget *parent = nullptr);
     ThemeBrick* getThemeBrick() { return themeBrick; }
+    InterlinkBrick* getInterlinkBrick() { return interlinkBrick; }
 
 private slots:
     void openQxWrite();
@@ -26,7 +27,7 @@ private:
     void setupMenus();
     void setupCentralWidget();
     ThemeBrick *themeBrick;
-    WindowManagerBrick *windowManagerBrick;
+    InterlinkBrick *interlinkBrick;
     QMenu *fileMenu;
     QMenu *appsMenu;
     QMenu *helpMenu;

@@ -2,7 +2,7 @@
 #include <QMenuBar>
 #include <QDebug>
 #include <QMessageBox>
-#include "windowmanagerbrick.h"
+#include "interlinkbrick.h"
 #include "../QxText/QxWrite/qxwritewindowbrick.h"
 #include "../QxText/QxSheet/qxsheetwindowbrick.h"
 #include "../QxAudio/QxAudioPlayer/qxmusicplayerwindow.h"
@@ -12,7 +12,7 @@ MainWindowBrick::MainWindowBrick(QWidget *parent) : QMainWindow(parent) {
     setWindowTitle("QxCentre");
     resize(1050, 800);
     themeBrick = new ThemeBrick(qApp, this);
-    windowManagerBrick = new WindowManagerBrick(this, this);
+    interlinkBrick = new InterlinkBrick(this, this);
     setupMenus();
     setupCentralWidget();
     qDebug() << "QxCentre main window initialized";
@@ -45,11 +45,10 @@ void MainWindowBrick::setupMenus() {
     videoMenu->addAction("Series");
     videoMenu->addAction("Recordings");
 
-    QMenu *textMenu = new QMenu("QxText");
+    QMenu *textMenu = appsMenu->addMenu("QxText");
     qxWriteAction = textMenu->addAction("QxWrite");
     qxSheetAction = textMenu->addAction("QxSheet");
     textMenu->addAction("QxNotes");
-    appsMenu->addMenu(textMenu);
 
     QMenu *graphicsMenu = appsMenu->addMenu("QxGraphics");
     graphicsMenu->addAction("QxDraw");
@@ -77,7 +76,7 @@ void MainWindowBrick::openQxWrite() {
     writeWindow->move(0, 50);
     writeWindow->resize(525, 750);
     writeWindow->initializeTheme(themeBrick->isDarkTheme());
-    windowManagerBrick->launchAppWindow(writeWindow);
+    interlinkBrick->launchAppWindow(writeWindow);
     qDebug() << "QxWrite window opened";
 }
 
@@ -87,7 +86,7 @@ void MainWindowBrick::openQxSheet() {
     sheetWindow->move(0, 50);
     sheetWindow->resize(525, 750);
     sheetWindow->initializeTheme(themeBrick->isDarkTheme());
-    windowManagerBrick->launchAppWindow(sheetWindow);
+    interlinkBrick->launchAppWindow(sheetWindow);
     qDebug() << "QxSheet window opened";
 }
 
@@ -97,7 +96,7 @@ void MainWindowBrick::openQxMusicPlayer() {
     musicWindow->move(0, 50);
     musicWindow->resize(400, 600);
     musicWindow->initializeTheme(themeBrick->isDarkTheme());
-    windowManagerBrick->launchAppWindow(musicWindow);
+    interlinkBrick->launchAppWindow(musicWindow);
     qDebug() << "QxMusicPlayer window opened";
 }
 

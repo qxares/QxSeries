@@ -5,6 +5,7 @@
 #include <QMenu>
 #include <QTableView>
 #include "../../QxCentre/themebrick.h"
+#include "../../QxCentre/interlinkbrick.h"
 
 class QxSheetWindowBrick : public QMainWindow {
     Q_OBJECT
@@ -13,6 +14,9 @@ public:
 
 public slots:
     void initializeTheme(bool dark);
+
+private slots:
+    void handleWindowStateChange(bool minimized);
 
 protected:
     void contextMenuEvent(QContextMenuEvent *event) override;
@@ -31,6 +35,7 @@ private:
     QMenu *helpMenu;
     QTableView *tableView;
     ThemeBrick *themeBrick;
+    InterlinkBrick *interlinkBrick;
 };
 
 #endif // QXSHEETWINDOWBRICK_H
