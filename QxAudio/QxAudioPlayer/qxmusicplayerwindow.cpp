@@ -12,12 +12,7 @@
 #include <QPixmap>
 #include <QEvent>
 #include <QDir>
-#include <taglib/fileref.h>
-#include <taglib/tag.h>
-#include <taglib/tbytevector.h>
-#include <taglib/mpegfile.h>
-#include <taglib/id3v2tag.h>
-#include <taglib/attachedpictureframe.h>
+#include <QTime>
 #include "mainwindowbrick.h"
 
 QxMusicPlayerWindow::QxMusicPlayerWindow(QWidget *parent) : QMainWindow(parent) {
@@ -40,7 +35,7 @@ QxMusicPlayerWindow::QxMusicPlayerWindow(QWidget *parent) : QMainWindow(parent) 
     connect(player, &QMediaPlayer::positionChanged, this, &QxMusicPlayerWindow::updateSeekSlider);
     connect(player, &QMediaPlayer::durationChanged, this, &QxMusicPlayerWindow::updateDuration);
     connect(player, &QMediaPlayer::mediaChanged, this, &QxMusicPlayerWindow::updateAlbumArt);
-    connect(playlist, &QMediaPlaylist::currentIndexChanged, this, &QxMusicPlayerWindow::updateAlbumArt);
+    connect(playlist, &QMediaPlaylist::currentIndexChanged, this, &QxMusicPlayerWindow::highlightCurrentTrack);
     showingVisualizer = false;
     setupMenus();
     setupCentralWidget();
@@ -67,6 +62,9 @@ void QxMusicPlayerWindow::initializeTheme(bool isDark) {
     );
     currentTimeLabel->setPalette(palette);
     totalTimeLabel->setPalette(palette);
+    shuffleButton->setPalette(palette);
+    clearButton->setPalette(palette);
+    repeatButton->setPalette(palette);
 }
 
 void QxMusicPlayerWindow::setupMenus() {
@@ -103,7 +101,7 @@ void QxMusicPlayerWindow::setupCentralWidget() {
     // Playback controls
     QWidget *controls = new QWidget(central);
     QHBoxLayout *controlLayout = new QHBoxLayout(controls);
-    controlLayout->setContentsMargins(15, 0, 15, 0); // 15pt left/right margins
+    controlLayout->setContentsMargins(5, 0, 5, 0); // Reduced margins
 
     // Left side: Play/Pause, Prev
     QVBoxLayout *leftLayout = new QVBoxLayout();
@@ -113,16 +111,15 @@ void QxMusicPlayerWindow::setupCentralWidget() {
     playPauseButton->setFixedSize(buttonSize);
     prevButton->setFixedSize(buttonSize);
     leftLayout->addWidget(playPauseButton);
-    leftLayout->addSpacing(20); // 20pt vertical spacing
+    leftLayout->addSpacing(10); // Reduced spacing
     leftLayout->addWidget(prevButton);
-    leftLayout->addStretch(); // Push buttons up
 
-    // Center: Album art/visualization + time bar
+    // Center: Album art/visualization + time bar + new buttons
     QVBoxLayout *centerLayout = new QVBoxLayout();
     albumArtLabel = new QLabel(controls);
     albumArtLabel->setFixedSize(100, 100);
     albumArtLabel->setAlignment(Qt::AlignCenter);
-    albumArtLabel->setStyleSheet("background-color: gray; color: white;"); // Placeholder
+    albumArtLabel->setStyleSheet("background-color: gray; color: white;");
     albumArtLabel->setText("No Art");
     albumArtLabel->installEventFilter(this);
     visualizerWidget = new VisualizerWidget(controls);
@@ -139,10 +136,25 @@ void QxMusicPlayerWindow::setupCentralWidget() {
     timeLayout->addWidget(seekSlider);
     timeLayout->addWidget(totalTimeLabel);
 
+    // New buttons: Shuffle, Clear, Repeat
+    QHBoxLayout *extraButtonsLayout = new QHBoxLayout();
+    shuffleButton = new QPushButton("Shuffle", controls);
+    clearButton = new QPushButton("Clear", controls);
+    repeatButton = new QPushButton("Repeat", controls);
+    QSize smallButtonSize(50, 15); // Half the size of playPauseButton
+    shuffleButton->setFixedSize(smallButtonSize);
+    clearButton->setFixedSize(smallButtonSize);
+    repeatButton->setFixedSize(smallButtonSize);
+    extraButtonsLayout->addStretch();
+    extraButtonsLayout->addWidget(shuffleButton);
+    extraButtonsLayout->addWidget(clearButton);
+    extraButtonsLayout->addWidget(repeatButton);
+    extraButtonsLayout->addStretch();
+
     centerLayout->addWidget(albumArtLabel);
     centerLayout->addWidget(visualizerWidget);
     centerLayout->addLayout(timeLayout);
-    centerLayout->addStretch(); // Push content up
+    centerLayout->addLayout(extraButtonsLayout);
 
     // Right side: Stop, Next
     QVBoxLayout *rightLayout = new QVBoxLayout();
@@ -151,19 +163,23 @@ void QxMusicPlayerWindow::setupCentralWidget() {
     stopButton->setFixedSize(buttonSize);
     nextButton->setFixedSize(buttonSize);
     rightLayout->addWidget(stopButton);
-    rightLayout->addSpacing(20); // 20pt vertical spacing
+    rightLayout->addSpacing(10); // Reduced spacing
     rightLayout->addWidget(nextButton);
-    rightLayout->addStretch(); // Push buttons up
 
-    // Combine layouts
+    // Combine layouts with stretch for centering album art
     controlLayout->addLayout(leftLayout);
+    controlLayout->addStretch(); // Center album art
     controlLayout->addLayout(centerLayout);
+    controlLayout->addStretch(); // Center album art
     controlLayout->addLayout(rightLayout);
     mainLayout->addWidget(controls);
 
+    // Gap between controls and playlist
+    mainLayout->addSpacing(20);
+
     // Playlist
     playlistWidget = new QListWidget(central);
-    mainLayout->addWidget(playlistWidget);
+    mainLayout->addWidget(playlistWidget, 1); // Stretch factor for taller playlist
 
     setCentralWidget(central);
 
@@ -174,6 +190,7 @@ void QxMusicPlayerWindow::setupCentralWidget() {
     connect(prevButton, &QPushButton::clicked, this, &QxMusicPlayerWindow::prev);
     connect(seekSlider, &QSlider::sliderMoved, this, &QxMusicPlayerWindow::seekPosition);
     connect(playlistWidget, &QListWidget::itemSelectionChanged, this, &QxMusicPlayerWindow::playlistSelectionChanged);
+    connect(playlistWidget, &QListWidget::itemDoubleClicked, this, &QxMusicPlayerWindow::playSelectedTrack);
 }
 
 void QxMusicPlayerWindow::toggleDarkTheme() {
@@ -210,22 +227,25 @@ void QxMusicPlayerWindow::prev() {
 }
 
 QString QxMusicPlayerWindow::getDisplayName(const QString &filePath, const QString &baseDir) {
-    TagLib::FileRef file(filePath.toStdString().c_str());
-    if (!file.isNull() && file.tag()) {
-        QString artist = QString::fromStdString(file.tag()->artist().to8Bit(true));
-        QString album = QString::fromStdString(file.tag()->album().to8Bit(true));
-        QString title = QString::fromStdString(file.tag()->title().to8Bit(true));
-        if (!artist.isEmpty() && !album.isEmpty() && !title.isEmpty()) {
-            return QString("%1 - %2 - %3").arg(artist, album, title);
-        }
+    QString path = baseDir.isEmpty() ? filePath : filePath.mid(baseDir.length() + 1);
+    QStringList segments = path.split('/', QString::SkipEmptyParts);
+    QString artist, album, song;
+    if (segments.size() >= 3) {
+        artist = segments[segments.size() - 3];
+        album = segments[segments.size() - 2];
+        song = segments[segments.size() - 1];
+        return QString("%1 - %2 - %3").arg(artist, album, song);
+    } else if (segments.size() == 2) {
+        album = segments[0];
+        song = segments[1];
+        return QString("%1 - %2").arg(album, song);
     }
-    // Fallback to directory name and file name
-    QString dirName = baseDir.isEmpty() ? QFileInfo(filePath).absolutePath().section('/', -1) : baseDir.section('/', -1);
-    QString fileName = QFileInfo(filePath).fileName();
-    return QString("%1/%2").arg(dirName, fileName);
+    return baseDir.isEmpty() ? QFileInfo(filePath).fileName() : path;
 }
 
 void QxMusicPlayerWindow::openFile() {
+    QTime timer;
+    timer.start();
     QStringList files = QFileDialog::getOpenFileNames(this, "Open Audio Files", QDir::homePath(),
                                                      "Audio Files (*.mp3 *.flac *.wav)");
     QString baseDir; // Empty for single file selection
@@ -233,6 +253,7 @@ void QxMusicPlayerWindow::openFile() {
         playlist->addMedia(QUrl::fromLocalFile(file));
         playlistWidget->addItem(getDisplayName(file, baseDir));
     }
+    qDebug() << "openFile took" << timer.elapsed() << "ms";
 }
 
 void QxMusicPlayerWindow::openUrl() {
@@ -244,15 +265,24 @@ void QxMusicPlayerWindow::openUrl() {
 }
 
 void QxMusicPlayerWindow::openDirectory() {
+    QTime timer;
+    timer.start();
     QString dir = QFileDialog::getExistingDirectory(this, "Open Directory", QDir::homePath());
+    int fileCount = 0;
     if (!dir.isEmpty()) {
         QDirIterator it(dir, {"*.mp3", "*.flac", "*.wav"}, QDir::Files, QDirIterator::Subdirectories);
-        while (it.hasNext()) {
+        int depth = 0;
+        while (it.hasNext() && depth <= 1) {
             QString file = it.next();
             playlist->addMedia(QUrl::fromLocalFile(file));
             playlistWidget->addItem(getDisplayName(file, dir));
+            fileCount++;
+            if (it.fileInfo().absolutePath().count('/') > dir.count('/') + 1) {
+                depth = it.fileInfo().absolutePath().count('/') - dir.count('/');
+            }
         }
     }
+    qDebug() << "openDirectory took" << timer.elapsed() << "ms, processed" << fileCount << "files";
 }
 
 void QxMusicPlayerWindow::handleMediaError() {
@@ -263,6 +293,21 @@ void QxMusicPlayerWindow::playlistSelectionChanged() {
     int index = playlistWidget->currentRow();
     if (index >= 0) {
         playlist->setCurrentIndex(index);
+    }
+}
+
+void QxMusicPlayerWindow::playSelectedTrack() {
+    int index = playlistWidget->currentRow();
+    if (index >= 0) {
+        playlist->setCurrentIndex(index);
+        player->play();
+    }
+}
+
+void QxMusicPlayerWindow::highlightCurrentTrack() {
+    int index = playlist->currentIndex();
+    if (index >= 0 && index < playlistWidget->count()) {
+        playlistWidget->setCurrentRow(index);
     }
 }
 
@@ -296,44 +341,39 @@ void QxMusicPlayerWindow::seekPosition(int value) {
 }
 
 void QxMusicPlayerWindow::updateAlbumArt() {
+    QTime timer;
+    timer.start();
     QMediaContent media = player->currentMedia();
     QString filePath = media.request().url().toLocalFile();
     if (filePath.isEmpty()) {
         albumArtLabel->setText("No Art");
         albumArtLabel->setPixmap(QPixmap());
+        qDebug() << "updateAlbumArt took" << timer.elapsed() << "ms, no file path";
         return;
     }
 
-    // Check ID3 tags for embedded album art
-    TagLib::FileRef file(filePath.toStdString().c_str());
-    if (!file.isNull() && file.tag()) {
-        TagLib::MPEG::File mpegFile(filePath.toStdString().c_str());
-        if (mpegFile.ID3v2Tag()) {
-            TagLib::ID3v2::Tag *tag = mpegFile.ID3v2Tag();
-            TagLib::ID3v2::FrameList frames = tag->frameList("APIC");
-            if (!frames.isEmpty()) {
-                TagLib::ID3v2::AttachedPictureFrame *picFrame =
-                    static_cast<TagLib::ID3v2::AttachedPictureFrame*>(frames.front());
-                QImage image;
-                image.loadFromData((const uchar*)picFrame->picture().data(), picFrame->picture().size());
-                if (!image.isNull()) {
-                    albumArtLabel->setPixmap(QPixmap::fromImage(image).scaled(100, 100, Qt::KeepAspectRatio));
-                    return;
-                }
-            }
+    // Check for front.jpg or Front.jpg in the file's folder
+    QDir dir = QFileInfo(filePath).absoluteDir();
+    QStringList nameFilters = {"*.jpg", "*.JPG"}; // Case-insensitive
+    QStringList images = dir.entryList(nameFilters, QDir::Files);
+    QString imagePath;
+    for (const QString &image : images) {
+        if (image.toLower() == "front.jpg") {
+            imagePath = dir.filePath(image);
+            break;
         }
     }
-
-    // Fallback to front.jpg or Front.jpg in the file's folder
-    QDir dir = QFileInfo(filePath).absoluteDir();
-    QStringList nameFilters = {"front.jpg", "Front.jpg"};
-    QStringList images = dir.entryList(nameFilters, QDir::Files);
-    if (!images.isEmpty()) {
-        QImage image(dir.filePath(images.first()));
+    if (!imagePath.isEmpty()) {
+        QImage image(imagePath);
         if (!image.isNull()) {
             albumArtLabel->setPixmap(QPixmap::fromImage(image).scaled(100, 100, Qt::KeepAspectRatio));
+            qDebug() << "updateAlbumArt took" << timer.elapsed() << "ms, loaded" << imagePath;
             return;
+        } else {
+            qDebug() << "updateAlbumArt took" << timer.elapsed() << "ms, failed to load" << imagePath;
         }
+    } else {
+        qDebug() << "updateAlbumArt took" << timer.elapsed() << "ms, no front.jpg found in" << dir.path();
     }
 
     // No art found

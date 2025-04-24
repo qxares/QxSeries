@@ -30,6 +30,7 @@ private:
     void setupMenus();
     void setupCentralWidget();
     void updateAlbumArt();
+    void highlightCurrentTrack();
     QString getDisplayName(const QString &filePath, const QString &baseDir);
     ThemeBrick *themeBrick;
     InterlinkBrick *interlinkBrick;
@@ -42,6 +43,9 @@ private:
     QPushButton *stopButton;
     QPushButton *nextButton;
     QPushButton *prevButton;
+    QPushButton *shuffleButton;
+    QPushButton *clearButton;
+    QPushButton *repeatButton;
     QListWidget *playlistWidget;
     QLineEdit *urlBar;
     QMediaPlayer *player;
@@ -65,6 +69,7 @@ private slots:
     void openDirectory();
     void handleMediaError();
     void playlistSelectionChanged();
+    void playSelectedTrack();
     void toggleVisualizer();
     void updateSeekSlider(qint64 position);
     void updateDuration(qint64 duration);
