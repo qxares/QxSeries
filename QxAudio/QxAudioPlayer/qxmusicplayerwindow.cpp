@@ -8,6 +8,16 @@
 #include <QLineEdit>
 #include <QFileDialog>
 #include <QDirIterator>
+#include <QImage>
+#include <QPixmap>
+#include <QEvent>
+#include <QDir>
+#include <taglib/fileref.h>
+#include <taglib/tag.h>
+#include <taglib/tbytevector.h>
+#include <taglib/mpegfile.h>
+#include <taglib/id3v2tag.h>
+#include <taglib/attachedpictureframe.h>
 #include "mainwindowbrick.h"
 
 QxMusicPlayerWindow::QxMusicPlayerWindow(QWidget *parent) : QMainWindow(parent) {
@@ -27,17 +37,36 @@ QxMusicPlayerWindow::QxMusicPlayerWindow(QWidget *parent) : QMainWindow(parent) 
     player->setPlaylist(playlist);
     connect(player, static_cast<void(QMediaPlayer::*)(QMediaPlayer::Error)>(&QMediaPlayer::error),
             this, &QxMusicPlayerWindow::handleMediaError);
+    connect(player, &QMediaPlayer::positionChanged, this, &QxMusicPlayerWindow::updateSeekSlider);
+    connect(player, &QMediaPlayer::durationChanged, this, &QxMusicPlayerWindow::updateDuration);
+    connect(player, &QMediaPlayer::mediaChanged, this, &QxMusicPlayerWindow::updateAlbumArt);
+    connect(playlist, &QMediaPlaylist::currentIndexChanged, this, &QxMusicPlayerWindow::updateAlbumArt);
+    showingVisualizer = false;
     setupMenus();
     setupCentralWidget();
     qDebug() << "QxMusicPlayer main window initialized";
 }
 
+bool QxMusicPlayerWindow::eventFilter(QObject *obj, QEvent *event) {
+    if (obj == albumArtLabel && event->type() == QEvent::MouseButtonDblClick) {
+        toggleVisualizer();
+        return true;
+    }
+    return QMainWindow::eventFilter(obj, event);
+}
+
 void QxMusicPlayerWindow::initializeTheme(bool isDark) {
     themeBrick->toggleDarkTheme(isDark);
     darkThemeAction->setChecked(isDark);
-    // Apply theme to URL bar
     QPalette palette = qApp->palette();
     urlBar->setPalette(palette);
+    albumArtLabel->setPalette(palette);
+    visualizerWidget->setThemeColors(
+        isDark ? QColor("#00BFFF") : QColor("#FF4500"), // Neon blue (dark) or orange (light)
+        palette.color(QPalette::Window)
+    );
+    currentTimeLabel->setPalette(palette);
+    totalTimeLabel->setPalette(palette);
 }
 
 void QxMusicPlayerWindow::setupMenus() {
@@ -88,6 +117,33 @@ void QxMusicPlayerWindow::setupCentralWidget() {
     leftLayout->addWidget(prevButton);
     leftLayout->addStretch(); // Push buttons up
 
+    // Center: Album art/visualization + time bar
+    QVBoxLayout *centerLayout = new QVBoxLayout();
+    albumArtLabel = new QLabel(controls);
+    albumArtLabel->setFixedSize(100, 100);
+    albumArtLabel->setAlignment(Qt::AlignCenter);
+    albumArtLabel->setStyleSheet("background-color: gray; color: white;"); // Placeholder
+    albumArtLabel->setText("No Art");
+    albumArtLabel->installEventFilter(this);
+    visualizerWidget = new VisualizerWidget(controls);
+    visualizerWidget->hide();
+    connect(visualizerWidget, &VisualizerWidget::mouseDoubleClicked, this, &QxMusicPlayerWindow::toggleVisualizer);
+
+    // Time bar
+    seekSlider = new QSlider(Qt::Horizontal, controls);
+    seekSlider->setFixedWidth(200);
+    currentTimeLabel = new QLabel("0:00", controls);
+    totalTimeLabel = new QLabel("0:00", controls);
+    QHBoxLayout *timeLayout = new QHBoxLayout();
+    timeLayout->addWidget(currentTimeLabel);
+    timeLayout->addWidget(seekSlider);
+    timeLayout->addWidget(totalTimeLabel);
+
+    centerLayout->addWidget(albumArtLabel);
+    centerLayout->addWidget(visualizerWidget);
+    centerLayout->addLayout(timeLayout);
+    centerLayout->addStretch(); // Push content up
+
     // Right side: Stop, Next
     QVBoxLayout *rightLayout = new QVBoxLayout();
     stopButton = new QPushButton("Stop", controls);
@@ -99,164 +155,185 @@ void QxMusicPlayerWindow::setupCentralWidget() {
     rightLayout->addWidget(nextButton);
     rightLayout->addStretch(); // Push buttons up
 
+    // Combine layouts
     controlLayout->addLayout(leftLayout);
-    controlLayout->addStretch(); // Center layouts
+    controlLayout->addLayout(centerLayout);
     controlLayout->addLayout(rightLayout);
-    controls->setLayout(controlLayout);
+    mainLayout->addWidget(controls);
 
     // Playlist
     playlistWidget = new QListWidget(central);
-    connect(playlistWidget, &QListWidget::itemSelectionChanged, this, &QxMusicPlayerWindow::playlistSelectionChanged);
+    mainLayout->addWidget(playlistWidget);
 
-    mainLayout->addWidget(controls);
-    mainLayout->addWidget(playlistWidget, 1); // Stretch to fill space
-    central->setLayout(mainLayout);
     setCentralWidget(central);
 
-    // Connect buttons
+    // Connect buttons and slider
     connect(playPauseButton, &QPushButton::clicked, this, &QxMusicPlayerWindow::playPause);
     connect(stopButton, &QPushButton::clicked, this, &QxMusicPlayerWindow::stop);
     connect(nextButton, &QPushButton::clicked, this, &QxMusicPlayerWindow::next);
     connect(prevButton, &QPushButton::clicked, this, &QxMusicPlayerWindow::prev);
+    connect(seekSlider, &QSlider::sliderMoved, this, &QxMusicPlayerWindow::seekPosition);
+    connect(playlistWidget, &QListWidget::itemSelectionChanged, this, &QxMusicPlayerWindow::playlistSelectionChanged);
 }
 
 void QxMusicPlayerWindow::toggleDarkTheme() {
-    themeBrick->toggleDarkTheme(darkThemeAction->isChecked());
-    // Update URL bar palette
-    QPalette palette = qApp->palette();
-    urlBar->setPalette(palette);
+    bool isDark = darkThemeAction->isChecked();
+    initializeTheme(isDark);
 }
 
 void QxMusicPlayerWindow::handleWindowStateChange(bool minimized) {
     if (minimized) {
         showMinimized();
-        qDebug() << "QxMusicPlayer minimized via InterlinkBrick";
     } else {
-        if (windowState() & Qt::WindowMaximized) {
-            showMaximized();
-        } else {
-            showNormal();
-        }
-        raise(); // Ensure QxMusicPlayer stays above QxCentre
-        qDebug() << "QxMusicPlayer restored via InterlinkBrick";
+        showNormal();
     }
 }
 
 void QxMusicPlayerWindow::playPause() {
     if (player->state() == QMediaPlayer::PlayingState) {
         player->pause();
-        qDebug() << "Playback paused";
-    } else if (player->state() == QMediaPlayer::PausedState || player->state() == QMediaPlayer::StoppedState) {
+    } else {
         player->play();
-        qDebug() << "Playback started";
     }
 }
 
 void QxMusicPlayerWindow::stop() {
     player->stop();
-    qDebug() << "Playback stopped";
 }
 
 void QxMusicPlayerWindow::next() {
-    if (playlist->mediaCount() > 0) {
-        playlist->next();
-        qDebug() << "Next track";
-    }
+    playlist->next();
 }
 
 void QxMusicPlayerWindow::prev() {
-    if (playlist->mediaCount() > 0) {
-        playlist->previous();
-        qDebug() << "Previous track";
-    }
+    playlist->previous();
 }
 
 void QxMusicPlayerWindow::openFile() {
-    QFileDialog dialog(this, "Open Audio Files");
-    dialog.setFileMode(QFileDialog::ExistingFiles);
-    dialog.setNameFilter("Audio Files (*.mp3 *.flac *.ogg *.wav)");
-    dialog.setDirectory(QDir::homePath());
-    // Apply theme (global DontUseNativeDialogs handles Qt-native)
-    QPalette palette = qApp->palette();
-    dialog.setPalette(palette);
-    if (dialog.exec()) {
-        QStringList files = dialog.selectedFiles();
-        playlist->clear();
-        playlistWidget->clear();
-        for (const QString &file : files) {
-            playlist->addMedia(QUrl::fromLocalFile(file));
-            playlistWidget->addItem(QFileInfo(file).fileName());
-            qDebug() << "Added file to playlist:" << file;
-        }
-        if (!files.isEmpty()) {
-            playlist->setCurrentIndex(0);
-            if (player->state() != QMediaPlayer::PlayingState) {
-                player->play();
-                qDebug() << "Started playback after adding files";
-            }
-        }
-    }
-}
-
-void QxMusicPlayerWindow::openDirectory() {
-    QFileDialog dialog(this, "Open Directory");
-    dialog.setFileMode(QFileDialog::Directory);
-    dialog.setDirectory(QDir::homePath());
-    // Apply theme
-    QPalette palette = qApp->palette();
-    dialog.setPalette(palette);
-    if (dialog.exec()) {
-        QString dirPath = dialog.selectedFiles().first();
-        playlist->clear();
-        playlistWidget->clear();
-        QDirIterator it(dirPath, {"*.mp3", "*.flac", "*.ogg", "*.wav"}, QDir::Files, QDirIterator::Subdirectories);
-        while (it.hasNext()) {
-            QString file = it.next();
-            playlist->addMedia(QUrl::fromLocalFile(file));
-            playlistWidget->addItem(QFileInfo(file).fileName());
-            qDebug() << "Added file to playlist:" << file;
-        }
-        if (playlist->mediaCount() > 0) {
-            playlist->setCurrentIndex(0);
-            if (player->state() != QMediaPlayer::PlayingState) {
-                player->play();
-                qDebug() << "Started playback after adding directory";
-            }
-        }
+    QStringList files = QFileDialog::getOpenFileNames(this, "Open Audio Files", QDir::homePath(),
+                                                     "Audio Files (*.mp3 *.flac *.wav)");
+    for (const QString &file : files) {
+        playlist->addMedia(QUrl::fromLocalFile(file));
+        playlistWidget->addItem(file);
     }
 }
 
 void QxMusicPlayerWindow::openUrl() {
-    QString urlText = urlBar->text().trimmed();
-    if (!urlText.isEmpty()) {
-        QUrl url(urlText);
-        if (url.isValid() && (url.scheme() == "http" || url.scheme() == "https")) {
-            playlist->clear();
-            playlistWidget->clear();
-            playlist->addMedia(url);
-            playlistWidget->addItem(urlText);
-            player->setMedia(url);
-            player->play();
-            qDebug() << "Streaming URL:" << urlText;
-        } else {
-            qDebug() << "Invalid URL:" << urlText;
+    QString url = urlBar->text();
+    if (!url.isEmpty()) {
+        playlist->addMedia(QUrl(url));
+        playlistWidget->addItem(url);
+    }
+}
+
+void QxMusicPlayerWindow::openDirectory() {
+    QFileDialog dialog(this, "Open Audio Files", QDir::homePath());
+    dialog.setFileMode(QFileDialog::ExistingFiles);
+    dialog.setNameFilter("Audio Files (*.mp3 *.flac *.wav)");
+    QStringList files;
+    if (dialog.exec()) {
+        files = dialog.selectedFiles();
+    }
+    if (!files.isEmpty()) {
+        QString dir = QFileInfo(files.first()).absolutePath();
+        for (const QString &file : files) {
+            playlist->addMedia(QUrl::fromLocalFile(file));
+            playlistWidget->addItem(file);
+        }
+        // Scan subdirectories for additional audio files
+        QDirIterator it(dir, {"*.mp3", "*.flac", "*.wav"}, QDir::Files, QDirIterator::Subdirectories);
+        while (it.hasNext()) {
+            QString file = it.next();
+            if (!files.contains(file)) {
+                playlist->addMedia(QUrl::fromLocalFile(file));
+                playlistWidget->addItem(file);
+            }
         }
     }
 }
 
 void QxMusicPlayerWindow::handleMediaError() {
-    QString errorString = player->errorString();
-    qDebug() << "Media error:" << errorString;
+    qDebug() << "Media error:" << player->errorString();
 }
 
 void QxMusicPlayerWindow::playlistSelectionChanged() {
-    QList<QListWidgetItem*> selected = playlistWidget->selectedItems();
-    if (!selected.isEmpty()) {
-        int index = playlistWidget->row(selected.first());
+    int index = playlistWidget->currentRow();
+    if (index >= 0) {
         playlist->setCurrentIndex(index);
-        if (player->state() != QMediaPlayer::PlayingState) {
-            player->play();
-            qDebug() << "Started playback from playlist selection";
+    }
+}
+
+void QxMusicPlayerWindow::toggleVisualizer() {
+    showingVisualizer = !showingVisualizer;
+    if (showingVisualizer) {
+        albumArtLabel->hide();
+        visualizerWidget->show();
+    } else {
+        visualizerWidget->hide();
+        albumArtLabel->show();
+    }
+}
+
+void QxMusicPlayerWindow::updateSeekSlider(qint64 position) {
+    seekSlider->setMaximum(player->duration());
+    seekSlider->setValue(position);
+    int seconds = (position / 1000) % 60;
+    int minutes = (position / 60000);
+    currentTimeLabel->setText(QString("%1:%2").arg(minutes).arg(seconds, 2, 10, QChar('0')));
+}
+
+void QxMusicPlayerWindow::updateDuration(qint64 duration) {
+    int seconds = (duration / 1000) % 60;
+    int minutes = (duration / 60000);
+    totalTimeLabel->setText(QString("%1:%2").arg(minutes).arg(seconds, 2, 10, QChar('0')));
+}
+
+void QxMusicPlayerWindow::seekPosition(int value) {
+    player->setPosition(value);
+}
+
+void QxMusicPlayerWindow::updateAlbumArt() {
+    QMediaContent media = player->currentMedia();
+    QString filePath = media.request().url().toLocalFile();
+    if (filePath.isEmpty()) {
+        albumArtLabel->setText("No Art");
+        albumArtLabel->setPixmap(QPixmap());
+        return;
+    }
+
+    // Check ID3 tags for embedded album art
+    TagLib::FileRef file(filePath.toStdString().c_str());
+    if (!file.isNull() && file.tag()) {
+        TagLib::MPEG::File mpegFile(filePath.toStdString().c_str());
+        if (mpegFile.ID3v2Tag()) {
+            TagLib::ID3v2::Tag *tag = mpegFile.ID3v2Tag();
+            TagLib::ID3v2::FrameList frames = tag->frameList("APIC");
+            if (!frames.isEmpty()) {
+                TagLib::ID3v2::AttachedPictureFrame *picFrame =
+                    static_cast<TagLib::ID3v2::AttachedPictureFrame*>(frames.front());
+                QImage image;
+                image.loadFromData((const uchar*)picFrame->picture().data(), picFrame->picture().size());
+                if (!image.isNull()) {
+                    albumArtLabel->setPixmap(QPixmap::fromImage(image).scaled(100, 100, Qt::KeepAspectRatio));
+                    return;
+                }
+            }
         }
     }
+
+    // Fallback to front.jpg or Front.jpg in the file's folder
+    QDir dir = QFileInfo(filePath).absoluteDir();
+    QStringList nameFilters = {"front.jpg", "Front.jpg"};
+    QStringList images = dir.entryList(nameFilters, QDir::Files);
+    if (!images.isEmpty()) {
+        QImage image(dir.filePath(images.first()));
+        if (!image.isNull()) {
+            albumArtLabel->setPixmap(QPixmap::fromImage(image).scaled(100, 100, Qt::KeepAspectRatio));
+            return;
+        }
+    }
+
+    // No art found
+    albumArtLabel->setText("No Art");
+    albumArtLabel->setPixmap(QPixmap());
 }
