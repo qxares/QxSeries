@@ -209,12 +209,29 @@ void QxMusicPlayerWindow::prev() {
     playlist->previous();
 }
 
+QString QxMusicPlayerWindow::getDisplayName(const QString &filePath, const QString &baseDir) {
+    TagLib::FileRef file(filePath.toStdString().c_str());
+    if (!file.isNull() && file.tag()) {
+        QString artist = QString::fromStdString(file.tag()->artist().to8Bit(true));
+        QString album = QString::fromStdString(file.tag()->album().to8Bit(true));
+        QString title = QString::fromStdString(file.tag()->title().to8Bit(true));
+        if (!artist.isEmpty() && !album.isEmpty() && !title.isEmpty()) {
+            return QString("%1 - %2 - %3").arg(artist, album, title);
+        }
+    }
+    // Fallback to directory name and file name
+    QString dirName = baseDir.isEmpty() ? QFileInfo(filePath).absolutePath().section('/', -1) : baseDir.section('/', -1);
+    QString fileName = QFileInfo(filePath).fileName();
+    return QString("%1/%2").arg(dirName, fileName);
+}
+
 void QxMusicPlayerWindow::openFile() {
     QStringList files = QFileDialog::getOpenFileNames(this, "Open Audio Files", QDir::homePath(),
                                                      "Audio Files (*.mp3 *.flac *.wav)");
+    QString baseDir; // Empty for single file selection
     for (const QString &file : files) {
         playlist->addMedia(QUrl::fromLocalFile(file));
-        playlistWidget->addItem(file);
+        playlistWidget->addItem(getDisplayName(file, baseDir));
     }
 }
 
@@ -227,27 +244,13 @@ void QxMusicPlayerWindow::openUrl() {
 }
 
 void QxMusicPlayerWindow::openDirectory() {
-    QFileDialog dialog(this, "Open Audio Files", QDir::homePath());
-    dialog.setFileMode(QFileDialog::ExistingFiles);
-    dialog.setNameFilter("Audio Files (*.mp3 *.flac *.wav)");
-    QStringList files;
-    if (dialog.exec()) {
-        files = dialog.selectedFiles();
-    }
-    if (!files.isEmpty()) {
-        QString dir = QFileInfo(files.first()).absolutePath();
-        for (const QString &file : files) {
-            playlist->addMedia(QUrl::fromLocalFile(file));
-            playlistWidget->addItem(file);
-        }
-        // Scan subdirectories for additional audio files
+    QString dir = QFileDialog::getExistingDirectory(this, "Open Directory", QDir::homePath());
+    if (!dir.isEmpty()) {
         QDirIterator it(dir, {"*.mp3", "*.flac", "*.wav"}, QDir::Files, QDirIterator::Subdirectories);
         while (it.hasNext()) {
             QString file = it.next();
-            if (!files.contains(file)) {
-                playlist->addMedia(QUrl::fromLocalFile(file));
-                playlistWidget->addItem(file);
-            }
+            playlist->addMedia(QUrl::fromLocalFile(file));
+            playlistWidget->addItem(getDisplayName(file, dir));
         }
     }
 }

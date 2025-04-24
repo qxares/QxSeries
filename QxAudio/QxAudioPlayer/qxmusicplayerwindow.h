@@ -6,8 +6,11 @@
 #include <QMediaPlaylist>
 #include <QLineEdit>
 #include <QFileDialog>
+#include <QLabel>
+#include <QSlider>
 #include "themebrick.h"
 #include "interlinkbrick.h"
+#include "visualizerwidget.h"
 
 class QAction;
 class QMenu;
@@ -20,9 +23,14 @@ public:
     explicit QxMusicPlayerWindow(QWidget *parent = nullptr);
     void initializeTheme(bool isDark);
 
+protected:
+    bool eventFilter(QObject *obj, QEvent *event) override;
+
 private:
     void setupMenus();
     void setupCentralWidget();
+    void updateAlbumArt();
+    QString getDisplayName(const QString &filePath, const QString &baseDir);
     ThemeBrick *themeBrick;
     InterlinkBrick *interlinkBrick;
     QMenu *fileMenu;
@@ -38,6 +46,12 @@ private:
     QLineEdit *urlBar;
     QMediaPlayer *player;
     QMediaPlaylist *playlist;
+    QLabel *albumArtLabel;
+    VisualizerWidget *visualizerWidget;
+    bool showingVisualizer;
+    QSlider *seekSlider;
+    QLabel *currentTimeLabel;
+    QLabel *totalTimeLabel;
 
 private slots:
     void toggleDarkTheme();
@@ -51,6 +65,10 @@ private slots:
     void openDirectory();
     void handleMediaError();
     void playlistSelectionChanged();
+    void toggleVisualizer();
+    void updateSeekSlider(qint64 position);
+    void updateDuration(qint64 duration);
+    void seekPosition(int value);
 };
 
 #endif // QXMUSICPLAYERWINDOW_H
