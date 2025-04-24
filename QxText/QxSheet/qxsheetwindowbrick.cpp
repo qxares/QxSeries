@@ -8,11 +8,16 @@
 
 QxSheetWindowBrick::QxSheetWindowBrick(QWidget *parent) : QMainWindow(parent) {
     setWindowTitle("QxSheet");
-    setWindowFlags(Qt::Window | Qt::WindowStaysOnTopHint);
     setupMenus();
     setupCentralWidget();
-    if (MainWindowBrick *mainWindow = qobject_cast<MainWindowBrick*>(parent)) {
+    MainWindowBrick *mainWindow = qobject_cast<MainWindowBrick*>(parent);
+    if (mainWindow) {
         themeBrick = mainWindow->getThemeBrick();
+        interlinkBrick = mainWindow->getInterlinkBrick();
+        if (interlinkBrick) {
+            interlinkBrick->registerAppWindow(this);
+            connect(interlinkBrick, &InterlinkBrick::windowStateChanged, this, &QxSheetWindowBrick::handleWindowStateChange);
+        }
         connect(themeBrick, &ThemeBrick::themeChanged, this, &QxSheetWindowBrick::applyTheme);
         initializeTheme(themeBrick->isDarkTheme());
     }
@@ -170,4 +175,19 @@ void QxSheetWindowBrick::applyTheme(bool dark) {
     setPalette(palette);
     tableView->setPalette(palette);
     qDebug() << "QxSheet theme applied: " << (dark ? "dark" : "light");
+}
+
+void QxSheetWindowBrick::handleWindowStateChange(bool minimized) {
+    if (minimized) {
+        showMinimized();
+        qDebug() << "QxSheet minimized via InterlinkBrick";
+    } else {
+        if (windowState() & Qt::WindowMaximized) {
+            showMaximized();
+        } else {
+            showNormal();
+        }
+        raise(); // Ensure QxSheet stays above QxCentre
+        qDebug() << "QxSheet restored via InterlinkBrick";
+    }
 }
