@@ -7,6 +7,7 @@ SOURCES += \
     main.cpp \
     mainwindowbrick.cpp \
     themebrick.cpp \
+    windowmanagerbrick.cpp \
     ../QxText/QxWrite/qxwritewindowbrick.cpp \
     ../QxText/QxSheet/qxsheetwindowbrick.cpp \
     ../QxAudio/QxAudioPlayer/qxmusicplayerwindow.cpp
@@ -14,6 +15,7 @@ SOURCES += \
 HEADERS += \
     mainwindowbrick.h \
     themebrick.h \
+    windowmanagerbrick.h \
     ../QxText/QxWrite/qxwritewindowbrick.h \
     ../QxText/QxSheet/qxsheetwindowbrick.h \
     ../QxAudio/QxAudioPlayer/qxmusicplayerwindow.h

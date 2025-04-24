@@ -55,21 +55,25 @@ OBJECTS_DIR   = ./
 SOURCES       = main.cpp \
 		mainwindowbrick.cpp \
 		themebrick.cpp \
+		windowmanagerbrick.cpp \
 		../QxText/QxWrite/qxwritewindowbrick.cpp \
 		../QxText/QxSheet/qxsheetwindowbrick.cpp \
 		../QxAudio/QxAudioPlayer/qxmusicplayerwindow.cpp moc_mainwindowbrick.cpp \
 		moc_themebrick.cpp \
+		moc_windowmanagerbrick.cpp \
 		moc_qxwritewindowbrick.cpp \
 		moc_qxsheetwindowbrick.cpp \
 		moc_qxmusicplayerwindow.cpp
 OBJECTS       = main.o \
 		mainwindowbrick.o \
 		themebrick.o \
+		windowmanagerbrick.o \
 		qxwritewindowbrick.o \
 		qxsheetwindowbrick.o \
 		qxmusicplayerwindow.o \
 		moc_mainwindowbrick.o \
 		moc_themebrick.o \
+		moc_windowmanagerbrick.o \
 		moc_qxwritewindowbrick.o \
 		moc_qxsheetwindowbrick.o \
 		moc_qxmusicplayerwindow.o
@@ -153,11 +157,13 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
 		QxCentre.pro mainwindowbrick.h \
 		themebrick.h \
+		windowmanagerbrick.h \
 		../QxText/QxWrite/qxwritewindowbrick.h \
 		../QxText/QxSheet/qxsheetwindowbrick.h \
 		../QxAudio/QxAudioPlayer/qxmusicplayerwindow.h main.cpp \
 		mainwindowbrick.cpp \
 		themebrick.cpp \
+		windowmanagerbrick.cpp \
 		../QxText/QxWrite/qxwritewindowbrick.cpp \
 		../QxText/QxSheet/qxsheetwindowbrick.cpp \
 		../QxAudio/QxAudioPlayer/qxmusicplayerwindow.cpp
@@ -346,8 +352,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents mainwindowbrick.h themebrick.h ../QxText/QxWrite/qxwritewindowbrick.h ../QxText/QxSheet/qxsheetwindowbrick.h ../QxAudio/QxAudioPlayer/qxmusicplayerwindow.h $(DISTDIR)/
-	$(COPY_FILE) --parents main.cpp mainwindowbrick.cpp themebrick.cpp ../QxText/QxWrite/qxwritewindowbrick.cpp ../QxText/QxSheet/qxsheetwindowbrick.cpp ../QxAudio/QxAudioPlayer/qxmusicplayerwindow.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents mainwindowbrick.h themebrick.h windowmanagerbrick.h ../QxText/QxWrite/qxwritewindowbrick.h ../QxText/QxSheet/qxsheetwindowbrick.h ../QxAudio/QxAudioPlayer/qxmusicplayerwindow.h $(DISTDIR)/
+	$(COPY_FILE) --parents main.cpp mainwindowbrick.cpp themebrick.cpp windowmanagerbrick.cpp ../QxText/QxWrite/qxwritewindowbrick.cpp ../QxText/QxSheet/qxsheetwindowbrick.cpp ../QxAudio/QxAudioPlayer/qxmusicplayerwindow.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -378,9 +384,9 @@ compiler_moc_predefs_clean:
 moc_predefs.h: /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 	g++ -pipe -g -Wall -Wextra -dM -E -o moc_predefs.h /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_mainwindowbrick.cpp moc_themebrick.cpp moc_qxwritewindowbrick.cpp moc_qxsheetwindowbrick.cpp moc_qxmusicplayerwindow.cpp
+compiler_moc_header_make_all: moc_mainwindowbrick.cpp moc_themebrick.cpp moc_windowmanagerbrick.cpp moc_qxwritewindowbrick.cpp moc_qxsheetwindowbrick.cpp moc_qxmusicplayerwindow.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_mainwindowbrick.cpp moc_themebrick.cpp moc_qxwritewindowbrick.cpp moc_qxsheetwindowbrick.cpp moc_qxmusicplayerwindow.cpp
+	-$(DEL_FILE) moc_mainwindowbrick.cpp moc_themebrick.cpp moc_windowmanagerbrick.cpp moc_qxwritewindowbrick.cpp moc_qxsheetwindowbrick.cpp moc_qxmusicplayerwindow.cpp
 moc_mainwindowbrick.cpp: mainwindowbrick.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
@@ -390,6 +396,11 @@ moc_themebrick.cpp: themebrick.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
 	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/ares/QxCentre/QxCentre/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/ares/QxCentre/QxCentre -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/13 -I/usr/include/x86_64-linux-gnu/c++/13 -I/usr/include/c++/13/backward -I/usr/lib/gcc/x86_64-linux-gnu/13/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include themebrick.h -o moc_themebrick.cpp
+
+moc_windowmanagerbrick.cpp: windowmanagerbrick.h \
+		moc_predefs.h \
+		/usr/lib/qt5/bin/moc
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/ares/QxCentre/QxCentre/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/ares/QxCentre/QxCentre -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/13 -I/usr/include/x86_64-linux-gnu/c++/13 -I/usr/include/c++/13/backward -I/usr/lib/gcc/x86_64-linux-gnu/13/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include windowmanagerbrick.h -o moc_windowmanagerbrick.cpp
 
 moc_qxwritewindowbrick.cpp: ../QxText/QxWrite/qxwritewindowbrick.h \
 		themebrick.h \
@@ -405,6 +416,7 @@ moc_qxsheetwindowbrick.cpp: ../QxText/QxSheet/qxsheetwindowbrick.h \
 
 moc_qxmusicplayerwindow.cpp: ../QxAudio/QxAudioPlayer/qxmusicplayerwindow.h \
 		themebrick.h \
+		windowmanagerbrick.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
 	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/ares/QxCentre/QxCentre/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/ares/QxCentre/QxCentre -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/13 -I/usr/include/x86_64-linux-gnu/c++/13 -I/usr/include/c++/13/backward -I/usr/lib/gcc/x86_64-linux-gnu/13/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../QxAudio/QxAudioPlayer/qxmusicplayerwindow.h -o moc_qxmusicplayerwindow.cpp
@@ -429,6 +441,7 @@ main.o: main.cpp mainwindowbrick.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
 
 mainwindowbrick.o: mainwindowbrick.cpp mainwindowbrick.h \
+		windowmanagerbrick.h \
 		../QxText/QxWrite/qxwritewindowbrick.h \
 		themebrick.h \
 		../QxText/QxSheet/qxsheetwindowbrick.h \
@@ -437,6 +450,9 @@ mainwindowbrick.o: mainwindowbrick.cpp mainwindowbrick.h \
 
 themebrick.o: themebrick.cpp themebrick.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o themebrick.o themebrick.cpp
+
+windowmanagerbrick.o: windowmanagerbrick.cpp windowmanagerbrick.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o windowmanagerbrick.o windowmanagerbrick.cpp
 
 qxwritewindowbrick.o: ../QxText/QxWrite/qxwritewindowbrick.cpp ../QxText/QxWrite/qxwritewindowbrick.h \
 		themebrick.h \
@@ -449,7 +465,9 @@ qxsheetwindowbrick.o: ../QxText/QxSheet/qxsheetwindowbrick.cpp ../QxText/QxSheet
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qxsheetwindowbrick.o ../QxText/QxSheet/qxsheetwindowbrick.cpp
 
 qxmusicplayerwindow.o: ../QxAudio/QxAudioPlayer/qxmusicplayerwindow.cpp ../QxAudio/QxAudioPlayer/qxmusicplayerwindow.h \
-		themebrick.h
+		themebrick.h \
+		windowmanagerbrick.h \
+		mainwindowbrick.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qxmusicplayerwindow.o ../QxAudio/QxAudioPlayer/qxmusicplayerwindow.cpp
 
 moc_mainwindowbrick.o: moc_mainwindowbrick.cpp 
@@ -457,6 +475,9 @@ moc_mainwindowbrick.o: moc_mainwindowbrick.cpp
 
 moc_themebrick.o: moc_themebrick.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_themebrick.o moc_themebrick.cpp
+
+moc_windowmanagerbrick.o: moc_windowmanagerbrick.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_windowmanagerbrick.o moc_windowmanagerbrick.cpp
 
 moc_qxwritewindowbrick.o: moc_qxwritewindowbrick.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_qxwritewindowbrick.o moc_qxwritewindowbrick.cpp

@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "themebrick.h"
+#include "windowmanagerbrick.h"
 
 class QAction;
 class QMenu;
@@ -19,6 +20,7 @@ private:
     void setupMenus();
     void setupCentralWidget();
     ThemeBrick *themeBrick;
+    WindowManagerBrick *windowManagerBrick;
     QMenu *fileMenu;
     QAction *darkThemeAction;
     QPushButton *playPauseButton;

@@ -5,11 +5,17 @@
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QListWidget>
+#include "mainwindowbrick.h"
 
 QxMusicPlayerWindow::QxMusicPlayerWindow(QWidget *parent) : QMainWindow(parent) {
     setWindowTitle("QxMusicPlayer");
     resize(400, 600);
     themeBrick = new ThemeBrick(qApp, this);
+    MainWindowBrick *mainWindow = qobject_cast<MainWindowBrick*>(parent);
+    if (mainWindow) {
+        windowManagerBrick = new WindowManagerBrick(this, this);
+        windowManagerBrick->registerAppWindow(this);
+    }
     setupMenus();
     setupCentralWidget();
     qDebug() << "QxMusicPlayer main window initialized";

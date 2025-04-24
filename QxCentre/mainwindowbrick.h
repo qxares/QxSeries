@@ -5,6 +5,7 @@
 #include <QApplication>
 
 class ThemeBrick;
+class WindowManagerBrick;
 class QxWriteWindowBrick;
 class QxSheetWindowBrick;
 class QxMusicPlayerWindow;
@@ -25,6 +26,7 @@ private:
     void setupMenus();
     void setupCentralWidget();
     ThemeBrick *themeBrick;
+    WindowManagerBrick *windowManagerBrick;
     QMenu *fileMenu;
     QMenu *appsMenu;
     QMenu *helpMenu;
