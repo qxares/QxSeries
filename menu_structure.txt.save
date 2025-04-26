@@ -1,3 +1,4 @@
+---
 File
   New Database
   Open Database
@@ -10,7 +11,7 @@ File
   Exit
 Apps
   QxAudio
-    QxAudio player
+    QxMusicPlayer
     Music
     Books
     Recordings
@@ -20,8 +21,6 @@ Apps
     Series
     Recordings
   QxText
-    QxWrite
-    QxSheet
     QxNotes
   QxGraphics
     QxDraw
@@ -30,7 +29,6 @@ Apps
   Tools
     QxCalc
     QxConvert
-    QxDatabase
 Help
   About QxCentre
   Documentation

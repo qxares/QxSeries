@@ -4,13 +4,13 @@
 #include <QMainWindow>
 #include <QMediaPlayer>
 #include <QMediaPlaylist>
-#include <QLineEdit>
 #include <QFileDialog>
 #include <QLabel>
 #include <QSlider>
-#include "themebrick.h"
-#include "interlinkbrick.h"
-#include "visualizerwidget.h"
+#include <QHash>
+#include <QSettings>
+#include "../../QxCentre/themebrick.h"
+#include "../../QxCentre/interlinkbrick.h"
 
 class QAction;
 class QMenu;
@@ -22,22 +22,18 @@ class QxMusicPlayerWindow : public QMainWindow {
 public:
     explicit QxMusicPlayerWindow(QWidget *parent = nullptr);
     void initializeTheme(bool isDark);
-
 protected:
-    bool eventFilter(QObject *obj, QEvent *event) override;
-
+    void resizeEvent(QResizeEvent *event) override;
 private:
     void setupMenus();
     void setupCentralWidget();
-    void updateAlbumArt();
     void highlightCurrentTrack();
-    QString getDisplayName(const QString &filePath, const QString &baseDir);
+    QString getDisplayName(const QString &filePath);
     ThemeBrick *themeBrick;
     InterlinkBrick *interlinkBrick;
     QMenu *fileMenu;
     QAction *darkThemeAction;
     QAction *openFileAction;
-    QAction *openUrlAction;
     QAction *openDirectoryAction;
     QPushButton *playPauseButton;
     QPushButton *stopButton;
@@ -46,17 +42,21 @@ private:
     QPushButton *shuffleButton;
     QPushButton *clearButton;
     QPushButton *repeatButton;
+    QPushButton *volumeUpButton;
+    QPushButton *muteButton;
+    QPushButton *volumeDownButton;
     QListWidget *playlistWidget;
-    QLineEdit *urlBar;
     QMediaPlayer *player;
     QMediaPlaylist *playlist;
-    QLabel *albumArtLabel;
-    VisualizerWidget *visualizerWidget;
-    bool showingVisualizer;
     QSlider *seekSlider;
     QLabel *currentTimeLabel;
     QLabel *totalTimeLabel;
-
+    QHash<QString, QStringList> fileCache;
+    QSettings *settings;
+    QString currentDirPath;
+    bool isShuffled;
+    QMediaPlaylist::PlaybackMode repeatMode;
+    QStringList originalPlaylistOrder;
 private slots:
     void toggleDarkTheme();
     void handleWindowStateChange(bool minimized);
@@ -64,13 +64,17 @@ private slots:
     void stop();
     void next();
     void prev();
+    void toggleShuffle(bool checked);
+    void clearPlaylist();
+    void toggleRepeat();
+    void volumeUp();
+    void toggleMute();
+    void volumeDown();
     void openFile();
-    void openUrl();
     void openDirectory();
     void handleMediaError();
     void playlistSelectionChanged();
     void playSelectedTrack();
-    void toggleVisualizer();
     void updateSeekSlider(qint64 position);
     void updateDuration(qint64 duration);
     void seekPosition(int value);

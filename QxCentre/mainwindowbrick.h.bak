@@ -2,12 +2,15 @@
 #define MAINWINDOWBRICK_H
 
 #include <QMainWindow>
-#include <QAction>
-#include "themebrick.h"
 #include "interlinkbrick.h"
+#include "themebrick.h"
+
+class QAction;
+class QMenu;
 
 class MainWindowBrick : public QMainWindow {
     Q_OBJECT
+
 public:
     explicit MainWindowBrick(QWidget *parent = nullptr);
     InterlinkBrick* getInterlinkBrick();
@@ -15,21 +18,16 @@ public:
 private:
     void setupMenus();
     void setupCentralWidget();
+    ThemeBrick *themeBrick;
+    InterlinkBrick *interlinkBrick;
     QMenu *fileMenu;
     QMenu *appsMenu;
     QMenu *helpMenu;
     QAction *darkThemeAction;
     QAction *qxMusicPlayerAction;
-    QAction *qxNotesAction;
-    QAction *qxWriteAction;
-    QAction *qxSheetAction;
-    ThemeBrick *themeBrick;
-    InterlinkBrick *interlinkBrick;
 
-public slots:
+private slots:
     void openQxMusicPlayer();
-    void openQxWrite();
-    void openQxSheet();
     void toggleDarkTheme();
 };
 
