@@ -2,31 +2,18 @@ QApplication initialized
 ThemeBrick initialized with dark theme
 InterlinkBrick initialized
 DatabaseBrick initialized
-No theme found, returning default: dark
+Loaded theme: "dark"
 Toggling theme to  dark
-No window position found for "QxCentre"
+Loaded window position for "QxCentre" : x= 0 , y= 0 , width= 1920 , height= 1011
 QxCentre main window initialized
-Saved window position for "QxCentre" : x= 0 , y= 280 , width= 1050 , height= 800
-Saved window position for "QxCentre" : x= 0 , y= 280 , width= 1050 , height= 800
-Saved window position for "QxCentre" : x= 0 , y= 211 , width= 1050 , height= 800
-Saved window position for "QxCentre" : x= 0 , y= 211 , width= 1920 , height= 1011
 Saved window position for "QxCentre" : x= 0 , y= 0 , width= 1920 , height= 1011
-Starting raiseGroup, QxCentre visible: true
-Grouped QxCentre behind all apps
-Launch requested for:  "Check for Updates"
-Starting raiseGroup, QxCentre visible: true
-Grouped QxCentre behind all apps
-Toggling theme to  light
-Toggling theme to  light
-Saved theme: "light"
-Saved theme: "light"
-Toggling theme to  dark
-Toggling theme to  dark
-Saved theme: "dark"
-Saved theme: "dark"
+Saved window position for "QxCentre" : x= 0 , y= 0 , width= 1920 , height= 1011
+Saved window position for "QxCentre" : x= 0 , y= 0 , width= 1920 , height= 1011
+Launch requested for:  "QxNotes"
+QxNotes process finished with exit code: 0 , status: QProcess::NormalExit
 Starting raiseGroup, QxCentre visible: true
 Grouped QxCentre behind all apps
 handleExit triggered
-QxCentre closeEvent triggered, openAppCount: 0
-QxCentre closeEvent accepted
+QxCentre closeEvent triggered, openAppCount: 1
+Blocking QxCentre closure due to open apps
 QApplication about to quit

@@ -1,0 +1,1 @@
+/home/ares/QxCentre/QxCentre/databasebrick.cpp

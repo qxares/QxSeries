@@ -8,6 +8,8 @@
 #include <QPushButton>
 #include <QMoveEvent>
 #include <QResizeEvent>
+#include <QProcess>
+#include <QFile>
 
 MainWindowBrick::MainWindowBrick(QWidget *parent) : QMainWindow(parent) {
     themeBrick = new ThemeBrick(qApp, this);
@@ -25,12 +27,10 @@ MainWindowBrick::MainWindowBrick(QWidget *parent) : QMainWindow(parent) {
     setMinimumSize(600, 400);
     setAttribute(Qt::WA_QuitOnClose, false);
 
-    // Load theme
     QString theme = databaseBrick->loadTheme();
     themeBrick->toggleDarkTheme(theme == "dark");
     setupTaskbar();
 
-    // Load window position
     int x, y, width, height;
     if (databaseBrick->loadWindowPosition("QxCentre", x, y, width, height)) {
         setGeometry(x, y, width, height);
@@ -79,7 +79,6 @@ void MainWindowBrick::setupTaskbar() {
     taskbar->setStyleSheet("QToolBar { spacing: 10px; padding: 5px; } QPushButton { min-width: 80px; min-height: 30px; }");
     taskbarDock->setWidget(taskbar);
 
-    // QxCentre Menu
     qxCentreMenu = new QMenu("QxCentre", taskbar);
     QMenu *preferencesMenu = qxCentreMenu->addMenu("Preferences");
     QMenu *themesMenu = preferencesMenu->addMenu("Themes");
@@ -100,7 +99,6 @@ void MainWindowBrick::setupTaskbar() {
     qxCentreButton->setMenu(qxCentreMenu);
     taskbar->addWidget(qxCentreButton);
 
-    // QxApps Menu
     qxAppsMenu = new QMenu("QxApps", taskbar);
     QMenu *qxDocumentsMenu = qxAppsMenu->addMenu("QxDocuments");
     qxDocumentsMenu->addAction("QxWrite");
@@ -132,7 +130,6 @@ void MainWindowBrick::setupTaskbar() {
     qxAppsButton->setMenu(qxAppsMenu);
     taskbar->addWidget(qxAppsButton);
 
-    // Help Menu
     helpMenu = new QMenu("Help", taskbar);
     helpMenu->addAction("About QxCentre");
     helpMenu->addAction("Documentation");
@@ -275,8 +272,32 @@ void MainWindowBrick::handleExit() {
 void MainWindowBrick::launchApp(QAction *action) {
     QString appName = action->text();
     qDebug() << "Launch requested for: " << appName;
-    QMessageBox::information(this, "App Status", "App is in development, wait for it 😺");
-    interlinkBrick->launchAppWindow(appName);
+    if (appName == "QxNotes") {
+        QProcess *process = new QProcess(this);
+        QString program = "/home/ares/QxCentre/QxSeries/QxDocuments/QxNotes/QxNotes";
+        if (!QFile::exists(program)) {
+            qDebug() << "QxNotes executable not found at:" << program;
+            QMessageBox::warning(this, "Error", "QxNotes executable not found");
+            delete process;
+            return;
+        }
+        process->start(program, QStringList());
+        if (!process->waitForStarted()) {
+            qDebug() << "Failed to start QxNotes:" << process->errorString();
+            QMessageBox::warning(this, "Error", "Failed to launch QxNotes: " + process->errorString());
+            delete process;
+            return;
+        }
+        connect(process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
+                this, [=](int exitCode, QProcess::ExitStatus exitStatus) {
+            qDebug() << "QxNotes process finished with exit code:" << exitCode << ", status:" << exitStatus;
+            delete process;
+        });
+        openAppCount++;
+    } else {
+        QMessageBox::information(this, "App Status", "App is in development, wait for it 😺");
+        interlinkBrick->launchAppWindow(appName);
+    }
 }
 
 void MainWindowBrick::activateWindow(int index) {
