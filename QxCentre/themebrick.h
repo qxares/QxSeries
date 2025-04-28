@@ -8,7 +8,9 @@ class ThemeBrick : public QObject {
     Q_OBJECT
 public:
     ThemeBrick(QApplication *app, QObject *parent = nullptr);
+    ~ThemeBrick(); // Added
     bool isDarkTheme() const { return isDark; }
+    void disconnectThemeSignals(QObject *receiver);
 
 public slots:
     void toggleDarkTheme(bool checked);

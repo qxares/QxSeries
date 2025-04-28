@@ -1,0 +1,8 @@
+QApplication initialized
+ThemeBrick initialized
+InterlinkBrick initialized
+QxCentre main window initialized
+handleExit triggered
+QxCentre closeEvent triggered, openAppCount: 0
+QxCentre closeEvent accepted
+QApplication about to quit

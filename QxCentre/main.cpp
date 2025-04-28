@@ -1,10 +1,18 @@
 #include <QApplication>
+#include <QDebug>
 #include "mainwindowbrick.h"
 
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
-    app.setAttribute(Qt::AA_DontUseNativeDialogs); // Force Qt-native dialogs
-    MainWindowBrick window;
-    window.show();
+    qDebug() << "QApplication initialized";
+
+    MainWindowBrick *mainWindow = new MainWindowBrick;
+    mainWindow->show();
+
+    // Connect aboutToQuit for shutdown logging
+    QObject::connect(&app, &QApplication::aboutToQuit, []() {
+        qDebug() << "QApplication about to quit";
+    });
+
     return app.exec();
 }

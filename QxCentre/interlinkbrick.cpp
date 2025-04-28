@@ -1,26 +1,55 @@
 #include "interlinkbrick.h"
+#include "mainwindowbrick.h"
 #include <QDebug>
 
-InterlinkBrick::InterlinkBrick(QWidget *parentWidget, QObject *parent)
-    : QObject(parent), parentWidget(parentWidget) {
+InterlinkBrick::InterlinkBrick(MainWindowBrick *mainWindow, QObject *parent)
+    : QObject(parent), mainWindow(mainWindow) {
     qDebug() << "InterlinkBrick initialized";
 }
 
-void InterlinkBrick::launchAppWindow(QWidget *window) {
-    if (!appWindows.contains(window)) {
-        appWindows.append(window);
-        qDebug() << "Registered app window: " << window->windowTitle();
-    }
-    window->show();
-    raiseAppWindows(); // Raise all child apps to keep them grouped
-    qDebug() << "Launched app window: " << window->windowTitle();
+InterlinkBrick::~InterlinkBrick() {
+    clearAppWindows();
+    qDebug() << "InterlinkBrick destroyed";
 }
 
-void InterlinkBrick::raiseAppWindows() {
-    parentWidget->lower(); // Ensure QxCentre stays behind
-    for (QWidget *window : appWindows) {
-        if (window && !window->isHidden()) {
-            window->raise(); // Raise each child app
+void InterlinkBrick::registerAppWindow(const QString &name, QWidget *window) {
+    appWindows.insert(name, window);
+    qDebug() << "Registered app window: " << name;
+}
+
+void InterlinkBrick::unregisterAppWindow(const QString &name) {
+    if (appWindows.contains(name)) {
+        if (appWindows[name]) {
+            disconnect(appWindows[name], nullptr, nullptr, nullptr);
         }
+        appWindows.remove(name);
+        qDebug() << "Unregistered app window: " << name;
+    }
+}
+
+void InterlinkBrick::clearAppWindows() {
+    for (auto it = appWindows.constBegin(); it != appWindows.constEnd(); ++it) {
+        if (it.value()) {
+            disconnect(it.value(), nullptr, nullptr, nullptr);
+        }
+    }
+    appWindows.clear();
+    qDebug() << "Cleared all app windows";
+}
+
+void InterlinkBrick::launchAppWindow(const QString &name) {
+    if (appWindows.contains(name) && appWindows[name]) {
+        appWindows[name]->show();
+        qDebug() << "Launched app window: " << name;
+    }
+}
+
+QMap<QString, QPointer<QWidget>> InterlinkBrick::getAppWindows() const {
+    return appWindows;
+}
+
+void InterlinkBrick::raiseGroup() {
+    if (mainWindow) {
+        mainWindow->raiseGroup();
     }
 }

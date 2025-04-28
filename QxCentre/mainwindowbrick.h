@@ -1,36 +1,42 @@
 #ifndef MAINWINDOWBRICK_H
 #define MAINWINDOWBRICK_H
 
-#include <QMainWindow>
-#include <QAction>
+#include <QWidget>
+#include <QMenu>
+#include <QMenuBar>
 #include "themebrick.h"
 #include "interlinkbrick.h"
 
-class MainWindowBrick : public QMainWindow {
+class MainWindowBrick : public QWidget {
     Q_OBJECT
 public:
     explicit MainWindowBrick(QWidget *parent = nullptr);
+    ~MainWindowBrick();
     InterlinkBrick* getInterlinkBrick();
+    ThemeBrick* getThemeBrick();
+
+public slots:
+    void raiseGroup();
 
 private:
     void setupMenus();
-    void setupCentralWidget();
+    void moveToBottomLeft();
+    void closeEvent(QCloseEvent *event) override;
+    void mousePressEvent(QMouseEvent *event) override;
     QMenu *fileMenu;
     QMenu *appsMenu;
     QMenu *helpMenu;
     QAction *darkThemeAction;
-    QAction *qxMusicPlayerAction;
-    QAction *qxNotesAction;
-    QAction *qxWriteAction;
-    QAction *qxSheetAction;
+    QAction *exitAction;
     ThemeBrick *themeBrick;
     InterlinkBrick *interlinkBrick;
+    QMenuBar *menuBarWidget;
+    bool isRaisingGroup;
+    int openAppCount;
 
-public slots:
-    void openQxMusicPlayer();
-    void openQxWrite();
-    void openQxSheet();
-    void toggleDarkTheme();
+private slots:
+    void handleAppWindowDestroyed(QObject *obj);
+    void handleExit();
 };
 
 #endif // MAINWINDOWBRICK_H

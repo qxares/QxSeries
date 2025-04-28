@@ -1,8 +1,15 @@
 #include "themebrick.h"
 #include <QStyle>
 #include <QPalette>
+#include <QDebug>
 
 ThemeBrick::ThemeBrick(QApplication *app, QObject *parent) : QObject(parent), application(app) {
+    qDebug() << "ThemeBrick initialized";
+}
+
+ThemeBrick::~ThemeBrick() {
+    disconnect(this, nullptr, nullptr, nullptr);
+    qDebug() << "ThemeBrick destroyed";
 }
 
 void ThemeBrick::applyDarkTheme() {
@@ -19,7 +26,7 @@ void ThemeBrick::applyDarkTheme() {
     application->setPalette(darkPalette);
 
     application->setStyleSheet(
-        "QMainWindow, QMdiSubWindow {"
+        "QWidget, QMdiSubWindow {"
         "    background-color: #272822;"
         "    color: #F8F8F2;"
         "}"
@@ -37,6 +44,7 @@ void ThemeBrick::applyDarkTheme() {
 
 void ThemeBrick::toggleDarkTheme(bool checked) {
     isDark = checked;
+    qDebug() << "Toggling theme to " << (checked ? "dark" : "light");
     if (checked) {
         applyDarkTheme();
     } else {
@@ -55,4 +63,11 @@ void ThemeBrick::toggleDarkTheme(bool checked) {
         emit themeChanged(false);
     }
     application->setStyle("Fusion");
+}
+
+void ThemeBrick::disconnectThemeSignals(QObject *receiver) {
+    if (receiver) {
+        disconnect(this, &ThemeBrick::themeChanged, receiver, nullptr);
+        qDebug() << "Disconnected themeChanged signals for receiver";
+    }
 }

@@ -1,3 +1,3 @@
 TEMPLATE = subdirs
-SUBDIRS += QxConversion/QxConversion.pro QxWriteProject/QxWrite.pro
-QxWriteProject.depends = QxConversion
+SUBDIRS += QxCentre
+QxCentre.file = QxCentre/qxcentre.pro

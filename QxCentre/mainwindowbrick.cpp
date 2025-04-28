@@ -1,23 +1,58 @@
 #include "mainwindowbrick.h"
-#include <QMenuBar>
 #include <QDebug>
-#include "../QxAudio/QxAudioPlayer/qxmusicplayerwindow.h"
-#include "../QxDocument/QxWrite/qxwritewindowbrick.h"
-#include "../QxDocument/QxSheet/qxsheetwindowbrick.h"
+#include <QMenu>
+#include <QAction>
+#include <QApplication>
+#include <QScreen>
+#include <QCloseEvent>
+#include <QMouseEvent>
+#include <QVBoxLayout>
 
-MainWindowBrick::MainWindowBrick(QWidget *parent) : QMainWindow(parent) {
+MainWindowBrick::MainWindowBrick(QWidget *parent) : QWidget(parent) {
+    themeBrick = new ThemeBrick(qApp, this);
+    interlinkBrick = new InterlinkBrick(this);
+    isRaisingGroup = false;
+    openAppCount = 0;
+    
+    setWindowFlags(Qt::Window | Qt::WindowStaysOnBottomHint);
     setWindowTitle("QxCentre");
     resize(1050, 800);
-    themeBrick = new ThemeBrick(qApp, this);
-    interlinkBrick = new InterlinkBrick(this, this);
+    setMinimumSize(600, 400);
+    setAttribute(Qt::WA_QuitOnClose, false);
+
+    menuBarWidget = new QMenuBar(this);
+    QVBoxLayout *layout = new QVBoxLayout(this);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
+    layout->addWidget(menuBarWidget);
+    setLayout(layout);
+
     setupMenus();
-    setupCentralWidget();
-    lower(); // Ensure QxCentre stays behind child apps
+    moveToBottomLeft();
     qDebug() << "QxCentre main window initialized";
 }
 
+MainWindowBrick::~MainWindowBrick() {
+    if (menuBarWidget) {
+        delete menuBarWidget;
+        menuBarWidget = nullptr;
+        qDebug() << "Deleted menuBarWidget in destructor";
+    }
+    if (themeBrick) {
+        delete themeBrick;
+        themeBrick = nullptr;
+        qDebug() << "Deleted themeBrick in destructor";
+    }
+    if (interlinkBrick) {
+        delete interlinkBrick;
+        interlinkBrick = nullptr;
+        qDebug() << "Deleted interlinkBrick in destructor";
+    }
+    qDebug() << "MainWindowBrick destroyed";
+}
+
 void MainWindowBrick::setupMenus() {
-    fileMenu = menuBar()->addMenu("&File");
+    fileMenu = menuBarWidget->addMenu("&File");
     fileMenu->addAction("New Database");
     fileMenu->addAction("Open Database");
     fileMenu->addAction("Save Database");
@@ -25,86 +60,124 @@ void MainWindowBrick::setupMenus() {
     QMenu *preferencesMenu = fileMenu->addMenu("Preferences");
     QMenu *themesMenu = preferencesMenu->addMenu("Themes");
     darkThemeAction = themesMenu->addAction("Dark");
-    darkThemeAction->setCheckable(true);
-    darkThemeAction->setChecked(themeBrick->isDarkTheme());
+    QAction *lightThemeAction = themesMenu->addAction("Light");
     fileMenu->addSeparator();
-    fileMenu->addAction("Exit");
+    exitAction = fileMenu->addAction("Exit");
 
-    appsMenu = menuBar()->addMenu("&Apps");
+    appsMenu = menuBarWidget->addMenu("&Apps");
     QMenu *audioMenu = appsMenu->addMenu("QxAudio");
-    qxMusicPlayerAction = audioMenu->addAction("QxMusicPlayer");
     audioMenu->addAction("Music");
     audioMenu->addAction("Books");
     audioMenu->addAction("Recordings");
-
     QMenu *videoMenu = appsMenu->addMenu("QxVideo");
     videoMenu->addAction("QxVideo player");
     videoMenu->addAction("Movies");
     videoMenu->addAction("Series");
     videoMenu->addAction("Recordings");
-
-    QMenu *textMenu = appsMenu->addMenu("QxDocument");
-    qxNotesAction = textMenu->addAction("QxNotes");
-    qxWriteAction = textMenu->addAction("QxWrite");
-    qxSheetAction = textMenu->addAction("QxSheet");
-
+    QMenu *documentMenu = appsMenu->addMenu("QxDocument");
+    documentMenu->addAction("QxNotes");
+    documentMenu->addAction("QxWrite");
+    documentMenu->addAction("QxSheet");
     QMenu *graphicsMenu = appsMenu->addMenu("QxGraphics");
     graphicsMenu->addAction("QxDraw");
     graphicsMenu->addAction("Images");
     graphicsMenu->addAction("Photos");
-
-    QMenu *toolsMenu = appsMenu->addMenu("Tools");
+    QMenu *toolsMenu = appsMenu->addMenu("QxTools");
     toolsMenu->addAction("QxCalc");
     toolsMenu->addAction("QxConvert");
 
-    helpMenu = menuBar()->addMenu("&Help");
+    helpMenu = menuBarWidget->addMenu("&Help");
     helpMenu->addAction("About QxCentre");
     helpMenu->addAction("Documentation");
     helpMenu->addAction("Check for Updates");
 
-    connect(qxMusicPlayerAction, &QAction::triggered, this, &MainWindowBrick::openQxMusicPlayer);
-    connect(qxWriteAction, &QAction::triggered, this, &MainWindowBrick::openQxWrite);
-    connect(qxSheetAction, &QAction::triggered, this, &MainWindowBrick::openQxSheet);
-    connect(darkThemeAction, &QAction::triggered, this, &MainWindowBrick::toggleDarkTheme);
+    connect(darkThemeAction, &QAction::triggered, this, [this]() { themeBrick->toggleDarkTheme(true); });
+    connect(lightThemeAction, &QAction::triggered, this, [this]() { themeBrick->toggleDarkTheme(false); });
+    connect(exitAction, &QAction::triggered, this, &MainWindowBrick::handleExit);
 }
 
-void MainWindowBrick::openQxMusicPlayer() {
-    QxMusicPlayerWindow *musicWindow = new QxMusicPlayerWindow(this);
-    musicWindow->setAttribute(Qt::WA_DeleteOnClose);
-    musicWindow->move(0, 50);
-    musicWindow->resize(400, 600);
-    musicWindow->initializeTheme(themeBrick->isDarkTheme());
-    interlinkBrick->launchAppWindow(musicWindow);
-    qDebug() << "QxMusicPlayer window opened";
+void MainWindowBrick::moveToBottomLeft() {
+    QScreen *screen = QGuiApplication::primaryScreen();
+    QRect screenGeometry = screen->geometry();
+    int x = 0;
+    int y = screenGeometry.height() - height();
+    move(x, y);
 }
 
-void MainWindowBrick::openQxWrite() {
-    QxWriteWindowBrick *writeWindow = new QxWriteWindowBrick(this);
-    writeWindow->setAttribute(Qt::WA_DeleteOnClose);
-    writeWindow->move(50, 100);
-    writeWindow->resize(400, 600);
-    writeWindow->initializeTheme(themeBrick->isDarkTheme());
-    interlinkBrick->launchAppWindow(writeWindow);
-    qDebug() << "QxWrite window opened";
+void MainWindowBrick::raiseGroup() {
+    if (isRaisingGroup) return;
+    isRaisingGroup = true;
+    qDebug() << "Starting raiseGroup, QxCentre visible:" << isVisible();
+
+    auto appWindows = interlinkBrick->getAppWindows();
+    QStringList staleKeys;
+    for (auto it = appWindows.constBegin(); it != appWindows.constEnd(); ++it) {
+        if (!it.value()) {
+            staleKeys << it.key();
+        }
+    }
+    for (const QString &key : staleKeys) {
+        interlinkBrick->unregisterAppWindow(key);
+        qDebug() << "Removed stale app window: " << key;
+    }
+
+    for (const QPointer<QWidget> &window : appWindows) {
+        if (window && window->isVisible()) {
+            window->raise();
+            qDebug() << "Raised app window: " << appWindows.key(window);
+        }
+    }
+
+    show();
+    isRaisingGroup = false;
+    qDebug() << "Grouped QxCentre behind all apps";
 }
 
-void MainWindowBrick::openQxSheet() {
-    QxSheetWindowBrick *sheetWindow = new QxSheetWindowBrick(this);
-    sheetWindow->setAttribute(Qt::WA_DeleteOnClose);
-    sheetWindow->move(100, 150);
-    sheetWindow->resize(400, 600);
-    sheetWindow->initializeTheme(themeBrick->isDarkTheme());
-    interlinkBrick->launchAppWindow(sheetWindow);
-    qDebug() << "QxSheet window opened";
+void MainWindowBrick::mousePressEvent(QMouseEvent *event) {
+    QWidget::mousePressEvent(event);
+    if (!isRaisingGroup) {
+        raiseGroup();
+    }
 }
 
-void MainWindowBrick::toggleDarkTheme() {
-    themeBrick->toggleDarkTheme(darkThemeAction->isChecked());
+void MainWindowBrick::closeEvent(QCloseEvent *event) {
+    qDebug() << "QxCentre closeEvent triggered, openAppCount:" << openAppCount;
+    if (openAppCount > 0) {
+        qDebug() << "Blocking QxCentre closure due to open apps";
+        event->ignore();
+        show();
+        return;
+    }
+    event->accept();
+    qDebug() << "QxCentre closeEvent accepted";
 }
 
-void MainWindowBrick::setupCentralWidget() {
-    QWidget *central = new QWidget(this);
-    setCentralWidget(central);
+void MainWindowBrick::handleAppWindowDestroyed(QObject *obj) {
+    qDebug() << "handleAppWindowDestroyed called for object:" << obj;
+    auto appWindows = interlinkBrick->getAppWindows();
+    for (auto it = appWindows.constBegin(); it != appWindows.constEnd(); ++it) {
+        if (it.value() == obj) {
+            themeBrick->disconnectThemeSignals(it.value());
+            interlinkBrick->unregisterAppWindow(it.key());
+            openAppCount--;
+            qDebug() << "Handled destroyed app window: " << it.key() << ", openAppCount:" << openAppCount;
+            break;
+        }
+    }
+    if (isVisible()) {
+        show();
+        qDebug() << "Ensured QxCentre remains visible";
+    }
+}
+
+void MainWindowBrick::handleExit() {
+    qDebug() << "handleExit triggered";
+    close();
+    QApplication::quit();
+}
+
+ThemeBrick* MainWindowBrick::getThemeBrick() {
+    return themeBrick;
 }
 
 InterlinkBrick* MainWindowBrick::getInterlinkBrick() {

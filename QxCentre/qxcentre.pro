@@ -1,22 +1,18 @@
-QT += core gui widgets multimedia
+QT += core gui widgets
 
-CONFIG += debug
+CONFIG += c++11
 
 SOURCES += \
     main.cpp \
     mainwindowbrick.cpp \
     themebrick.cpp \
     interlinkbrick.cpp \
-    ../QxAudio/QxAudioPlayer/qxmusicplayerwindow.cpp \
-    ../QxDocument/QxWrite/qxwritewindowbrick.cpp \
-    ../QxDocument/QxSheet/qxsheetwindowbrick.cpp
+    windowbrick.cpp
 
 HEADERS += \
     mainwindowbrick.h \
     themebrick.h \
     interlinkbrick.h \
-    ../QxAudio/QxAudioPlayer/qxmusicplayerwindow.h \
-    ../QxDocument/QxWrite/qxwritewindowbrick.h \
-    ../QxDocument/QxSheet/qxsheetwindowbrick.h
+    windowbrick.h
 
 TARGET = QxCentre
