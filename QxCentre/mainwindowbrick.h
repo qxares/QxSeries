@@ -9,6 +9,7 @@
 #include <QMessageBox>
 #include "themebrick.h"
 #include "interlinkbrick.h"
+#include "databasebrick.h"
 
 class MainWindowBrick : public QMainWindow {
     Q_OBJECT
@@ -17,10 +18,15 @@ public:
     ~MainWindowBrick();
     InterlinkBrick* getInterlinkBrick();
     ThemeBrick* getThemeBrick();
+    DatabaseBrick* getDatabaseBrick();
 
 public slots:
     void raiseGroup();
     void updateTaskbarWindows();
+
+protected:
+    void moveEvent(QMoveEvent *event) override;
+    void resizeEvent(QResizeEvent *event) override;
 
 private:
     void setupTaskbar();
@@ -36,6 +42,7 @@ private:
     QAction *exitAction;
     ThemeBrick *themeBrick;
     InterlinkBrick *interlinkBrick;
+    DatabaseBrick *databaseBrick;
     bool isRaisingGroup;
     int openAppCount;
 

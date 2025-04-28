@@ -1,4 +1,4 @@
-QT += core gui widgets
+QT += core gui widgets sql
 
 CONFIG += c++11
 
@@ -7,12 +7,14 @@ SOURCES += \
     mainwindowbrick.cpp \
     themebrick.cpp \
     interlinkbrick.cpp \
-    windowbrick.cpp
+    windowbrick.cpp \
+    databasebrick.cpp
 
 HEADERS += \
     mainwindowbrick.h \
     themebrick.h \
     interlinkbrick.h \
-    windowbrick.h
+    windowbrick.h \
+    databasebrick.h
 
 TARGET = QxCentre

@@ -14,10 +14,10 @@ EQ            = =
 
 CC            = gcc
 CXX           = g++
-DEFINES       = -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
+DEFINES       = -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_SQL_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -g -Wall -Wextra -D_REENTRANT -fPIC $(DEFINES)
 CXXFLAGS      = -pipe -g -std=gnu++11 -Wall -Wextra -D_REENTRANT -fPIC $(DEFINES)
-INCPATH       = -I. -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++
+INCPATH       = -I. -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtSql -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++
 QMAKE         = /usr/lib/qt5/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -40,7 +40,7 @@ DISTNAME      = QxCentre1.0.0
 DISTDIR = /home/ares/QxCentre/QxCentre/.tmp/QxCentre1.0.0
 LINK          = g++
 LFLAGS        = 
-LIBS          = $(SUBLIBS) /usr/lib/x86_64-linux-gnu/libQt5Widgets.so /usr/lib/x86_64-linux-gnu/libQt5Gui.so /usr/lib/x86_64-linux-gnu/libQt5Core.so -lGL -lpthread   
+LIBS          = $(SUBLIBS) /usr/lib/x86_64-linux-gnu/libQt5Widgets.so /usr/lib/x86_64-linux-gnu/libQt5Gui.so /usr/lib/x86_64-linux-gnu/libQt5Sql.so /usr/lib/x86_64-linux-gnu/libQt5Core.so -lGL -lpthread   
 AR            = ar cqs
 RANLIB        = 
 SED           = sed
@@ -56,19 +56,23 @@ SOURCES       = main.cpp \
 		mainwindowbrick.cpp \
 		themebrick.cpp \
 		interlinkbrick.cpp \
-		windowbrick.cpp moc_mainwindowbrick.cpp \
+		windowbrick.cpp \
+		databasebrick.cpp moc_mainwindowbrick.cpp \
 		moc_themebrick.cpp \
 		moc_interlinkbrick.cpp \
-		moc_windowbrick.cpp
+		moc_windowbrick.cpp \
+		moc_databasebrick.cpp
 OBJECTS       = main.o \
 		mainwindowbrick.o \
 		themebrick.o \
 		interlinkbrick.o \
 		windowbrick.o \
+		databasebrick.o \
 		moc_mainwindowbrick.o \
 		moc_themebrick.o \
 		moc_interlinkbrick.o \
-		moc_windowbrick.o
+		moc_windowbrick.o \
+		moc_databasebrick.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/linux.conf \
@@ -152,11 +156,13 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		qxcentre.pro mainwindowbrick.h \
 		themebrick.h \
 		interlinkbrick.h \
-		windowbrick.h main.cpp \
+		windowbrick.h \
+		databasebrick.h main.cpp \
 		mainwindowbrick.cpp \
 		themebrick.cpp \
 		interlinkbrick.cpp \
-		windowbrick.cpp
+		windowbrick.cpp \
+		databasebrick.cpp
 QMAKE_TARGET  = QxCentre
 DESTDIR       = 
 TARGET        = QxCentre
@@ -346,8 +352,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents mainwindowbrick.h themebrick.h interlinkbrick.h windowbrick.h $(DISTDIR)/
-	$(COPY_FILE) --parents main.cpp mainwindowbrick.cpp themebrick.cpp interlinkbrick.cpp windowbrick.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents mainwindowbrick.h themebrick.h interlinkbrick.h windowbrick.h databasebrick.h $(DISTDIR)/
+	$(COPY_FILE) --parents main.cpp mainwindowbrick.cpp themebrick.cpp interlinkbrick.cpp windowbrick.cpp databasebrick.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -378,32 +384,38 @@ compiler_moc_predefs_clean:
 moc_predefs.h: /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 	g++ -pipe -g -std=gnu++11 -Wall -Wextra -dM -E -o moc_predefs.h /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_mainwindowbrick.cpp moc_themebrick.cpp moc_interlinkbrick.cpp moc_windowbrick.cpp
+compiler_moc_header_make_all: moc_mainwindowbrick.cpp moc_themebrick.cpp moc_interlinkbrick.cpp moc_windowbrick.cpp moc_databasebrick.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_mainwindowbrick.cpp moc_themebrick.cpp moc_interlinkbrick.cpp moc_windowbrick.cpp
+	-$(DEL_FILE) moc_mainwindowbrick.cpp moc_themebrick.cpp moc_interlinkbrick.cpp moc_windowbrick.cpp moc_databasebrick.cpp
 moc_mainwindowbrick.cpp: mainwindowbrick.h \
 		themebrick.h \
 		interlinkbrick.h \
+		databasebrick.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/ares/QxCentre/QxCentre/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/ares/QxCentre/QxCentre -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/13 -I/usr/include/x86_64-linux-gnu/c++/13 -I/usr/include/c++/13/backward -I/usr/lib/gcc/x86_64-linux-gnu/13/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include mainwindowbrick.h -o moc_mainwindowbrick.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/ares/QxCentre/QxCentre/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/ares/QxCentre/QxCentre -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtSql -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/13 -I/usr/include/x86_64-linux-gnu/c++/13 -I/usr/include/c++/13/backward -I/usr/lib/gcc/x86_64-linux-gnu/13/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include mainwindowbrick.h -o moc_mainwindowbrick.cpp
 
 moc_themebrick.cpp: themebrick.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/ares/QxCentre/QxCentre/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/ares/QxCentre/QxCentre -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/13 -I/usr/include/x86_64-linux-gnu/c++/13 -I/usr/include/c++/13/backward -I/usr/lib/gcc/x86_64-linux-gnu/13/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include themebrick.h -o moc_themebrick.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/ares/QxCentre/QxCentre/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/ares/QxCentre/QxCentre -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtSql -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/13 -I/usr/include/x86_64-linux-gnu/c++/13 -I/usr/include/c++/13/backward -I/usr/lib/gcc/x86_64-linux-gnu/13/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include themebrick.h -o moc_themebrick.cpp
 
 moc_interlinkbrick.cpp: interlinkbrick.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/ares/QxCentre/QxCentre/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/ares/QxCentre/QxCentre -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/13 -I/usr/include/x86_64-linux-gnu/c++/13 -I/usr/include/c++/13/backward -I/usr/lib/gcc/x86_64-linux-gnu/13/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include interlinkbrick.h -o moc_interlinkbrick.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/ares/QxCentre/QxCentre/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/ares/QxCentre/QxCentre -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtSql -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/13 -I/usr/include/x86_64-linux-gnu/c++/13 -I/usr/include/c++/13/backward -I/usr/lib/gcc/x86_64-linux-gnu/13/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include interlinkbrick.h -o moc_interlinkbrick.cpp
 
 moc_windowbrick.cpp: windowbrick.h \
 		themebrick.h \
 		interlinkbrick.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/ares/QxCentre/QxCentre/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/ares/QxCentre/QxCentre -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/13 -I/usr/include/x86_64-linux-gnu/c++/13 -I/usr/include/c++/13/backward -I/usr/lib/gcc/x86_64-linux-gnu/13/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include windowbrick.h -o moc_windowbrick.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/ares/QxCentre/QxCentre/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/ares/QxCentre/QxCentre -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtSql -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/13 -I/usr/include/x86_64-linux-gnu/c++/13 -I/usr/include/c++/13/backward -I/usr/lib/gcc/x86_64-linux-gnu/13/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include windowbrick.h -o moc_windowbrick.cpp
+
+moc_databasebrick.cpp: databasebrick.h \
+		moc_predefs.h \
+		/usr/lib/qt5/bin/moc
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/ares/QxCentre/QxCentre/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/ares/QxCentre/QxCentre -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtSql -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/13 -I/usr/include/x86_64-linux-gnu/c++/13 -I/usr/include/c++/13/backward -I/usr/lib/gcc/x86_64-linux-gnu/13/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include databasebrick.h -o moc_databasebrick.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -423,12 +435,14 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 
 main.o: main.cpp mainwindowbrick.h \
 		themebrick.h \
-		interlinkbrick.h
+		interlinkbrick.h \
+		databasebrick.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
 
 mainwindowbrick.o: mainwindowbrick.cpp mainwindowbrick.h \
 		themebrick.h \
-		interlinkbrick.h
+		interlinkbrick.h \
+		databasebrick.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindowbrick.o mainwindowbrick.cpp
 
 themebrick.o: themebrick.cpp themebrick.h
@@ -436,14 +450,19 @@ themebrick.o: themebrick.cpp themebrick.h
 
 interlinkbrick.o: interlinkbrick.cpp interlinkbrick.h \
 		mainwindowbrick.h \
-		themebrick.h
+		themebrick.h \
+		databasebrick.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o interlinkbrick.o interlinkbrick.cpp
 
 windowbrick.o: windowbrick.cpp windowbrick.h \
 		themebrick.h \
 		interlinkbrick.h \
-		mainwindowbrick.h
+		mainwindowbrick.h \
+		databasebrick.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o windowbrick.o windowbrick.cpp
+
+databasebrick.o: databasebrick.cpp databasebrick.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o databasebrick.o databasebrick.cpp
 
 moc_mainwindowbrick.o: moc_mainwindowbrick.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindowbrick.o moc_mainwindowbrick.cpp
@@ -456,6 +475,9 @@ moc_interlinkbrick.o: moc_interlinkbrick.cpp
 
 moc_windowbrick.o: moc_windowbrick.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_windowbrick.o moc_windowbrick.cpp
+
+moc_databasebrick.o: moc_databasebrick.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_databasebrick.o moc_databasebrick.cpp
 
 ####### Install
 

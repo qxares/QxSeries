@@ -6,21 +6,39 @@
 #include <QCloseEvent>
 #include <QMouseEvent>
 #include <QPushButton>
+#include <QMoveEvent>
+#include <QResizeEvent>
 
 MainWindowBrick::MainWindowBrick(QWidget *parent) : QMainWindow(parent) {
     themeBrick = new ThemeBrick(qApp, this);
     interlinkBrick = new InterlinkBrick(this);
+    databaseBrick = new DatabaseBrick(this);
     isRaisingGroup = false;
     openAppCount = 0;
     
+    if (!databaseBrick->initialize()) {
+        qDebug() << "Failed to initialize DatabaseBrick";
+    }
+
     setWindowFlags(Qt::Window | Qt::WindowStaysOnBottomHint);
     setWindowTitle("QxCentre");
-    resize(1050, 800);
     setMinimumSize(600, 400);
     setAttribute(Qt::WA_QuitOnClose, false);
 
+    // Load theme
+    QString theme = databaseBrick->loadTheme();
+    themeBrick->toggleDarkTheme(theme == "dark");
     setupTaskbar();
-    moveToBottomLeft();
+
+    // Load window position
+    int x, y, width, height;
+    if (databaseBrick->loadWindowPosition("QxCentre", x, y, width, height)) {
+        setGeometry(x, y, width, height);
+    } else {
+        resize(1050, 800);
+        moveToBottomLeft();
+    }
+
     qDebug() << "QxCentre main window initialized";
 }
 
@@ -39,6 +57,11 @@ MainWindowBrick::~MainWindowBrick() {
         delete interlinkBrick;
         interlinkBrick = nullptr;
         qDebug() << "Deleted interlinkBrick in destructor";
+    }
+    if (databaseBrick) {
+        delete databaseBrick;
+        databaseBrick = nullptr;
+        qDebug() << "Deleted databaseBrick in destructor";
     }
     qDebug() << "MainWindowBrick destroyed";
 }
@@ -127,18 +150,22 @@ void MainWindowBrick::setupTaskbar() {
         if (checked) {
             themeBrick->toggleDarkTheme(true);
             lightThemeAction->setChecked(false);
+            databaseBrick->saveTheme("dark");
         } else {
             themeBrick->toggleDarkTheme(false);
             lightThemeAction->setChecked(true);
+            databaseBrick->saveTheme("light");
         }
     });
     connect(lightThemeAction, &QAction::toggled, this, [this, darkThemeAction](bool checked) {
         if (checked) {
             themeBrick->toggleDarkTheme(false);
             darkThemeAction->setChecked(false);
+            databaseBrick->saveTheme("light");
         } else {
             themeBrick->toggleDarkTheme(true);
             darkThemeAction->setChecked(true);
+            databaseBrick->saveTheme("dark");
         }
     });
     connect(exitAction, &QAction::triggered, this, &MainWindowBrick::handleExit);
@@ -161,6 +188,16 @@ void MainWindowBrick::moveToBottomLeft() {
     int x = 0;
     int y = screenGeometry.height() - height();
     move(x, y);
+}
+
+void MainWindowBrick::moveEvent(QMoveEvent *event) {
+    QMainWindow::moveEvent(event);
+    databaseBrick->saveWindowPosition("QxCentre", x(), y(), width(), height());
+}
+
+void MainWindowBrick::resizeEvent(QResizeEvent *event) {
+    QMainWindow::resizeEvent(event);
+    databaseBrick->saveWindowPosition("QxCentre", x(), y(), width(), height());
 }
 
 void MainWindowBrick::raiseGroup() {
@@ -271,4 +308,8 @@ ThemeBrick* MainWindowBrick::getThemeBrick() {
 
 InterlinkBrick* MainWindowBrick::getInterlinkBrick() {
     return interlinkBrick;
+}
+
+DatabaseBrick* MainWindowBrick::getDatabaseBrick() {
+    return databaseBrick;
 }
