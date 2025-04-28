@@ -12,13 +12,19 @@ class InterlinkBrick : public QObject {
     Q_OBJECT
 public:
     explicit InterlinkBrick(MainWindowBrick *mainWindow, QObject *parent = nullptr);
-    ~InterlinkBrick(); // Added
+    ~InterlinkBrick();
     void registerAppWindow(const QString &name, QWidget *window);
     void unregisterAppWindow(const QString &name);
     void clearAppWindows();
     void launchAppWindow(const QString &name);
+    void minimizeWindow(const QString &name);
+    void maximizeWindow(const QString &name);
+    void restoreWindow(const QString &name);
     QMap<QString, QPointer<QWidget>> getAppWindows() const;
     void raiseGroup();
+
+signals:
+    void windowStateChanged();
 
 private:
     MainWindowBrick *mainWindow;

@@ -8,7 +8,7 @@ class ThemeBrick : public QObject {
     Q_OBJECT
 public:
     ThemeBrick(QApplication *app, QObject *parent = nullptr);
-    ~ThemeBrick(); // Added
+    ~ThemeBrick();
     bool isDarkTheme() const { return isDark; }
     void disconnectThemeSignals(QObject *receiver);
 
@@ -20,6 +20,7 @@ signals:
 
 private:
     void applyDarkTheme();
+    void applyGlobalStyles();
     QApplication *application;
     bool isDark = false;
 };

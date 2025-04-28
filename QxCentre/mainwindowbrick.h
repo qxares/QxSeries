@@ -1,13 +1,15 @@
 #ifndef MAINWINDOWBRICK_H
 #define MAINWINDOWBRICK_H
 
-#include <QWidget>
+#include <QMainWindow>
+#include <QDockWidget>
+#include <QToolBar>
+#include <QComboBox>
 #include <QMenu>
-#include <QMenuBar>
 #include "themebrick.h"
 #include "interlinkbrick.h"
 
-class MainWindowBrick : public QWidget {
+class MainWindowBrick : public QMainWindow {
     Q_OBJECT
 public:
     explicit MainWindowBrick(QWidget *parent = nullptr);
@@ -17,26 +19,29 @@ public:
 
 public slots:
     void raiseGroup();
+    void updateTaskbarWindows();
 
 private:
-    void setupMenus();
+    void setupTaskbar();
     void moveToBottomLeft();
     void closeEvent(QCloseEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
-    QMenu *fileMenu;
-    QMenu *appsMenu;
-    QMenu *helpMenu;
+    QDockWidget *taskbarDock;
+    QToolBar *taskbar;
+    QComboBox *windowList;
+    QMenu *systemMenu;
     QAction *darkThemeAction;
     QAction *exitAction;
     ThemeBrick *themeBrick;
     InterlinkBrick *interlinkBrick;
-    QMenuBar *menuBarWidget;
     bool isRaisingGroup;
     int openAppCount;
 
 private slots:
     void handleAppWindowDestroyed(QObject *obj);
     void handleExit();
+    void launchApp(const QString &appName);
+    void activateWindow(int index);
 };
 
 #endif // MAINWINDOWBRICK_H

@@ -4,6 +4,7 @@
 #include <QDebug>
 
 ThemeBrick::ThemeBrick(QApplication *app, QObject *parent) : QObject(parent), application(app) {
+    applyGlobalStyles();
     qDebug() << "ThemeBrick initialized";
 }
 
@@ -24,22 +25,45 @@ void ThemeBrick::applyDarkTheme() {
     darkPalette.setColor(QPalette::Highlight, QColor("#0D3B44"));
     darkPalette.setColor(QPalette::HighlightedText, QColor("#F8F8F2"));
     application->setPalette(darkPalette);
+    applyGlobalStyles();
+    emit themeChanged(true);
+}
 
-    application->setStyleSheet(
+void ThemeBrick::applyGlobalStyles() {
+    QString styleSheet = 
         "QWidget, QMdiSubWindow {"
-        "    background-color: #272822;"
-        "    color: #F8F8F2;"
+        "    background-color: %1;"
+        "    color: %2;"
+        "    font-family: 'Arial', sans-serif;"
+        "    font-size: 12px;"
         "}"
-        "QMenuBar, QMenu {"
-        "    background-color: #49483E;"
-        "    color: #F8F8F2;"
+        "QToolBar, QDockWidget {"
+        "    background-color: %3;"
+        "    color: %2;"
+        "    border: 1px solid %4;"
+        "}"
+        "QPushButton, QComboBox {"
+        "    background-color: %3;"
+        "    color: %2;"
+        "    border: 1px solid %4;"
+        "    padding: 4px;"
+        "}"
+        "QPushButton:hover, QComboBox:hover {"
+        "    background-color: %5;"
+        "}"
+        "QMenu {"
+        "    background-color: %3;"
+        "    color: %2;"
         "}"
         "QMenu::item:selected {"
-        "    background-color: #0D3B44;"
-        "}"
-    );
-
-    emit themeChanged(true);
+        "    background-color: %5;"
+        "}";
+    if (isDark) {
+        styleSheet = styleSheet.arg("#272822", "#F8F8F2", "#49483E", "#3E3D32", "#0D3B44");
+    } else {
+        styleSheet = styleSheet.arg("#ECECEC", "#000000", "#D3D3D3", "#B0B0B0", "#0078D7");
+    }
+    application->setStyleSheet(styleSheet);
 }
 
 void ThemeBrick::toggleDarkTheme(bool checked) {
@@ -59,7 +83,7 @@ void ThemeBrick::toggleDarkTheme(bool checked) {
         lightPalette.setColor(QPalette::Highlight, QColor("#0078D7"));
         lightPalette.setColor(QPalette::HighlightedText, Qt::white);
         application->setPalette(lightPalette);
-        application->setStyleSheet("");
+        applyGlobalStyles();
         emit themeChanged(false);
     }
     application->setStyle("Fusion");
