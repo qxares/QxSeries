@@ -47,35 +47,110 @@ void MainWindowBrick::setupTaskbar() {
     taskbarDock = new QDockWidget(this);
     taskbarDock->setFeatures(QDockWidget::NoDockWidgetFeatures);
     taskbarDock->setAllowedAreas(Qt::TopDockWidgetArea);
-    taskbarDock->setTitleBarWidget(new QWidget()); // Hide title bar
-    setCentralWidget(new QWidget()); // Placeholder central widget
+    taskbarDock->setTitleBarWidget(new QWidget());
+    setCentralWidget(new QWidget());
     addDockWidget(Qt::TopDockWidgetArea, taskbarDock);
 
     taskbar = new QToolBar(taskbarDock);
     taskbar->setMovable(false);
+    taskbar->setStyleSheet("QToolBar { spacing: 10px; padding: 5px; } QPushButton { min-width: 80px; min-height: 30px; }");
     taskbarDock->setWidget(taskbar);
 
-    systemMenu = new QMenu("System", taskbar);
-    darkThemeAction = systemMenu->addAction("Dark Theme");
+    // QxCentre Menu
+    qxCentreMenu = new QMenu("QxCentre", taskbar);
+    QMenu *preferencesMenu = qxCentreMenu->addMenu("Preferences");
+    QMenu *themesMenu = preferencesMenu->addMenu("Themes");
+    QAction *darkThemeAction = themesMenu->addAction("Dark");
     darkThemeAction->setCheckable(true);
-    systemMenu->addSeparator();
-    exitAction = systemMenu->addAction("Exit");
-    QPushButton *systemButton = new QPushButton("System", taskbar);
-    systemButton->setMenu(systemMenu);
-    taskbar->addWidget(systemButton);
+    darkThemeAction->setChecked(themeBrick->isDarkTheme());
+    QAction *lightThemeAction = themesMenu->addAction("Light");
+    lightThemeAction->setCheckable(true);
+    lightThemeAction->setChecked(!themeBrick->isDarkTheme());
+    QMenu *databaseMenu = qxCentreMenu->addMenu("DataBase");
+    databaseMenu->addAction("New Database");
+    databaseMenu->addAction("Open Database");
+    databaseMenu->addAction("Save Database");
+    databaseMenu->addAction("Save As");
+    qxCentreMenu->addSeparator();
+    exitAction = qxCentreMenu->addAction("Exit");
+    QPushButton *qxCentreButton = new QPushButton("QxCentre", taskbar);
+    qxCentreButton->setMenu(qxCentreMenu);
+    taskbar->addWidget(qxCentreButton);
 
-    QAction *writeAction = taskbar->addAction("QxWrite");
-    QAction *calcAction = taskbar->addAction("QxCalc");
+    // QxApps Menu
+    qxAppsMenu = new QMenu("QxApps", taskbar);
+    QMenu *qxDocumentsMenu = qxAppsMenu->addMenu("QxDocuments");
+    qxDocumentsMenu->addAction("QxWrite");
+    qxDocumentsMenu->addAction("QxSheet");
+    qxDocumentsMenu->addAction("QxNotes");
+    QMenu *qxGraphicsMenu = qxAppsMenu->addMenu("QxGraphics");
+    qxGraphicsMenu->addAction("QxDraw");
+    qxGraphicsMenu->addAction("Images");
+    qxGraphicsMenu->addAction("Photos");
+    QMenu *qxAudioMenu = qxAppsMenu->addMenu("QxAudio");
+    qxAudioMenu->addAction("QxAudioPlayer");
+    qxAudioMenu->addAction("Music");
+    qxAudioMenu->addAction("Books");
+    qxAudioMenu->addAction("Recordings");
+    QMenu *qxVideoMenu = qxAppsMenu->addMenu("QxVideo");
+    qxVideoMenu->addAction("QxVideoPlayer");
+    qxVideoMenu->addAction("Movies");
+    qxVideoMenu->addAction("Series");
+    qxVideoMenu->addAction("Recordings");
+    QMenu *qxToolsMenu = qxAppsMenu->addMenu("QxTools");
+    qxToolsMenu->addAction("QxCalc");
+    qxToolsMenu->addAction("QxConvert");
+    qxToolsMenu->addAction("QxTranslate");
+    qxToolsMenu->addAction("QxCMD");
+    QMenu *qxTechMenu = qxAppsMenu->addMenu("QxTech");
+    qxTechMenu->addAction("QxNetworkMonitor");
+    qxTechMenu->addAction("QxDisk Management");
+    QPushButton *qxAppsButton = new QPushButton("QxApps", taskbar);
+    qxAppsButton->setMenu(qxAppsMenu);
+    taskbar->addWidget(qxAppsButton);
+
+    // Help Menu
+    helpMenu = new QMenu("Help", taskbar);
+    helpMenu->addAction("About QxCentre");
+    helpMenu->addAction("Documentation");
+    helpMenu->addAction("Check for Updates");
+    QPushButton *helpButton = new QPushButton("Help", taskbar);
+    helpButton->setMenu(helpMenu);
+    taskbar->addWidget(helpButton);
+
     taskbar->addSeparator();
-
     windowList = new QComboBox(taskbar);
     windowList->setSizeAdjustPolicy(QComboBox::AdjustToContents);
     taskbar->addWidget(windowList);
 
-    connect(darkThemeAction, &QAction::toggled, this, [this](bool checked) { themeBrick->toggleDarkTheme(checked); });
+    connect(darkThemeAction, &QAction::toggled, this, [this, lightThemeAction](bool checked) {
+        if (checked) {
+            themeBrick->toggleDarkTheme(true);
+            lightThemeAction->setChecked(false);
+        } else {
+            themeBrick->toggleDarkTheme(false);
+            lightThemeAction->setChecked(true);
+        }
+    });
+    connect(lightThemeAction, &QAction::toggled, this, [this, darkThemeAction](bool checked) {
+        if (checked) {
+            themeBrick->toggleDarkTheme(false);
+            darkThemeAction->setChecked(false);
+        } else {
+            themeBrick->toggleDarkTheme(true);
+            darkThemeAction->setChecked(true);
+        }
+    });
     connect(exitAction, &QAction::triggered, this, &MainWindowBrick::handleExit);
-    connect(writeAction, &QAction::triggered, this, [this]() { launchApp("QxWrite"); });
-    connect(calcAction, &QAction::triggered, this, [this]() { launchApp("QxCalc"); });
+    connect(qxAppsMenu, &QMenu::triggered, this, &MainWindowBrick::launchApp);
+    connect(databaseMenu, &QMenu::triggered, this, &MainWindowBrick::launchApp);
+    connect(helpMenu, &QMenu::triggered, this, [this](QAction *action) {
+        if (action->text() == "About QxCentre") {
+            showAboutDialog();
+        } else {
+            launchApp(action);
+        }
+    });
     connect(windowList, QOverload<int>::of(&QComboBox::activated), this, &MainWindowBrick::activateWindow);
     connect(interlinkBrick, &InterlinkBrick::windowStateChanged, this, &MainWindowBrick::updateTaskbarWindows);
 }
@@ -160,8 +235,10 @@ void MainWindowBrick::handleExit() {
     QApplication::quit();
 }
 
-void MainWindowBrick::launchApp(const QString &appName) {
+void MainWindowBrick::launchApp(QAction *action) {
+    QString appName = action->text();
     qDebug() << "Launch requested for: " << appName;
+    QMessageBox::information(this, "App Status", "App is in development, wait for it 😺");
     interlinkBrick->launchAppWindow(appName);
 }
 
@@ -182,6 +259,10 @@ void MainWindowBrick::updateTaskbarWindows() {
         }
     }
     qDebug() << "Updated taskbar window list";
+}
+
+void MainWindowBrick::showAboutDialog() {
+    QMessageBox::about(this, "About QxCentre", "Created by Peter van den Bosch and Grok xAI");
 }
 
 ThemeBrick* MainWindowBrick::getThemeBrick() {

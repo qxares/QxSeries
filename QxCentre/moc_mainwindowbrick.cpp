@@ -22,8 +22,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_MainWindowBrick_t {
-    QByteArrayData data[11];
-    char stringdata0[128];
+    QByteArrayData data[13];
+    char stringdata0[152];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -40,15 +40,17 @@ QT_MOC_LITERAL(4, 49, 24), // "handleAppWindowDestroyed"
 QT_MOC_LITERAL(5, 74, 3), // "obj"
 QT_MOC_LITERAL(6, 78, 10), // "handleExit"
 QT_MOC_LITERAL(7, 89, 9), // "launchApp"
-QT_MOC_LITERAL(8, 99, 7), // "appName"
-QT_MOC_LITERAL(9, 107, 14), // "activateWindow"
-QT_MOC_LITERAL(10, 122, 5) // "index"
+QT_MOC_LITERAL(8, 99, 8), // "QAction*"
+QT_MOC_LITERAL(9, 108, 6), // "action"
+QT_MOC_LITERAL(10, 115, 14), // "activateWindow"
+QT_MOC_LITERAL(11, 130, 5), // "index"
+QT_MOC_LITERAL(12, 136, 15) // "showAboutDialog"
 
     },
     "MainWindowBrick\0raiseGroup\0\0"
     "updateTaskbarWindows\0handleAppWindowDestroyed\0"
-    "obj\0handleExit\0launchApp\0appName\0"
-    "activateWindow\0index"
+    "obj\0handleExit\0launchApp\0QAction*\0"
+    "action\0activateWindow\0index\0showAboutDialog"
 };
 #undef QT_MOC_LITERAL
 
@@ -58,7 +60,7 @@ static const uint qt_meta_data_MainWindowBrick[] = {
        8,       // revision
        0,       // classname
        0,    0, // classinfo
-       6,   14, // methods
+       7,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -66,20 +68,22 @@ static const uint qt_meta_data_MainWindowBrick[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    0,   44,    2, 0x0a /* Public */,
-       3,    0,   45,    2, 0x0a /* Public */,
-       4,    1,   46,    2, 0x08 /* Private */,
-       6,    0,   49,    2, 0x08 /* Private */,
-       7,    1,   50,    2, 0x08 /* Private */,
-       9,    1,   53,    2, 0x08 /* Private */,
+       1,    0,   49,    2, 0x0a /* Public */,
+       3,    0,   50,    2, 0x0a /* Public */,
+       4,    1,   51,    2, 0x08 /* Private */,
+       6,    0,   54,    2, 0x08 /* Private */,
+       7,    1,   55,    2, 0x08 /* Private */,
+      10,    1,   58,    2, 0x08 /* Private */,
+      12,    0,   61,    2, 0x08 /* Private */,
 
  // slots: parameters
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void, QMetaType::QObjectStar,    5,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::QString,    8,
-    QMetaType::Void, QMetaType::Int,   10,
+    QMetaType::Void, 0x80000000 | 8,    9,
+    QMetaType::Void, QMetaType::Int,   11,
+    QMetaType::Void,
 
        0        // eod
 };
@@ -94,9 +98,21 @@ void MainWindowBrick::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int 
         case 1: _t->updateTaskbarWindows(); break;
         case 2: _t->handleAppWindowDestroyed((*reinterpret_cast< QObject*(*)>(_a[1]))); break;
         case 3: _t->handleExit(); break;
-        case 4: _t->launchApp((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 4: _t->launchApp((*reinterpret_cast< QAction*(*)>(_a[1]))); break;
         case 5: _t->activateWindow((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 6: _t->showAboutDialog(); break;
         default: ;
+        }
+    } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
+        switch (_id) {
+        default: *reinterpret_cast<int*>(_a[0]) = -1; break;
+        case 4:
+            switch (*reinterpret_cast<int*>(_a[1])) {
+            default: *reinterpret_cast<int*>(_a[0]) = -1; break;
+            case 0:
+                *reinterpret_cast<int*>(_a[0]) = qRegisterMetaType< QAction* >(); break;
+            }
+            break;
         }
     }
 }
@@ -130,13 +146,13 @@ int MainWindowBrick::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 6)
+        if (_id < 7)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 6;
+        _id -= 7;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 6)
-            *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 6;
+        if (_id < 7)
+            qt_static_metacall(this, _c, _id, _a);
+        _id -= 7;
     }
     return _id;
 }

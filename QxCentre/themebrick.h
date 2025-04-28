@@ -11,6 +11,7 @@ public:
     ~ThemeBrick();
     bool isDarkTheme() const { return isDark; }
     void disconnectThemeSignals(QObject *receiver);
+    void loadThemeSettings();
 
 public slots:
     void toggleDarkTheme(bool checked);
@@ -22,7 +23,7 @@ private:
     void applyDarkTheme();
     void applyGlobalStyles();
     QApplication *application;
-    bool isDark = false;
+    bool isDark = true;
 };
 
 #endif // THEMEBRICK_H

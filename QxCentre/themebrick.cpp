@@ -4,8 +4,9 @@
 #include <QDebug>
 
 ThemeBrick::ThemeBrick(QApplication *app, QObject *parent) : QObject(parent), application(app) {
-    applyGlobalStyles();
-    qDebug() << "ThemeBrick initialized";
+    isDark = true;
+    applyDarkTheme();
+    qDebug() << "ThemeBrick initialized with dark theme";
 }
 
 ThemeBrick::~ThemeBrick() {
@@ -87,6 +88,11 @@ void ThemeBrick::toggleDarkTheme(bool checked) {
         emit themeChanged(false);
     }
     application->setStyle("Fusion");
+}
+
+void ThemeBrick::loadThemeSettings() {
+    // Placeholder for DatabaseBrick integration
+    qDebug() << "Loading theme settings (placeholder)";
 }
 
 void ThemeBrick::disconnectThemeSignals(QObject *receiver) {

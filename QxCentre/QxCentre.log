@@ -1,12 +1,11 @@
 QApplication initialized
-ThemeBrick initialized
+ThemeBrick initialized with dark theme
 InterlinkBrick initialized
 QxCentre main window initialized
+Toggling theme to  light
+Toggling theme to  light
 Toggling theme to  dark
-Starting raiseGroup, QxCentre visible: true
-Grouped QxCentre behind all apps
-Starting raiseGroup, QxCentre visible: true
-Grouped QxCentre behind all apps
+Toggling theme to  dark
 handleExit triggered
 QxCentre closeEvent triggered, openAppCount: 0
 QxCentre closeEvent accepted

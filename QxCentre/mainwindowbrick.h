@@ -6,6 +6,7 @@
 #include <QToolBar>
 #include <QComboBox>
 #include <QMenu>
+#include <QMessageBox>
 #include "themebrick.h"
 #include "interlinkbrick.h"
 
@@ -29,8 +30,9 @@ private:
     QDockWidget *taskbarDock;
     QToolBar *taskbar;
     QComboBox *windowList;
-    QMenu *systemMenu;
-    QAction *darkThemeAction;
+    QMenu *qxCentreMenu;
+    QMenu *qxAppsMenu;
+    QMenu *helpMenu;
     QAction *exitAction;
     ThemeBrick *themeBrick;
     InterlinkBrick *interlinkBrick;
@@ -40,8 +42,9 @@ private:
 private slots:
     void handleAppWindowDestroyed(QObject *obj);
     void handleExit();
-    void launchApp(const QString &appName);
+    void launchApp(QAction *action);
     void activateWindow(int index);
+    void showAboutDialog();
 };
 
 #endif // MAINWINDOWBRICK_H
