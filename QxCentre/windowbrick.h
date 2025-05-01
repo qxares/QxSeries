@@ -17,6 +17,8 @@ public:
 
 protected:
     void closeEvent(QCloseEvent *event) override;
+
+private:
     MainWindowBrick *mainWindowBrick;
     ThemeBrick *themeBrick;
     InterlinkBrick *interlinkBrick;

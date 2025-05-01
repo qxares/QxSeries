@@ -6,28 +6,21 @@
 #include <QPointer>
 #include <QWidget>
 
-class MainWindowBrick;
-
 class InterlinkBrick : public QObject {
     Q_OBJECT
 public:
-    explicit InterlinkBrick(MainWindowBrick *mainWindow, QObject *parent = nullptr);
+    explicit InterlinkBrick(QObject *parent = nullptr);
     ~InterlinkBrick();
+    void launchAppWindow(const QString &appName);
+    void restoreWindow(const QString &windowName);
     void registerAppWindow(const QString &name, QWidget *window);
     void unregisterAppWindow(const QString &name);
-    void clearAppWindows();
-    void launchAppWindow(const QString &name);
-    void minimizeWindow(const QString &name);
-    void maximizeWindow(const QString &name);
-    void restoreWindow(const QString &name);
     QMap<QString, QPointer<QWidget>> getAppWindows() const;
-    void raiseGroup();
 
 signals:
     void windowStateChanged();
 
 private:
-    MainWindowBrick *mainWindow;
     QMap<QString, QPointer<QWidget>> appWindows;
 };
 

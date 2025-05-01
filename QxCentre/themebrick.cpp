@@ -1,103 +1,74 @@
 #include "themebrick.h"
-#include <QStyle>
-#include <QPalette>
 #include <QDebug>
+#include <QStyleFactory>
 
-ThemeBrick::ThemeBrick(QApplication *app, QObject *parent) : QObject(parent), application(app) {
-    isDark = true;
-    applyDarkTheme();
-    qDebug() << "ThemeBrick initialized with dark theme";
+ThemeBrick::ThemeBrick(QApplication *app, QObject *parent)
+    : QObject(parent), application(app), darkThemeEnabled(false) {
+    qDebug() << "ThemeBrick initialized";
 }
 
 ThemeBrick::~ThemeBrick() {
-    disconnect(this, nullptr, nullptr, nullptr);
     qDebug() << "ThemeBrick destroyed";
 }
 
+void ThemeBrick::toggleDarkTheme(bool enable) {
+    if (enable != darkThemeEnabled) {
+        darkThemeEnabled = enable;
+        if (enable) {
+            applyDarkTheme();
+        } else {
+            applyLightTheme();
+        }
+        emit themeChanged(darkThemeEnabled);
+        qDebug() << "Theme switched to" << (darkThemeEnabled ? "dark" : "light");
+    }
+}
+
+bool ThemeBrick::isDarkTheme() const {
+    return darkThemeEnabled;
+}
+
 void ThemeBrick::applyDarkTheme() {
-    QPalette darkPalette;
-    darkPalette.setColor(QPalette::Window, QColor("#272822"));
-    darkPalette.setColor(QPalette::WindowText, QColor("#F8F8F2"));
-    darkPalette.setColor(QPalette::Base, QColor("#272822"));
-    darkPalette.setColor(QPalette::Text, QColor("#F8F8F2"));
-    darkPalette.setColor(QPalette::Button, QColor("#49483E"));
-    darkPalette.setColor(QPalette::ButtonText, QColor("#F8F8F2"));
-    darkPalette.setColor(QPalette::AlternateBase, QColor("#3E3D32"));
-    darkPalette.setColor(QPalette::Highlight, QColor("#0D3B44"));
-    darkPalette.setColor(QPalette::HighlightedText, QColor("#F8F8F2"));
-    application->setPalette(darkPalette);
-    applyGlobalStyles();
-    emit themeChanged(true);
+    QPalette monokaiPalette;
+    monokaiPalette.setColor(QPalette::Window, QColor("#272822")); // Monokai background
+    monokaiPalette.setColor(QPalette::WindowText, QColor("#F8F8F2")); // Monokai foreground
+    monokaiPalette.setColor(QPalette::Base, QColor("#272822")); // Editor background
+    monokaiPalette.setColor(QPalette::AlternateBase, QColor("#3E3D32")); // Slightly lighter for contrast
+    monokaiPalette.setColor(QPalette::ToolTipBase, QColor("#75715E")); // Monokai comment
+    monokaiPalette.setColor(QPalette::ToolTipText, QColor("#F8F8F2")); // Foreground
+    monokaiPalette.setColor(QPalette::Text, QColor("#F8F8F2")); // Text
+    monokaiPalette.setColor(QPalette::Button, QColor("#3E3D32")); // Button background
+    monokaiPalette.setColor(QPalette::ButtonText, QColor("#F8F8F2")); // Button text
+    monokaiPalette.setColor(QPalette::BrightText, QColor("#F8F8F2")); // Monokai foreground (keywords)
+    monokaiPalette.setColor(QPalette::Link, QColor("#d6d6c7")); // Custom light gray
+    monokaiPalette.setColor(QPalette::Highlight, QColor("#3e3d33")); // Custom dark gray
+    monokaiPalette.setColor(QPalette::HighlightedText, QColor("#F8F8F2")); // Foreground for contrast
+    application->setPalette(monokaiPalette);
+    application->setStyle(QStyleFactory::create("Fusion"));
 }
 
-void ThemeBrick::applyGlobalStyles() {
-    QString styleSheet = 
-        "QWidget, QMdiSubWindow {"
-        "    background-color: %1;"
-        "    color: %2;"
-        "    font-family: 'Arial', sans-serif;"
-        "    font-size: 12px;"
-        "}"
-        "QToolBar, QDockWidget {"
-        "    background-color: %3;"
-        "    color: %2;"
-        "    border: 1px solid %4;"
-        "}"
-        "QPushButton, QComboBox {"
-        "    background-color: %3;"
-        "    color: %2;"
-        "    border: 1px solid %4;"
-        "    padding: 4px;"
-        "}"
-        "QPushButton:hover, QComboBox:hover {"
-        "    background-color: %5;"
-        "}"
-        "QMenu {"
-        "    background-color: %3;"
-        "    color: %2;"
-        "}"
-        "QMenu::item:selected {"
-        "    background-color: %5;"
-        "}";
-    if (isDark) {
-        styleSheet = styleSheet.arg("#272822", "#F8F8F2", "#49483E", "#3E3D32", "#0D3B44");
-    } else {
-        styleSheet = styleSheet.arg("#ECECEC", "#000000", "#D3D3D3", "#B0B0B0", "#0078D7");
-    }
-    application->setStyleSheet(styleSheet);
+void ThemeBrick::applyLightTheme() {
+    QPalette lightPalette;
+    lightPalette.setColor(QPalette::Window, Qt::white);
+    lightPalette.setColor(QPalette::WindowText, Qt::black);
+    lightPalette.setColor(QPalette::Base, Qt::white);
+    lightPalette.setColor(QPalette::AlternateBase, QColor(240, 240, 240));
+    lightPalette.setColor(QPalette::ToolTipBase, Qt::black);
+    lightPalette.setColor(QPalette::ToolTipText, Qt::black);
+    lightPalette.setColor(QPalette::Text, Qt::black);
+    lightPalette.setColor(QPalette::Button, Qt::white);
+    lightPalette.setColor(QPalette::ButtonText, Qt::black);
+    lightPalette.setColor(QPalette::BrightText, Qt::red);
+    lightPalette.setColor(QPalette::Link, QColor(0, 0, 255));
+    lightPalette.setColor(QPalette::Highlight, QColor(0, 120, 215));
+    lightPalette.setColor(QPalette::HighlightedText, Qt::white);
+    application->setPalette(lightPalette);
+    application->setStyle(QStyleFactory::create("Fusion"));
 }
 
-void ThemeBrick::toggleDarkTheme(bool checked) {
-    isDark = checked;
-    qDebug() << "Toggling theme to " << (checked ? "dark" : "light");
-    if (checked) {
-        applyDarkTheme();
-    } else {
-        QPalette lightPalette;
-        lightPalette.setColor(QPalette::Window, QColor("#ECECEC"));
-        lightPalette.setColor(QPalette::WindowText, Qt::black);
-        lightPalette.setColor(QPalette::Base, QColor("#ECECEC"));
-        lightPalette.setColor(QPalette::Text, Qt::black);
-        lightPalette.setColor(QPalette::Button, QColor("#D3D3D3"));
-        lightPalette.setColor(QPalette::ButtonText, Qt::black);
-        lightPalette.setColor(QPalette::AlternateBase, QColor("#D3D3D3"));
-        lightPalette.setColor(QPalette::Highlight, QColor("#0078D7"));
-        lightPalette.setColor(QPalette::HighlightedText, Qt::white);
-        application->setPalette(lightPalette);
-        applyGlobalStyles();
-        emit themeChanged(false);
-    }
-    application->setStyle("Fusion");
-}
-
-void ThemeBrick::loadThemeSettings() {
-    // Placeholder for DatabaseBrick integration
-    qDebug() << "Loading theme settings (placeholder)";
-}
-
-void ThemeBrick::disconnectThemeSignals(QObject *receiver) {
-    if (receiver) {
-        disconnect(this, &ThemeBrick::themeChanged, receiver, nullptr);
-        qDebug() << "Disconnected themeChanged signals for receiver";
+void ThemeBrick::disconnectThemeSignals(QWidget *widget) {
+    if (widget) {
+        disconnect(this, &ThemeBrick::themeChanged, widget, nullptr);
+        qDebug() << "Disconnected theme signals for widget";
     }
 }

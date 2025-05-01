@@ -3,27 +3,27 @@
 
 #include <QObject>
 #include <QApplication>
+#include <QPalette>
+#include <QWidget>
 
 class ThemeBrick : public QObject {
     Q_OBJECT
 public:
-    ThemeBrick(QApplication *app, QObject *parent = nullptr);
+    explicit ThemeBrick(QApplication *app, QObject *parent = nullptr);
     ~ThemeBrick();
-    bool isDarkTheme() const { return isDark; }
-    void disconnectThemeSignals(QObject *receiver);
-    void loadThemeSettings();
-
-public slots:
-    void toggleDarkTheme(bool checked);
+    void toggleDarkTheme(bool enable);
+    bool isDarkTheme() const;
+    void disconnectThemeSignals(QWidget *widget);
 
 signals:
-    void themeChanged(bool dark);
+    void themeChanged(bool isDark);
 
 private:
     void applyDarkTheme();
-    void applyGlobalStyles();
+    void applyLightTheme();
+
     QApplication *application;
-    bool isDark = true;
+    bool darkThemeEnabled;
 };
 
 #endif // THEMEBRICK_H

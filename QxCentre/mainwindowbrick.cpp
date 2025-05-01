@@ -10,58 +10,60 @@
 #include <QResizeEvent>
 #include <QProcess>
 #include <QFile>
+#include <QSettings>
 
-MainWindowBrick::MainWindowBrick(QWidget *parent) : QMainWindow(parent) {
+MainWindowBrick::MainWindowBrick(QWidget *parent) 
+    : QMainWindow(parent) {
     themeBrick = new ThemeBrick(qApp, this);
     interlinkBrick = new InterlinkBrick(this);
-    databaseBrick = new DatabaseBrick(this);
     isRaisingGroup = false;
     openAppCount = 0;
-    
-    if (!databaseBrick->initialize()) {
-        qDebug() << "Failed to initialize DatabaseBrick";
-    }
 
-    setWindowFlags(Qt::Window | Qt::WindowStaysOnBottomHint);
     setWindowTitle("QxCentre");
     setMinimumSize(600, 400);
     setAttribute(Qt::WA_QuitOnClose, false);
 
-    QString theme = databaseBrick->loadTheme();
+    QSettings settings("QxSeries", "QxCentre");
+    QString theme = settings.value("theme", "dark").toString();
     themeBrick->toggleDarkTheme(theme == "dark");
     setupTaskbar();
 
-    int x, y, width, height;
-    if (databaseBrick->loadWindowPosition("QxCentre", x, y, width, height)) {
-        setGeometry(x, y, width, height);
-    } else {
-        resize(1050, 800);
-        moveToBottomLeft();
+    // Load window position
+    QRect geometry = settings.value("window_position/QxCentre", QRect(0, 0, 800, 600)).toRect();
+    QScreen *screen = QGuiApplication::primaryScreen();
+    QRect screenGeometry = screen->availableGeometry();
+    int x = qMax(screenGeometry.left(), qMin(geometry.x(), screenGeometry.right() - geometry.width()));
+    int y = qMax(screenGeometry.top(), qMin(geometry.y(), screenGeometry.bottom() - geometry.height()));
+    int width = qMin(geometry.width(), screenGeometry.width());
+    int height = qMin(geometry.height(), screenGeometry.height());
+    setGeometry(x, y, width, height);
+    if (x == 0 && y == 0) {
+        centerWindow();
     }
 
-    qDebug() << "QxCentre main window initialized";
+    qDebug() << "QxCentre main window initialized, geometry:" << geometry;
+    show();
+    raise();
+    QApplication::processEvents();
+    qDebug() << "MainWindowBrick shown, visibility:" << isVisible() << "geometry:" << geometry;
 }
 
 MainWindowBrick::~MainWindowBrick() {
-    if (taskbarDock) {
-        delete taskbarDock;
-        taskbarDock = nullptr;
-        qDebug() << "Deleted taskbarDock in destructor";
+    if (interlinkBrick) {
+        disconnect(interlinkBrick, &InterlinkBrick::windowStateChanged, this, &MainWindowBrick::updateTaskbarWindows);
+        delete interlinkBrick;
+        interlinkBrick = nullptr;
+        qDebug() << "Deleted interlinkBrick in cleanup";
     }
     if (themeBrick) {
         delete themeBrick;
         themeBrick = nullptr;
-        qDebug() << "Deleted themeBrick in destructor";
+        qDebug() << "Deleted themeBrick in cleanup";
     }
-    if (interlinkBrick) {
-        delete interlinkBrick;
-        interlinkBrick = nullptr;
-        qDebug() << "Deleted interlinkBrick in destructor";
-    }
-    if (databaseBrick) {
-        delete databaseBrick;
-        databaseBrick = nullptr;
-        qDebug() << "Deleted databaseBrick in destructor";
+    if (taskbarDock) {
+        delete taskbarDock;
+        taskbarDock = nullptr;
+        qDebug() << "Deleted taskbarDock in cleanup";
     }
     qDebug() << "MainWindowBrick destroyed";
 }
@@ -88,12 +90,6 @@ void MainWindowBrick::setupTaskbar() {
     QAction *lightThemeAction = themesMenu->addAction("Light");
     lightThemeAction->setCheckable(true);
     lightThemeAction->setChecked(!themeBrick->isDarkTheme());
-    QMenu *databaseMenu = qxCentreMenu->addMenu("DataBase");
-    databaseMenu->addAction("New Database");
-    databaseMenu->addAction("Open Database");
-    databaseMenu->addAction("Save Database");
-    databaseMenu->addAction("Save As");
-    qxCentreMenu->addSeparator();
     exitAction = qxCentreMenu->addAction("Exit");
     QPushButton *qxCentreButton = new QPushButton("QxCentre", taskbar);
     qxCentreButton->setMenu(qxCentreMenu);
@@ -131,7 +127,6 @@ void MainWindowBrick::setupTaskbar() {
     taskbar->addWidget(qxAppsButton);
 
     helpMenu = new QMenu("Help", taskbar);
-    helpMenu->addAction("About QxCentre");
     helpMenu->addAction("Documentation");
     helpMenu->addAction("Check for Updates");
     QPushButton *helpButton = new QPushButton("Help", taskbar);
@@ -144,57 +139,55 @@ void MainWindowBrick::setupTaskbar() {
     taskbar->addWidget(windowList);
 
     connect(darkThemeAction, &QAction::toggled, this, [this, lightThemeAction](bool checked) {
+        QSettings settings("QxSeries", "QxCentre");
         if (checked) {
             themeBrick->toggleDarkTheme(true);
             lightThemeAction->setChecked(false);
-            databaseBrick->saveTheme("dark");
+            settings.setValue("theme", "dark");
         } else {
             themeBrick->toggleDarkTheme(false);
             lightThemeAction->setChecked(true);
-            databaseBrick->saveTheme("light");
+            settings.setValue("theme", "light");
         }
     });
     connect(lightThemeAction, &QAction::toggled, this, [this, darkThemeAction](bool checked) {
+        QSettings settings("QxSeries", "QxCentre");
         if (checked) {
             themeBrick->toggleDarkTheme(false);
             darkThemeAction->setChecked(false);
-            databaseBrick->saveTheme("light");
+            settings.setValue("theme", "light");
         } else {
             themeBrick->toggleDarkTheme(true);
             darkThemeAction->setChecked(true);
-            databaseBrick->saveTheme("dark");
+            settings.setValue("theme", "dark");
         }
     });
     connect(exitAction, &QAction::triggered, this, &MainWindowBrick::handleExit);
     connect(qxAppsMenu, &QMenu::triggered, this, &MainWindowBrick::launchApp);
-    connect(databaseMenu, &QMenu::triggered, this, &MainWindowBrick::launchApp);
-    connect(helpMenu, &QMenu::triggered, this, [this](QAction *action) {
-        if (action->text() == "About QxCentre") {
-            showAboutDialog();
-        } else {
-            launchApp(action);
-        }
-    });
+    connect(helpMenu, &QMenu::triggered, this, &MainWindowBrick::launchApp);
     connect(windowList, QOverload<int>::of(&QComboBox::activated), this, &MainWindowBrick::activateWindow);
     connect(interlinkBrick, &InterlinkBrick::windowStateChanged, this, &MainWindowBrick::updateTaskbarWindows);
 }
 
-void MainWindowBrick::moveToBottomLeft() {
+void MainWindowBrick::centerWindow() {
     QScreen *screen = QGuiApplication::primaryScreen();
-    QRect screenGeometry = screen->geometry();
-    int x = 0;
-    int y = screenGeometry.height() - height();
+    QRect screenGeometry = screen->availableGeometry();
+    int x = (screenGeometry.width() - width()) / 2 + screenGeometry.left();
+    int y = (screenGeometry.height() - height()) / 2 + screenGeometry.top();
     move(x, y);
+    qDebug() << "Centered QxCentre at:" << x << y;
 }
 
 void MainWindowBrick::moveEvent(QMoveEvent *event) {
     QMainWindow::moveEvent(event);
-    databaseBrick->saveWindowPosition("QxCentre", x(), y(), width(), height());
+    QSettings settings("QxSeries", "QxCentre");
+    settings.setValue("window_position/QxCentre", geometry());
 }
 
 void MainWindowBrick::resizeEvent(QResizeEvent *event) {
     QMainWindow::resizeEvent(event);
-    databaseBrick->saveWindowPosition("QxCentre", x(), y(), width(), height());
+    QSettings settings("QxSeries", "QxCentre");
+    settings.setValue("window_position/QxCentre", geometry());
 }
 
 void MainWindowBrick::raiseGroup() {
@@ -272,32 +265,7 @@ void MainWindowBrick::handleExit() {
 void MainWindowBrick::launchApp(QAction *action) {
     QString appName = action->text();
     qDebug() << "Launch requested for: " << appName;
-    if (appName == "QxNotes") {
-        QProcess *process = new QProcess(this);
-        QString program = "/home/ares/QxCentre/QxSeries/QxDocuments/QxNotes/QxNotes";
-        if (!QFile::exists(program)) {
-            qDebug() << "QxNotes executable not found at:" << program;
-            QMessageBox::warning(this, "Error", "QxNotes executable not found");
-            delete process;
-            return;
-        }
-        process->start(program, QStringList());
-        if (!process->waitForStarted()) {
-            qDebug() << "Failed to start QxNotes:" << process->errorString();
-            QMessageBox::warning(this, "Error", "Failed to launch QxNotes: " + process->errorString());
-            delete process;
-            return;
-        }
-        connect(process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
-                this, [=](int exitCode, QProcess::ExitStatus exitStatus) {
-            qDebug() << "QxNotes process finished with exit code:" << exitCode << ", status:" << exitStatus;
-            delete process;
-        });
-        openAppCount++;
-    } else {
-        QMessageBox::information(this, "App Status", "App is in development, wait for it 😺");
-        interlinkBrick->launchAppWindow(appName);
-    }
+    interlinkBrick->launchAppWindow(appName);
 }
 
 void MainWindowBrick::activateWindow(int index) {
@@ -309,18 +277,16 @@ void MainWindowBrick::activateWindow(int index) {
 }
 
 void MainWindowBrick::updateTaskbarWindows() {
-    windowList->clear();
-    auto appWindows = interlinkBrick->getAppWindows();
-    for (auto it = appWindows.constBegin(); it != appWindows.constEnd(); ++it) {
-        if (it.value() && it.value()->isVisible()) {
-            windowList->addItem(it.key());
+    if (windowList) {
+        windowList->clear();
+        auto appWindows = interlinkBrick->getAppWindows();
+        for (auto it = appWindows.constBegin(); it != appWindows.constEnd(); ++it) {
+            if (it.value() && it.value()->isVisible()) {
+                windowList->addItem(it.key());
+            }
         }
+        qDebug() << "Updated taskbar window list";
     }
-    qDebug() << "Updated taskbar window list";
-}
-
-void MainWindowBrick::showAboutDialog() {
-    QMessageBox::about(this, "About QxCentre", "Created by Peter van den Bosch and Grok xAI");
 }
 
 ThemeBrick* MainWindowBrick::getThemeBrick() {
@@ -329,8 +295,4 @@ ThemeBrick* MainWindowBrick::getThemeBrick() {
 
 InterlinkBrick* MainWindowBrick::getInterlinkBrick() {
     return interlinkBrick;
-}
-
-DatabaseBrick* MainWindowBrick::getDatabaseBrick() {
-    return databaseBrick;
 }

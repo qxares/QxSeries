@@ -1,6 +1,17 @@
-QT += core gui widgets sql
+#-------------------------------------------------
+#
+# Project created by QtCreator 2025-05-03
+#
+#-------------------------------------------------
 
-CONFIG += c++11
+QT       += core gui widgets
+
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+
+TARGET = QxCentre
+TEMPLATE = app
+
+DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     main.cpp \
@@ -8,13 +19,13 @@ SOURCES += \
     themebrick.cpp \
     interlinkbrick.cpp \
     windowbrick.cpp \
-    databasebrick.cpp
+    startupbrick.cpp
 
 HEADERS += \
     mainwindowbrick.h \
     themebrick.h \
     interlinkbrick.h \
     windowbrick.h \
-    databasebrick.h
+    startupbrick.h
 
-TARGET = QxCentre
+QMAKE_CXXFLAGS += -std=c++11

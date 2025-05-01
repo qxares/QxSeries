@@ -1,19 +1,25 @@
-QApplication initialized
-ThemeBrick initialized with dark theme
-InterlinkBrick initialized
-DatabaseBrick initialized
-Loaded theme: "dark"
-Toggling theme to  dark
-Loaded window position for "QxCentre" : x= 0 , y= 0 , width= 1920 , height= 1011
-QxCentre main window initialized
-Saved window position for "QxCentre" : x= 0 , y= 0 , width= 1920 , height= 1011
-Saved window position for "QxCentre" : x= 0 , y= 0 , width= 1920 , height= 1011
-Saved window position for "QxCentre" : x= 0 , y= 0 , width= 1920 , height= 1011
-Launch requested for:  "QxNotes"
-QxNotes process finished with exit code: 0 , status: QProcess::NormalExit
-Starting raiseGroup, QxCentre visible: true
-Grouped QxCentre behind all apps
-handleExit triggered
-QxCentre closeEvent triggered, openAppCount: 1
-Blocking QxCentre closure due to open apps
-QApplication about to quit
+2025-05-01 08:45:06: StartupBrick initialized
+2025-05-01 08:45:06: Settings initialized: theme= "dark"
+2025-05-01 08:45:06: Settings initialized in 0 ms
+2025-05-01 08:45:06: StartupBrick initialized successfully in 0 ms
+2025-05-01 08:45:06: StartupBrick initialization complete, launching MainWindowBrick
+2025-05-01 08:45:06: ThemeBrick initialized
+2025-05-01 08:45:06: InterlinkBrick initialized
+2025-05-01 08:45:06: Theme switched to dark
+2025-05-01 08:45:06: QxCentre main window initialized, geometry: QRect(0,32 1920x1011)
+2025-05-01 08:45:06: MainWindowBrick shown, visibility: true geometry: QRect(0,32 1920x1011)
+2025-05-01 08:45:07: MainWindowBrick shown, visibility: true geometry: QRect(0,32 1920x1011)
+2025-05-01 08:45:43: handleExit triggered
+2025-05-01 08:45:43: QxCentre closeEvent triggered, openAppCount: 0
+2025-05-01 08:45:43: QxCentre closeEvent accepted
+2025-05-01 08:45:43: QApplication exec returned, shutting down
+2025-05-01 08:45:43: StartupBrick shutdown
+2025-05-01 08:45:43: StartupBrick shutdown
+2025-05-01 08:45:43: StartupBrick destroyed
+2025-05-01 08:45:43: QApplication about to quit
+2025-05-01 08:45:43: InterlinkBrick destroyed
+2025-05-01 08:45:43: Deleted interlinkBrick in cleanup
+2025-05-01 08:45:43: ThemeBrick destroyed
+2025-05-01 08:45:43: Deleted themeBrick in cleanup
+2025-05-01 08:45:43: Deleted taskbarDock in cleanup
+2025-05-01 08:45:43: MainWindowBrick destroyed

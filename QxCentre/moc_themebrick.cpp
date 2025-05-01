@@ -22,8 +22,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_ThemeBrick_t {
-    QByteArrayData data[6];
-    char stringdata0[54];
+    QByteArrayData data[4];
+    char stringdata0[32];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -35,13 +35,10 @@ static const qt_meta_stringdata_ThemeBrick_t qt_meta_stringdata_ThemeBrick = {
 QT_MOC_LITERAL(0, 0, 10), // "ThemeBrick"
 QT_MOC_LITERAL(1, 11, 12), // "themeChanged"
 QT_MOC_LITERAL(2, 24, 0), // ""
-QT_MOC_LITERAL(3, 25, 4), // "dark"
-QT_MOC_LITERAL(4, 30, 15), // "toggleDarkTheme"
-QT_MOC_LITERAL(5, 46, 7) // "checked"
+QT_MOC_LITERAL(3, 25, 6) // "isDark"
 
     },
-    "ThemeBrick\0themeChanged\0\0dark\0"
-    "toggleDarkTheme\0checked"
+    "ThemeBrick\0themeChanged\0\0isDark"
 };
 #undef QT_MOC_LITERAL
 
@@ -51,7 +48,7 @@ static const uint qt_meta_data_ThemeBrick[] = {
        8,       // revision
        0,       // classname
        0,    0, // classinfo
-       2,   14, // methods
+       1,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -59,16 +56,10 @@ static const uint qt_meta_data_ThemeBrick[] = {
        1,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    1,   24,    2, 0x06 /* Public */,
-
- // slots: name, argc, parameters, tag, flags
-       4,    1,   27,    2, 0x0a /* Public */,
+       1,    1,   19,    2, 0x06 /* Public */,
 
  // signals: parameters
     QMetaType::Void, QMetaType::Bool,    3,
-
- // slots: parameters
-    QMetaType::Void, QMetaType::Bool,    5,
 
        0        // eod
 };
@@ -80,7 +71,6 @@ void ThemeBrick::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         (void)_t;
         switch (_id) {
         case 0: _t->themeChanged((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 1: _t->toggleDarkTheme((*reinterpret_cast< bool(*)>(_a[1]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -124,13 +114,13 @@ int ThemeBrick::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 2)
+        if (_id < 1)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 2;
+        _id -= 1;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 2)
+        if (_id < 1)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 2;
+        _id -= 1;
     }
     return _id;
 }
