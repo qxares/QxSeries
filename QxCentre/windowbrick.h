@@ -5,21 +5,23 @@
 #include "themebrick.h"
 #include "interlinkbrick.h"
 
-class MainWindowBrick;
-
 class WindowBrick : public QMainWindow {
     Q_OBJECT
 public:
-    explicit WindowBrick(MainWindowBrick *mainWindow, QWidget *parent = nullptr);
+    explicit WindowBrick(const QString &appName, QWidget *parent = nullptr);
     virtual ~WindowBrick();
-    virtual void initializeTheme(bool isDark) = 0;
+    void initializeTheme(bool isDark);
     virtual void postInitialize();
+    void centerWindow();
+
+signals:
+    void windowClosed(QObject *obj);
 
 protected:
     void closeEvent(QCloseEvent *event) override;
 
 private:
-    MainWindowBrick *mainWindowBrick;
+    QString appName;
     ThemeBrick *themeBrick;
     InterlinkBrick *interlinkBrick;
 };

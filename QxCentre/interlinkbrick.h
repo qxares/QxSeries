@@ -4,17 +4,20 @@
 #include <QObject>
 #include <QMap>
 #include <QPointer>
-#include <QWidget>
+#include <QString>
+#include "mainwindowbrick.h"
 
 class InterlinkBrick : public QObject {
     Q_OBJECT
+
 public:
-    explicit InterlinkBrick(QObject *parent = nullptr);
+    explicit InterlinkBrick(MainWindowBrick *parent);
     ~InterlinkBrick();
+
+    void registerAppWindow(const QString &appName, QWidget *window);
+    void unregisterAppWindow(const QString &appName);
+    void restoreWindow(const QString &appName);
     void launchAppWindow(const QString &appName);
-    void restoreWindow(const QString &windowName);
-    void registerAppWindow(const QString &name, QWidget *window);
-    void unregisterAppWindow(const QString &name);
     QMap<QString, QPointer<QWidget>> getAppWindows() const;
 
 signals:
@@ -22,6 +25,7 @@ signals:
 
 private:
     QMap<QString, QPointer<QWidget>> appWindows;
+    MainWindowBrick *mainWindow;
 };
 
 #endif // INTERLINKBRICK_H

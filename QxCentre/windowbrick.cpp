@@ -1,41 +1,57 @@
 #include "windowbrick.h"
-#include "mainwindowbrick.h"
 #include <QDebug>
 #include <QCloseEvent>
+#include <QScreen>
+#include <QSettings>
 
-WindowBrick::WindowBrick(MainWindowBrick *mainWindow, QWidget *parent)
-    : QMainWindow(parent), mainWindowBrick(mainWindow) {
-    if (mainWindowBrick) {
-        themeBrick = mainWindowBrick->getThemeBrick();
-        interlinkBrick = mainWindowBrick->getInterlinkBrick();
-        if (themeBrick) {
-            connect(themeBrick, &ThemeBrick::themeChanged, this, &WindowBrick::initializeTheme);
-        }
-    }
+WindowBrick::WindowBrick(const QString &appName, QWidget *parent)
+    : QMainWindow(parent), appName(appName) {
+    setWindowTitle(appName);
     setMinimumSize(400, 300);
-    qDebug() << "WindowBrick initialized";
+    themeBrick = nullptr;
+    interlinkBrick = nullptr;
+    qDebug() << "WindowBrick initialized for" << appName;
 }
 
 WindowBrick::~WindowBrick() {
-    if (themeBrick) {
-        themeBrick->disconnectThemeSignals(this);
+    qDebug() << "WindowBrick destroyed for" << appName;
+}
+
+void WindowBrick::initializeTheme(bool isDark) {
+    if (!themeBrick) {
+        themeBrick = new ThemeBrick(qApp, this);
     }
-    qDebug() << "WindowBrick destroyed";
+    themeBrick->toggleDarkTheme(isDark);
+    qDebug() << "Initialized theme for" << appName << ":" << (isDark ? "dark" : "light");
 }
 
 void WindowBrick::postInitialize() {
-    if (themeBrick) {
-        initializeTheme(themeBrick->isDarkTheme());
+    qDebug() << "Post-initialization for" << appName;
+}
+
+void WindowBrick::centerWindow() {
+    QScreen *screen = QGuiApplication::primaryScreen();
+    QRect screenGeometry = screen->availableGeometry();
+    QPoint cursorPos = QCursor::pos();
+    for (QScreen *s : QGuiApplication::screens()) {
+        if (s->geometry().contains(cursorPos)) {
+            screen = s;
+            screenGeometry = s->availableGeometry();
+            break;
+        }
     }
+    int x = (screenGeometry.width() - width()) / 2 + screenGeometry.left();
+    int y = (screenGeometry.height() - height()) / 2 + screenGeometry.top();
+    move(x, y);
+    QSettings settings("QxSeries", "QxCentre");
+    settings.setValue("window_position/" + appName, geometry());
+    qDebug() << "Centered" << appName << "at:" << x << y << "on screen:" << screen->name();
 }
 
 void WindowBrick::closeEvent(QCloseEvent *event) {
-    qDebug() << "WindowBrick closeEvent triggered for" << windowTitle();
-    if (interlinkBrick) {
-        interlinkBrick->unregisterAppWindow(windowTitle());
-    }
-    if (themeBrick) {
-        themeBrick->disconnectThemeSignals(this);
-    }
+    QSettings settings("QxSeries", "QxCentre");
+    settings.setValue("window_position/" + appName, geometry());
+    emit windowClosed(this);
     event->accept();
+    qDebug() << "Close event for" << appName;
 }

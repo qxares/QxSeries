@@ -1,25 +1,59 @@
-2025-05-01 08:45:06: StartupBrick initialized
-2025-05-01 08:45:06: Settings initialized: theme= "dark"
-2025-05-01 08:45:06: Settings initialized in 0 ms
-2025-05-01 08:45:06: StartupBrick initialized successfully in 0 ms
-2025-05-01 08:45:06: StartupBrick initialization complete, launching MainWindowBrick
-2025-05-01 08:45:06: ThemeBrick initialized
-2025-05-01 08:45:06: InterlinkBrick initialized
-2025-05-01 08:45:06: Theme switched to dark
-2025-05-01 08:45:06: QxCentre main window initialized, geometry: QRect(0,32 1920x1011)
-2025-05-01 08:45:06: MainWindowBrick shown, visibility: true geometry: QRect(0,32 1920x1011)
-2025-05-01 08:45:07: MainWindowBrick shown, visibility: true geometry: QRect(0,32 1920x1011)
-2025-05-01 08:45:43: handleExit triggered
-2025-05-01 08:45:43: QxCentre closeEvent triggered, openAppCount: 0
-2025-05-01 08:45:43: QxCentre closeEvent accepted
-2025-05-01 08:45:43: QApplication exec returned, shutting down
-2025-05-01 08:45:43: StartupBrick shutdown
-2025-05-01 08:45:43: StartupBrick shutdown
-2025-05-01 08:45:43: StartupBrick destroyed
-2025-05-01 08:45:43: QApplication about to quit
-2025-05-01 08:45:43: InterlinkBrick destroyed
-2025-05-01 08:45:43: Deleted interlinkBrick in cleanup
-2025-05-01 08:45:43: ThemeBrick destroyed
-2025-05-01 08:45:43: Deleted themeBrick in cleanup
-2025-05-01 08:45:43: Deleted taskbarDock in cleanup
-2025-05-01 08:45:43: MainWindowBrick destroyed
+2025-05-01 12:08:46: StartupBrick initialized
+2025-05-01 12:08:46: Settings initialized: theme= "dark"
+2025-05-01 12:08:46: Settings initialized in 0 ms
+2025-05-01 12:08:46: StartupBrick initialized successfully in 0 ms
+2025-05-01 12:08:46: StartupBrick initialization complete, launching MainWindowBrick
+2025-05-01 12:08:46: ThemeBrick initialized
+2025-05-01 12:08:46: InterlinkBrick initialized
+2025-05-01 12:08:46: Theme switched to dark
+2025-05-01 12:08:46: qxcentre main window initialized, geometry: QRect(288,188 1344x730)
+2025-05-01 12:08:47: MainWindowBrick shown, visibility: true geometry: QRect(288,188 1344x730)
+2025-05-01 12:08:47: MainWindowBrick shown, visibility: true geometry: QRect(288,188 1344x730)
+2025-05-01 12:08:50: Launching info window for: "Images"
+2025-05-01 12:08:50: Launching app window: "Images_Info"
+2025-05-01 12:08:50: ThemeBrick initialized
+2025-05-01 12:08:50: Theme switched to dark
+2025-05-01 12:08:50: Initialized theme for "Images_Info" : dark
+2025-05-01 12:08:50: BaseDialogBrick initialized for "Images_Info"
+2025-05-01 12:08:50: Applied Noto Color Emoji font for "Images_Info"
+2025-05-01 12:08:50: Centered "Images_Info" at: 810 421 on screen: "DP-1"
+2025-05-01 12:08:50: InfoDialogBrick initialized for "Images_Info"
+2025-05-01 12:08:50: Registered app "Images_Info" with dependencies: theme,geometry
+2025-05-01 12:08:50: Updated taskbar window list
+2025-05-01 12:08:50: Incremented openAppCount to: 1
+2025-05-01 12:08:50: Launched "Images_Info" with geometry: QRect(810,421 300x200)
+2025-05-01 12:08:54: Launching info window for: "Movies"
+2025-05-01 12:08:54: Launching app window: "Movies_Info"
+2025-05-01 12:08:54: ThemeBrick initialized
+2025-05-01 12:08:54: Theme switched to dark
+2025-05-01 12:08:54: Initialized theme for "Movies_Info" : dark
+2025-05-01 12:08:54: BaseDialogBrick initialized for "Movies_Info"
+2025-05-01 12:08:54: Applied Noto Color Emoji font for "Movies_Info"
+2025-05-01 12:08:54: Centered "Movies_Info" at: 810 421 on screen: "DP-1"
+2025-05-01 12:08:54: InfoDialogBrick initialized for "Movies_Info"
+2025-05-01 12:08:54: Registered app "Movies_Info" with dependencies: theme,geometry
+2025-05-01 12:08:54: Updated taskbar window list
+2025-05-01 12:08:54: Incremented openAppCount to: 2
+2025-05-01 12:08:54: Launched "Movies_Info" with geometry: QRect(810,421 300x200)
+2025-05-01 12:08:55: Starting raiseGroup, qxcentre visible: true
+2025-05-01 12:08:55: Raised app window:  "Images_Info"
+2025-05-01 12:08:55: Raised app window:  "Movies_Info"
+2025-05-01 12:08:55: Grouped qxcentre behind all apps
+2025-05-01 12:10:59: handleExit triggered
+2025-05-01 12:10:59: qxcentre closeEvent triggered, openAppCount: 2
+2025-05-01 12:10:59: Blocking qxcentre closure due to open apps
+2025-05-01 12:10:59: QApplication exec returned, shutting down
+2025-05-01 12:10:59: StartupBrick shutdown
+2025-05-01 12:10:59: StartupBrick shutdown
+2025-05-01 12:10:59: StartupBrick destroyed
+2025-05-01 12:10:59: QApplication about to quit
+2025-05-01 12:10:59: InterlinkBrick destroyed
+2025-05-01 12:10:59: Deleted interlinkBrick in cleanup
+2025-05-01 12:10:59: ThemeBrick destroyed
+2025-05-01 12:10:59: Deleted themeBrick in cleanup
+2025-05-01 12:10:59: Deleted taskbarDock in cleanup
+2025-05-01 12:10:59: MainWindowBrick destroyed
+2025-05-01 12:10:59: InfoDialogBrick destroyed for "Images_Info"
+2025-05-01 12:10:59: ThemeBrick destroyed
+2025-05-01 12:10:59: BaseDialogBrick destroyed for "Images_Info"
+2025-05-01 12:10:59: handleAppWindowDestroyed called for object: QWidget(0x5e73b3025840)

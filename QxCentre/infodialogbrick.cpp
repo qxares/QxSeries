@@ -1,0 +1,47 @@
+#include "infodialogbrick.h"
+#include <QDebug>
+#include <QLabel>
+#include <QVBoxLayout>
+#include <QFontDatabase>
+#include <QApplication>
+#include <QScreen>
+#include <QSettings>
+
+InfoDialogBrick::InfoDialogBrick(const QString &title, const QString &text, QWidget *parent)
+    : BaseDialogBrick(title, parent) {
+    qDebug() << "InfoDialogBrick initialized for" << title;
+    setFixedSize(300, 200);
+
+    QVBoxLayout *layout = new QVBoxLayout(this);
+    QLabel *label = new QLabel(text, this);
+    label->setAlignment(Qt::AlignCenter);
+    label->setWordWrap(true);
+
+    // Apply Noto Color Emoji font
+    QFontDatabase fontDb;
+    if (fontDb.hasFamily("Noto Color Emoji")) {
+        QFont font("Noto Color Emoji");
+        label->setFont(font);
+        qDebug() << "Applied Noto Color Emoji font for" << title;
+    } else {
+        qDebug() << "Noto Color Emoji font not found";
+    }
+
+    layout->addWidget(label);
+    setLayout(layout);
+
+    // Center on screen
+    QScreen *screen = QGuiApplication::primaryScreen();
+    QRect screenGeometry = screen->availableGeometry();
+    int x = (screenGeometry.width() - width()) / 2 + screenGeometry.left();
+    int y = (screenGeometry.height() - height()) / 2 + screenGeometry.top();
+    move(x, y);
+    qDebug() << "Centered" << title << "at:" << x << y << "on screen:" << screen->name();
+
+    QSettings settings("QxSeries", "qxcentre");
+    settings.setValue(QString("window_position/%1").arg(title), geometry());
+}
+
+InfoDialogBrick::~InfoDialogBrick() {
+    qDebug() << "InfoDialogBrick destroyed";
+}
