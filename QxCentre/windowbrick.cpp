@@ -8,6 +8,7 @@ WindowBrick::WindowBrick(const QString &appName, QWidget *parent)
     : QMainWindow(parent), appName(appName) {
     setWindowTitle(appName);
     setMinimumSize(400, 300);
+    setAttribute(Qt::WA_NativeWindow, true); // Ensure Muffin decorations
     themeBrick = nullptr;
     interlinkBrick = nullptr;
     qDebug() << "WindowBrick initialized for" << appName;
@@ -22,6 +23,12 @@ void WindowBrick::initializeTheme(bool isDark) {
         themeBrick = new ThemeBrick(qApp, this);
     }
     themeBrick->toggleDarkTheme(isDark);
+    QString bgColor = isDark ? "#2E2E2E" : "#F5F5F5";
+    QString textColor = isDark ? "#FFFFFF" : "#000000";
+    QString styleSheet = QString(
+        "QMainWindow { background-color: %1; color: %2; }"
+    ).arg(bgColor, textColor);
+    setStyleSheet(styleSheet);
     qDebug() << "Initialized theme for" << appName << ":" << (isDark ? "dark" : "light");
 }
 

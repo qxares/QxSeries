@@ -1,9 +1,8 @@
 #include "basedialogbrick.h"
 #include <QDebug>
 #include <QSettings>
-#include <QScreen>
-#include <QGuiApplication>
 #include <QCloseEvent>
+#include <QScreen>
 #include "themebrick.h"
 
 BaseDialogBrick::BaseDialogBrick(const QString &title, QWidget *parent)
@@ -25,6 +24,13 @@ BaseDialogBrick::~BaseDialogBrick() {
 void BaseDialogBrick::initializeTheme(bool isDark) {
     themeBrick = new ThemeBrick(qApp, this);
     themeBrick->toggleDarkTheme(isDark);
+    QString bgColor = isDark ? "#2E2E2E" : "#F5F5F5";
+    QString textColor = isDark ? "#FFFFFF" : "#000000";
+    QString styleSheet = QString(
+        "QDialog { background-color: %1; color: %2; }"
+        "QLabel { background-color: %1; color: %2; }"
+    ).arg(bgColor, textColor);
+    setStyleSheet(styleSheet);
     qDebug() << "Initialized theme for" << title << ":" << (isDark ? "dark" : "light");
 }
 

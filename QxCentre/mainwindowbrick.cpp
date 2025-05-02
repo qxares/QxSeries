@@ -1,4 +1,5 @@
 #include "mainwindowbrick.h"
+#include "infodialogbrick.h"
 #include <QDebug>
 #include <QApplication>
 #include <QScreen>
@@ -35,9 +36,7 @@ MainWindowBrick::MainWindowBrick(QWidget *parent)
     setWindowTitle("QxCentre");
     setMinimumSize(600, 400);
     setAttribute(Qt::WA_QuitOnClose, true);
-
-    // Remove window buttons
-    setWindowFlags(Qt::FramelessWindowHint);
+    setAttribute(Qt::WA_NativeWindow, true); // Ensure Muffin decorations
 
     // Log platform, display, and window manager
     qDebug() << "Platform:" << QGuiApplication::platformName() << "Display:" << qgetenv("DISPLAY");
@@ -95,31 +94,7 @@ MainWindowBrick::~MainWindowBrick() {
 void MainWindowBrick::setupTaskbar() {
     qDebug() << "Setting up taskbar";
     QMenuBar *taskbar = menuBar();
-    taskbar->setStyleSheet(
-        "QMenuBar {"
-        "    background-color: #3E3D32;" // Monokai dark
-        "    color: #F8F8F2;" // Monokai light text
-        "    font-size: 14px;" // Larger font
-        "    padding: 5px;"
-        "}"
-        "QMenuBar::item {"
-        "    padding: 5px 10px;"
-        "}"
-        "QMenuBar::item:selected {"
-        "    background-color: #66D9EF;" // Monokai blue hover
-        "}"
-        "QMenu {"
-        "    background-color: #3E3D32;"
-        "    color: #F8F8F2;"
-        "    font-size: 12px;"
-        "}"
-        "QMenu::item {"
-        "    padding: 5px 20px;"
-        "}"
-        "QMenu::item:selected {"
-        "    background-color: #66D9EF;"
-        "}"
-    );
+    updateCentralWidgetStyle(themeBrick->isDarkTheme()); // Apply initial theme to menu bar
 
     // QxCentre Menu
     QMenu *qxCentreMenu = taskbar->addMenu("QxCentre");
@@ -129,7 +104,7 @@ void MainWindowBrick::setupTaskbar() {
     QAction *lightAction = themesMenu->addAction("Light");
     darkAction->setCheckable(true);
     lightAction->setCheckable(true);
-    darkAction->setChecked(themeBrick->isDarkTheme()); // Reflect current theme
+    darkAction->setChecked(themeBrick->isDarkTheme());
     lightAction->setChecked(!themeBrick->isDarkTheme());
     QActionGroup *themeGroup = new QActionGroup(this);
     themeGroup->addAction(darkAction);
@@ -151,24 +126,12 @@ void MainWindowBrick::setupTaskbar() {
     QAction *exitAction = qxCentreMenu->addAction("Exit");
     connect(exitAction, &QAction::triggered, this, &MainWindowBrick::handleExit);
 
-    // QxApps Menu
+    // QxApps Menu (placeholders, no launch logic)
     QMenu *qxAppsMenu = taskbar->addMenu("QxApps");
     QMenu *documentsMenu = qxAppsMenu->addMenu("QxDocuments");
-    QAction *qxWriteAction = documentsMenu->addAction("QxWrite");
-    QAction *qxSheetAction = documentsMenu->addAction("QxSheet");
-    QAction *qxNotesAction = documentsMenu->addAction("QxNotes");
-    connect(qxWriteAction, &QAction::triggered, this, [this]() {
-        QProcess::startDetached("QxWrite", QStringList());
-        qDebug() << "Launching QxWrite";
-    });
-    connect(qxSheetAction, &QAction::triggered, this, [this]() {
-        QProcess::startDetached("QxSheet", QStringList());
-        qDebug() << "Launching QxSheet";
-    });
-    connect(qxNotesAction, &QAction::triggered, this, [this]() {
-        QProcess::startDetached("QxNotes", QStringList());
-        qDebug() << "Launching QxNotes";
-    });
+    documentsMenu->addAction("QxWrite");
+    documentsMenu->addAction("QxSheet");
+    documentsMenu->addAction("QxNotes");
     QMenu *graphicsMenu = qxAppsMenu->addMenu("QxGraphics");
     graphicsMenu->addAction("QxDraw");
     graphicsMenu->addAction("Images");
@@ -194,9 +157,24 @@ void MainWindowBrick::setupTaskbar() {
 
     // Help Menu
     QMenu *helpMenu = taskbar->addMenu("Help");
-    helpMenu->addAction("About QxCentre");
-    helpMenu->addAction("Documentation");
-    helpMenu->addAction("Check for Updates");
+    QAction *aboutAction = helpMenu->addAction("About QxCentre");
+    QAction *docsAction = helpMenu->addAction("Documentation");
+    QAction *updatesAction = helpMenu->addAction("Check for Updates");
+    connect(aboutAction, &QAction::triggered, this, [this]() {
+        InfoDialogBrick *dialog = new InfoDialogBrick("About QxCentre", "QxCentre v1.0\nA Qt-powered desktop environment for Aries-Desk.", this);
+        dialog->show();
+        qDebug() << "Showing About QxCentre dialog";
+    });
+    connect(docsAction, &QAction::triggered, this, [this]() {
+        InfoDialogBrick *dialog = new InfoDialogBrick("Documentation", "QxCentre Documentation\nSee https://github.com/qxares/QxSeries for details.", this);
+        dialog->show();
+        qDebug() << "Showing Documentation dialog";
+    });
+    connect(updatesAction, &QAction::triggered, this, [this]() {
+        InfoDialogBrick *dialog = new InfoDialogBrick("Check for Updates", "No updates available.\nCheck https://github.com/qxares/QxSeries for the latest version.", this);
+        dialog->show();
+        qDebug() << "Showing Check for Updates dialog";
+    });
 
     taskbar->show();
     qDebug() << "Taskbar set, visible:" << taskbar->isVisible();
@@ -226,12 +204,24 @@ void MainWindowBrick::resizeEvent(QResizeEvent *event) {
 }
 
 void MainWindowBrick::updateCentralWidgetStyle(bool isDark) {
-    QWidget *central = centralWidget();
-    if (central) {
-        QString bgColor = isDark ? "#272822" : "#FFFFFF";
-        central->setStyleSheet(QString("background-color: %1;").arg(bgColor));
-        qDebug() << "Updated central widget style, dark:" << isDark << "bg:" << bgColor;
+    QString bgColor = isDark ? "#2E2E2E" : "#F5F5F5"; // Flat-Color-GTK colors
+    QString textColor = isDark ? "#FFFFFF" : "#000000";
+    QString hoverColor = "#66D9EF"; // Monokai accent
+    QString styleSheet = QString(
+        "QWidget { background-color: %1; color: %2; }"
+        "QMenuBar { background-color: %1; color: %2; font-size: 14px; padding: 5px; }"
+        "QMenuBar::item { padding: 5px 10px; }"
+        "QMenuBar::item:selected { background-color: %3; }"
+        "QMenu { background-color: %1; color: %2; font-size: 12px; }"
+        "QMenu::item { padding: 5px 20px; }"
+        "QMenu::item:selected { background-color: %3; }"
+    ).arg(bgColor, textColor, hoverColor);
+    
+    if (centralWidget()) {
+        centralWidget()->setStyleSheet(styleSheet);
     }
+    menuBar()->setStyleSheet(styleSheet);
+    qDebug() << "Updated central widget style, dark:" << isDark << "bg:" << bgColor;
 }
 
 void MainWindowBrick::raiseGroup() {}

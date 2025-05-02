@@ -37,7 +37,7 @@ void ThemeBrick::toggleDarkTheme(bool enable) {
             applyLightTheme();
         }
         emit themeChanged(darkThemeEnabled);
-        qDebug() << "Theme switched to" << (darkThemeEnabled ? "dark" : "light");
+        qDebug() << "Emitted themeChanged, dark:" << darkThemeEnabled;
     }
 }
 
@@ -46,39 +46,39 @@ bool ThemeBrick::isDarkTheme() const {
 }
 
 void ThemeBrick::applyDarkTheme() {
-    QPalette monokaiPalette;
-    monokaiPalette.setColor(QPalette::Window, QColor("#272822")); // Monokai background
-    monokaiPalette.setColor(QPalette::WindowText, QColor("#F8F8F2")); // Monokai foreground
-    monokaiPalette.setColor(QPalette::Base, QColor("#272822")); // Editor background
-    monokaiPalette.setColor(QPalette::AlternateBase, QColor("#3E3D32")); // Slightly lighter for contrast
-    monokaiPalette.setColor(QPalette::ToolTipBase, QColor("#75715E")); // Monokai comment
-    monokaiPalette.setColor(QPalette::ToolTipText, QColor("#F8F8F2")); // Foreground
-    monokaiPalette.setColor(QPalette::Text, QColor("#F8F8F2")); // Text
-    monokaiPalette.setColor(QPalette::Button, QColor("#3E3D32")); // Button background
-    monokaiPalette.setColor(QPalette::ButtonText, QColor("#F8F8F2")); // Button text
-    monokaiPalette.setColor(QPalette::BrightText, QColor("#F8F8F2")); // Keywords (off-white)
-    monokaiPalette.setColor(QPalette::Link, QColor("#d6d6c7")); // Links (light gray)
-    monokaiPalette.setColor(QPalette::Highlight, QColor("#3e3d33")); // Selection (dark gray)
-    monokaiPalette.setColor(QPalette::HighlightedText, QColor("#F8F8F2")); // Foreground for contrast
-    application->setPalette(monokaiPalette);
+    QPalette darkPalette;
+    darkPalette.setColor(QPalette::Window, QColor("#2E2E2E")); // Flat-Color-GTK dark
+    darkPalette.setColor(QPalette::WindowText, QColor("#FFFFFF"));
+    darkPalette.setColor(QPalette::Base, QColor("#2E2E2E"));
+    darkPalette.setColor(QPalette::AlternateBase, QColor("#3E3D32"));
+    darkPalette.setColor(QPalette::ToolTipBase, QColor("#75715E"));
+    darkPalette.setColor(QPalette::ToolTipText, QColor("#FFFFFF"));
+    darkPalette.setColor(QPalette::Text, QColor("#FFFFFF"));
+    darkPalette.setColor(QPalette::Button, QColor("#3E3D32"));
+    darkPalette.setColor(QPalette::ButtonText, QColor("#FFFFFF"));
+    darkPalette.setColor(QPalette::BrightText, QColor("#FFFFFF"));
+    darkPalette.setColor(QPalette::Link, QColor("#d6d6c7"));
+    darkPalette.setColor(QPalette::Highlight, QColor("#66D9EF")); // Monokai accent
+    darkPalette.setColor(QPalette::HighlightedText, QColor("#FFFFFF"));
+    application->setPalette(darkPalette);
     application->setStyle(QStyleFactory::create("Fusion"));
 }
 
 void ThemeBrick::applyLightTheme() {
     QPalette lightPalette;
-    lightPalette.setColor(QPalette::Window, Qt::white);
-    lightPalette.setColor(QPalette::WindowText, Qt::black);
-    lightPalette.setColor(QPalette::Base, Qt::white);
+    lightPalette.setColor(QPalette::Window, QColor("#F5F5F5")); // Flat-Color-GTK light
+    lightPalette.setColor(QPalette::WindowText, QColor("#000000"));
+    lightPalette.setColor(QPalette::Base, QColor("#F5F5F5"));
     lightPalette.setColor(QPalette::AlternateBase, QColor(240, 240, 240));
-    lightPalette.setColor(QPalette::ToolTipBase, Qt::black);
-    lightPalette.setColor(QPalette::ToolTipText, Qt::black);
-    lightPalette.setColor(QPalette::Text, Qt::black);
-    lightPalette.setColor(QPalette::Button, Qt::white);
-    lightPalette.setColor(QPalette::ButtonText, Qt::black);
-    lightPalette.setColor(QPalette::BrightText, Qt::red);
-    lightPalette.setColor(QPalette::Link, QColor(0, 0, 255));
-    lightPalette.setColor(QPalette::Highlight, QColor(0, 120, 215));
-    lightPalette.setColor(QPalette::HighlightedText, Qt::white);
+    lightPalette.setColor(QPalette::ToolTipBase, QColor("#000000"));
+    lightPalette.setColor(QPalette::ToolTipText, QColor("#000000"));
+    lightPalette.setColor(QPalette::Text, QColor("#000000"));
+    lightPalette.setColor(QPalette::Button, QColor("#F5F5F5"));
+    lightPalette.setColor(QPalette::ButtonText, QColor("#000000"));
+    lightPalette.setColor(QPalette::BrightText, QColor("#FF0000"));
+    lightPalette.setColor(QPalette::Link, QColor("#0078D7")); // Flat-Color-GTK accent
+    lightPalette.setColor(QPalette::Highlight, QColor("#66D9EF")); // Monokai accent
+    lightPalette.setColor(QPalette::HighlightedText, QColor("#000000"));
     application->setPalette(lightPalette);
     application->setStyle(QStyleFactory::create("Fusion"));
 }
