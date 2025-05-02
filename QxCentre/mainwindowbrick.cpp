@@ -15,9 +15,10 @@
 #include <QFile>
 #include <QDateTime>
 #include "themebrick.h"
+#include "windowbrick.h"
 
 MainWindowBrick::MainWindowBrick(QWidget *parent) 
-    : QMainWindow(parent), themeBrick(new ThemeBrick(qApp, this)) {
+    : QMainWindow(parent), themeBrick(new ThemeBrick(qApp, this)), interlinkBrick(new InterlinkBrick(this)) {
     qDebug() << "MainWindowBrick constructor started";
     
     // Initialize logging
@@ -126,10 +127,19 @@ void MainWindowBrick::setupTaskbar() {
     QAction *exitAction = qxCentreMenu->addAction("Exit");
     connect(exitAction, &QAction::triggered, this, &MainWindowBrick::handleExit);
 
-    // QxApps Menu (placeholders, no launch logic)
+    // QxApps Menu
     QMenu *qxAppsMenu = taskbar->addMenu("QxApps");
     QMenu *documentsMenu = qxAppsMenu->addMenu("QxDocuments");
-    documentsMenu->addAction("QxWrite");
+    QAction *qxWriteAction = documentsMenu->addAction("QxWrite");
+    // Disabled until QxWrite is implemented
+    // connect(qxWriteAction, &QAction::triggered, this, [this]() {
+    //     WindowBrick *window = new WindowBrick("QxWrite", this);
+    //     window->initializeTheme(themeBrick->isDarkTheme());
+    //     window->centerWindow();
+    //     window->show();
+    //     interlinkBrick->addWindow(window);
+    //     qDebug() << "Launched QxWrite window";
+    // });
     documentsMenu->addAction("QxSheet");
     documentsMenu->addAction("QxNotes");
     QMenu *graphicsMenu = qxAppsMenu->addMenu("QxGraphics");
@@ -145,7 +155,7 @@ void MainWindowBrick::setupTaskbar() {
     videoMenu->addAction("QxVideoPlayer");
     videoMenu->addAction("Movies");
     videoMenu->addAction("Series");
-    videoMenu->addAction("Recordings");
+    audioMenu->addAction("Recordings");
     QMenu *toolsMenu = qxAppsMenu->addMenu("QxTools");
     toolsMenu->addAction("QxCalc");
     toolsMenu->addAction("QxConvert");
@@ -176,6 +186,12 @@ void MainWindowBrick::setupTaskbar() {
         qDebug() << "Showing Check for Updates dialog";
     });
 
+    // Connect InterlinkBrick signals
+    connect(interlinkBrick, &InterlinkBrick::taskbarUpdated, this, &MainWindowBrick::updateTaskbarWindows);
+    connect(interlinkBrick, &InterlinkBrick::appCountChanged, this, [this](int count) {
+        qDebug() << "Open app count changed:" << count;
+    });
+
     taskbar->show();
     qDebug() << "Taskbar set, visible:" << taskbar->isVisible();
 }
@@ -204,24 +220,25 @@ void MainWindowBrick::resizeEvent(QResizeEvent *event) {
 }
 
 void MainWindowBrick::updateCentralWidgetStyle(bool isDark) {
-    QString bgColor = isDark ? "#272822" : "#F5F5F5"; // Dark gray-green or light
+    QString bgColor = isDark ? "#272822" : "#FFFFFF"; // Dark gray-green or white
     QString textColor = isDark ? "#F8F8F2" : "#000000"; // Off-white or black
-    QString hoverColor = "#66D9EF"; // Monokai accent
+    QString menuBarBg = isDark ? "#1e1f1a" : "#F0F0F0"; // Darker gray-green or light gray
+    QString hoverColor = isDark ? "#63634e" : "#0078D7"; // Olive-green or Windows blue
     QString styleSheet = QString(
         "QWidget { background-color: %1; color: %2; }"
-        "QMenuBar { background-color: %1; color: %2; font-size: 14px; padding: 5px; }"
+        "QMenuBar { background-color: %3; color: %2; font-size: 14px; padding: 5px; }"
         "QMenuBar::item { padding: 5px 10px; }"
-        "QMenuBar::item:selected { background-color: %3; }"
+        "QMenuBar::item:selected { background-color: %4; }"
         "QMenu { background-color: %1; color: %2; font-size: 12px; }"
         "QMenu::item { padding: 5px 20px; }"
-        "QMenu::item:selected { background-color: %3; }"
-    ).arg(bgColor, textColor, hoverColor);
+        "QMenu::item:selected { background-color: %4; }"
+    ).arg(bgColor, textColor, menuBarBg, hoverColor);
     
     if (centralWidget()) {
         centralWidget()->setStyleSheet(styleSheet);
     }
     menuBar()->setStyleSheet(styleSheet);
-    qDebug() << "Updated central widget style, dark:" << isDark << "bg:" << bgColor;
+    qDebug() << "Updated central widget style, dark:" << isDark << "bg:" << bgColor << "menuBarBg:" << menuBarBg;
 }
 
 void MainWindowBrick::raiseGroup() {}
@@ -232,14 +249,22 @@ void MainWindowBrick::closeEvent(QCloseEvent *event) {
     handleExit();
 }
 void MainWindowBrick::handleAppWindowDestroyed([[maybe_unused]] QObject *obj) {}
-void MainWindowBrick::incrementOpenAppCount() {}
-void MainWindowBrick::decrementOpenAppCount() {}
+void MainWindowBrick::incrementOpenAppCount() {
+    interlinkBrick->incrementOpenAppCount();
+}
+void MainWindowBrick::decrementOpenAppCount() {
+    interlinkBrick->decrementOpenAppCount();
+}
 void MainWindowBrick::handleExit() {
     qDebug() << "handleExit triggered";
     QApplication::quit();
 }
 void MainWindowBrick::launchInfoWindow() {}
-void MainWindowBrick::activateWindow([[maybe_unused]] int index) {}
-void MainWindowBrick::updateTaskbarWindows() {}
+void MainWindowBrick::activateWindow(int index) {
+    interlinkBrick->activateWindow(index);
+}
+void MainWindowBrick::updateTaskbarWindows() {
+    interlinkBrick->updateTaskbarWindows();
+}
 ThemeBrick* MainWindowBrick::getThemeBrick() { return themeBrick; }
-InterlinkBrick* MainWindowBrick::getInterlinkBrick() { return nullptr; }
+InterlinkBrick* MainWindowBrick::getInterlinkBrick() { return interlinkBrick; }

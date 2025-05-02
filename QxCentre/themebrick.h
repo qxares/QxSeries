@@ -11,6 +11,7 @@ class ThemeBrick : public QObject {
 public:
     explicit ThemeBrick(QApplication *app, QObject *parent = nullptr);
     ~ThemeBrick();
+    void setTheme(const QString &theme);
     void toggleDarkTheme(bool enable);
     bool isDarkTheme() const;
     void disconnectThemeSignals(QWidget *widget);

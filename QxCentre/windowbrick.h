@@ -3,7 +3,8 @@
 
 #include <QMainWindow>
 #include "themebrick.h"
-#include "interlinkbrick.h"
+
+class InterlinkBrick; // Forward declaration
 
 class WindowBrick : public QMainWindow {
     Q_OBJECT
@@ -15,7 +16,7 @@ public:
     void centerWindow();
 
 signals:
-    void windowClosed(QObject *obj);
+    void windowClosed(WindowBrick *window);
 
 protected:
     void closeEvent(QCloseEvent *event) override;

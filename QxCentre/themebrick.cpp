@@ -66,19 +66,19 @@ void ThemeBrick::applyDarkTheme() {
 
 void ThemeBrick::applyLightTheme() {
     QPalette lightPalette;
-    lightPalette.setColor(QPalette::Window, QColor("#F5F5F5")); // Flat-Color-GTK light
-    lightPalette.setColor(QPalette::WindowText, QColor("#000000"));
-    lightPalette.setColor(QPalette::Base, QColor("#F5F5F5"));
-    lightPalette.setColor(QPalette::AlternateBase, QColor(240, 240, 240));
-    lightPalette.setColor(QPalette::ToolTipBase, QColor("#000000"));
-    lightPalette.setColor(QPalette::ToolTipText, QColor("#000000"));
-    lightPalette.setColor(QPalette::Text, QColor("#000000"));
-    lightPalette.setColor(QPalette::Button, QColor("#F5F5F5"));
-    lightPalette.setColor(QPalette::ButtonText, QColor("#000000"));
-    lightPalette.setColor(QPalette::BrightText, QColor("#FF0000"));
-    lightPalette.setColor(QPalette::Link, QColor("#0078D7")); // Flat-Color-GTK accent
-    lightPalette.setColor(QPalette::Highlight, QColor("#66D9EF")); // Monokai accent
-    lightPalette.setColor(QPalette::HighlightedText, QColor("#000000"));
+    lightPalette.setColor(QPalette::Window, QColor("#FFFFFF")); // White
+    lightPalette.setColor(QPalette::WindowText, QColor("#000000")); // Black
+    lightPalette.setColor(QPalette::Base, QColor("#FFFFFF")); // White
+    lightPalette.setColor(QPalette::AlternateBase, QColor("#D4D4D4")); // Light gray
+    lightPalette.setColor(QPalette::ToolTipBase, QColor("#FFFFE1")); // Light yellow
+    lightPalette.setColor(QPalette::ToolTipText, QColor("#000000")); // Black
+    lightPalette.setColor(QPalette::Text, QColor("#000000")); // Black
+    lightPalette.setColor(QPalette::Button, QColor("#D4D4D4")); // Light gray
+    lightPalette.setColor(QPalette::ButtonText, QColor("#000000")); // Black
+    lightPalette.setColor(QPalette::BrightText, QColor("#FF0000")); // Red
+    lightPalette.setColor(QPalette::Link, QColor("#0000FF")); // Blue
+    lightPalette.setColor(QPalette::Highlight, QColor("#0078D7")); // Windows blue
+    lightPalette.setColor(QPalette::HighlightedText, QColor("#000000")); // Black
     application->setPalette(lightPalette);
     application->setStyle(QStyleFactory::create("Fusion"));
 }

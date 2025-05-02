@@ -22,3 +22,5 @@ HEADERS += \
     themebrick.h \
     windowbrick.h
 QMAKE_CXXFLAGS += -std=c++11
+HEADERS += desktopmaestrobrick.h
+SOURCES += desktopmaestrobrick.cpp

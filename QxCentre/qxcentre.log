@@ -1,0 +1,369 @@
+2025-05-01 16:03:51 [DEBUG] Logging initialized to qxcentre.log
+2025-05-01 16:03:51 [DEBUG] QApplication initialized
+2025-05-01 16:03:51 [DEBUG] StartupBrick initialized
+2025-05-01 16:03:51 [DEBUG] StartupBrick initialized
+2025-05-01 16:03:51 [DEBUG] Initializing desktop
+2025-05-01 16:03:51 [DEBUG] MainWindowBrick constructor started
+2025-05-01 16:03:51 [DEBUG] Platform: "xcb" Display: ":0"
+2025-05-01 16:03:51 [DEBUG] Window manager: "X-Cinnamon"
+2025-05-01 16:03:51 [DEBUG] Primary screen: "DP-1" Available geometry: QRect(0,0 1920x1080)
+2025-05-01 16:03:51 [DEBUG] Saved geometry: QRect(0,0 1920x1080)
+2025-05-01 16:03:51 [DEBUG] Set geometry: QRect(0,0 1920x1080)
+2025-05-01 16:03:52 [DEBUG] Called showMaximized, maximized: true geometry: QRect(0,0 1920x1080)
+2025-05-01 16:03:52 [DEBUG] Central widget set, visible: true
+2025-05-01 16:03:52 [DEBUG] Setting up taskbar
+2025-05-01 16:03:52 [DEBUG] Taskbar set, visible: true
+2025-05-01 16:03:52 [DEBUG] Window shown, visibility: true active: false geometry: QRect(0,0 1920x1080)
+2025-05-01 16:03:52 [DEBUG] MainWindowBrick constructor completed
+2025-05-01 16:03:52 [DEBUG] Desktop shown, visible: true
+2025-05-01 16:03:56 [DEBUG] handleExit triggered
+2025-05-01 16:03:56 [DEBUG] StartupBrick shutdown
+2025-05-01 16:03:56 [DEBUG] StartupBrick destroyed
+2025-05-01 16:06:14 [DEBUG] Logging initialized to qxcentre.log
+2025-05-01 16:06:14 [DEBUG] QApplication initialized
+2025-05-01 16:06:14 [DEBUG] StartupBrick initialized
+2025-05-01 16:06:14 [DEBUG] StartupBrick initialized
+2025-05-01 16:06:14 [DEBUG] Initializing desktop
+2025-05-01 16:06:14 [DEBUG] MainWindowBrick constructor started
+2025-05-01 16:06:14 [DEBUG] Platform: "xcb" Display: ":0"
+2025-05-01 16:06:14 [DEBUG] Window manager: "X-Cinnamon"
+2025-05-01 16:06:14 [DEBUG] Primary screen: "DP-1" Available geometry: QRect(0,0 1920x1050)
+2025-05-01 16:06:14 [DEBUG] Saved geometry: QRect(0,0 1920x1080)
+2025-05-01 16:06:14 [DEBUG] Reset geometry to: QRect(0,0 1920x1050)
+2025-05-01 16:06:14 [DEBUG] Set geometry: QRect(0,0 1920x1050)
+2025-05-01 16:06:14 [DEBUG] Called showMaximized, maximized: true geometry: QRect(0,0 1920x1050)
+2025-05-01 16:06:14 [DEBUG] Central widget set, visible: true
+2025-05-01 16:06:14 [DEBUG] Setting up taskbar
+2025-05-01 16:06:14 [DEBUG] Taskbar set, visible: true
+2025-05-01 16:06:14 [DEBUG] Window shown, visibility: true active: false geometry: QRect(0,0 1920x1050)
+2025-05-01 16:06:14 [DEBUG] MainWindowBrick constructor completed
+2025-05-01 16:06:14 [DEBUG] Desktop shown, visible: true
+2025-05-01 16:06:17 [DEBUG] handleExit triggered
+2025-05-01 16:06:17 [DEBUG] StartupBrick shutdown
+2025-05-01 16:06:17 [DEBUG] StartupBrick destroyed
+2025-05-01 16:11:43 [DEBUG] Logging initialized to qxcentre.log
+2025-05-01 16:11:44 [DEBUG] QApplication initialized
+2025-05-01 16:11:44 [DEBUG] StartupBrick initialized
+2025-05-01 16:11:44 [DEBUG] StartupBrick initialized
+2025-05-01 16:11:44 [DEBUG] Initializing desktop
+2025-05-01 16:11:44 [DEBUG] MainWindowBrick constructor started
+2025-05-01 16:11:44 [DEBUG] Platform: "xcb" Display: ":0"
+2025-05-01 16:11:44 [DEBUG] Window manager: "X-Cinnamon"
+2025-05-01 16:11:44 [DEBUG] Primary screen: "DP-1" Available geometry: QRect(0,0 1920x1043)
+2025-05-01 16:11:44 [DEBUG] Saved geometry: QRect(0,0 1920x1050)
+2025-05-01 16:11:44 [DEBUG] Reset geometry to: QRect(0,0 1920x1043)
+2025-05-01 16:11:44 [DEBUG] Set geometry: QRect(0,0 1920x1043)
+2025-05-01 16:11:44 [DEBUG] Called showMaximized, maximized: true geometry: QRect(0,0 1920x1043)
+2025-05-01 16:11:44 [DEBUG] Central widget set, visible: true
+2025-05-01 16:11:44 [DEBUG] Setting up taskbar
+2025-05-01 16:11:44 [DEBUG] Taskbar set, visible: true
+2025-05-01 16:11:44 [DEBUG] Window shown, visibility: true active: false geometry: QRect(0,0 1920x1043)
+2025-05-01 16:11:44 [DEBUG] MainWindowBrick constructor completed
+2025-05-01 16:11:44 [DEBUG] Desktop shown, visible: true
+2025-05-01 16:11:56 [DEBUG] handleExit triggered
+2025-05-01 16:11:56 [DEBUG] StartupBrick shutdown
+2025-05-01 16:11:56 [DEBUG] StartupBrick destroyed
+2025-05-01 16:42:38 [DEBUG] Logging initialized to qxcentre.log
+2025-05-01 16:42:39 [DEBUG] QApplication initialized
+2025-05-01 16:42:39 [DEBUG] StartupBrick initialized
+2025-05-01 16:42:39 [DEBUG] StartupBrick initialized
+2025-05-01 16:42:39 [DEBUG] Initializing desktop
+2025-05-01 16:42:39 [DEBUG] MainWindowBrick constructor started
+2025-05-01 16:42:39 [DEBUG] Platform: "xcb" Display: ":0"
+2025-05-01 16:42:39 [DEBUG] Window manager: "X-Cinnamon"
+2025-05-01 16:42:39 [DEBUG] Primary screen: "DP-1" Available geometry: QRect(0,0 1920x1043)
+2025-05-01 16:42:39 [DEBUG] Saved geometry: QRect(0,0 1920x1043)
+2025-05-01 16:42:39 [DEBUG] Set geometry: QRect(0,0 1920x1043)
+2025-05-01 16:42:39 [DEBUG] Called showMaximized, maximized: true geometry: QRect(0,0 1920x1043)
+2025-05-01 16:42:39 [DEBUG] Central widget set, visible: true
+2025-05-01 16:42:39 [DEBUG] Setting up taskbar
+2025-05-01 16:42:39 [DEBUG] Taskbar set, visible: true
+2025-05-01 16:42:39 [DEBUG] Window shown, visibility: true active: false geometry: QRect(0,0 1920x1043)
+2025-05-01 16:42:39 [DEBUG] MainWindowBrick constructor completed
+2025-05-01 16:42:39 [DEBUG] Desktop shown, visible: true
+2025-05-01 16:43:19 [DEBUG] handleExit triggered
+2025-05-01 16:43:19 [DEBUG] StartupBrick shutdown
+2025-05-01 16:43:19 [DEBUG] StartupBrick destroyed
+2025-05-01 16:43:28 [DEBUG] Logging initialized to qxcentre.log
+2025-05-01 16:43:28 [DEBUG] QApplication initialized
+2025-05-01 16:43:28 [DEBUG] StartupBrick initialized
+2025-05-01 16:43:28 [DEBUG] StartupBrick initialized
+2025-05-01 16:43:28 [DEBUG] Initializing desktop
+2025-05-01 16:43:28 [DEBUG] MainWindowBrick constructor started
+2025-05-01 16:43:28 [DEBUG] Platform: "xcb" Display: ":0"
+2025-05-01 16:43:28 [DEBUG] Window manager: "X-Cinnamon"
+2025-05-01 16:43:28 [DEBUG] Primary screen: "DP-1" Available geometry: QRect(0,0 1920x1043)
+2025-05-01 16:43:28 [DEBUG] Saved geometry: QRect(0,0 1920x1043)
+2025-05-01 16:43:28 [DEBUG] Set geometry: QRect(0,0 1920x1043)
+2025-05-01 16:43:28 [DEBUG] Called showMaximized, maximized: true geometry: QRect(0,0 1920x1043)
+2025-05-01 16:43:28 [DEBUG] Central widget set, visible: true
+2025-05-01 16:43:28 [DEBUG] Setting up taskbar
+2025-05-01 16:43:28 [DEBUG] Taskbar set, visible: true
+2025-05-01 16:43:28 [DEBUG] Window shown, visibility: true active: false geometry: QRect(0,0 1920x1043)
+2025-05-01 16:43:28 [DEBUG] MainWindowBrick constructor completed
+2025-05-01 16:43:28 [DEBUG] Desktop shown, visible: true
+2025-05-01 16:43:33 [DEBUG] Launching QxSheet
+2025-05-01 16:43:37 [DEBUG] handleExit triggered
+2025-05-01 16:43:37 [DEBUG] StartupBrick shutdown
+2025-05-01 16:43:37 [DEBUG] StartupBrick destroyed
+2025-05-01 16:44:28 [DEBUG] Logging initialized to qxcentre.log
+2025-05-01 16:44:28 [DEBUG] QApplication initialized
+2025-05-01 16:44:28 [DEBUG] StartupBrick initialized
+2025-05-01 16:44:28 [DEBUG] StartupBrick initialized
+2025-05-01 16:44:28 [DEBUG] Initializing desktop
+2025-05-01 16:44:28 [DEBUG] MainWindowBrick constructor started
+2025-05-01 16:44:28 [DEBUG] Platform: "xcb" Display: ":0"
+2025-05-01 16:44:28 [DEBUG] Window manager: "X-Cinnamon"
+2025-05-01 16:44:28 [DEBUG] Primary screen: "DP-1" Available geometry: QRect(0,0 1920x1043)
+2025-05-01 16:44:28 [DEBUG] Saved geometry: QRect(0,0 1920x1043)
+2025-05-01 16:44:28 [DEBUG] Set geometry: QRect(0,0 1920x1043)
+2025-05-01 16:44:28 [DEBUG] Called showMaximized, maximized: true geometry: QRect(0,0 1920x1043)
+2025-05-01 16:44:28 [DEBUG] Central widget set, visible: true
+2025-05-01 16:44:28 [DEBUG] Setting up taskbar
+2025-05-01 16:44:28 [DEBUG] Taskbar set, visible: true
+2025-05-01 16:44:28 [DEBUG] Window shown, visibility: true active: false geometry: QRect(0,0 1920x1043)
+2025-05-01 16:44:28 [DEBUG] MainWindowBrick constructor completed
+2025-05-01 16:44:28 [DEBUG] Desktop shown, visible: true
+2025-05-01 16:44:33 [DEBUG] handleExit triggered
+2025-05-01 16:44:33 [DEBUG] StartupBrick shutdown
+2025-05-01 16:44:33 [DEBUG] StartupBrick destroyed
+2025-05-01 16:52:06 [DEBUG] Logging initialized to qxcentre.log
+2025-05-01 16:52:06 [DEBUG] QApplication initialized
+2025-05-01 16:52:06 [DEBUG] StartupBrick initialized
+2025-05-01 16:52:06 [DEBUG] StartupBrick initialized
+2025-05-01 16:52:06 [DEBUG] Initializing desktop
+2025-05-01 16:52:06 [DEBUG] MainWindowBrick constructor started
+2025-05-01 16:52:06 [DEBUG] Platform: "xcb" Display: ":0"
+2025-05-01 16:52:06 [DEBUG] Window manager: "X-Cinnamon"
+2025-05-01 16:52:06 [DEBUG] Primary screen: "DP-1" Available geometry: QRect(0,0 1920x1043)
+2025-05-01 16:52:06 [DEBUG] Saved geometry: QRect(0,0 1920x1043)
+2025-05-01 16:52:06 [DEBUG] Set geometry: QRect(0,0 1920x1043)
+2025-05-01 16:52:06 [DEBUG] Called showMaximized, maximized: true geometry: QRect(0,0 1920x1043)
+2025-05-01 16:52:06 [DEBUG] Central widget set, visible: true
+2025-05-01 16:52:06 [DEBUG] Setting up taskbar
+2025-05-01 16:52:06 [DEBUG] Taskbar set, visible: true
+2025-05-01 16:52:06 [DEBUG] Window shown, visibility: true active: false geometry: QRect(0,0 1920x1043)
+2025-05-01 16:52:06 [DEBUG] MainWindowBrick constructor completed
+2025-05-01 16:52:06 [DEBUG] Desktop shown, visible: true
+2025-05-01 16:52:17 [DEBUG] handleExit triggered
+2025-05-01 16:52:17 [DEBUG] StartupBrick shutdown
+2025-05-01 16:52:17 [DEBUG] StartupBrick destroyed
+2025-05-01 16:52:21 [DEBUG] Logging initialized to qxcentre.log
+2025-05-01 16:52:21 [DEBUG] QApplication initialized
+2025-05-01 16:52:21 [DEBUG] StartupBrick initialized
+2025-05-01 16:52:21 [DEBUG] StartupBrick initialized
+2025-05-01 16:52:21 [DEBUG] Initializing desktop
+2025-05-01 16:52:21 [DEBUG] MainWindowBrick constructor started
+2025-05-01 16:52:21 [DEBUG] Platform: "xcb" Display: ":0"
+2025-05-01 16:52:21 [DEBUG] Window manager: "X-Cinnamon"
+2025-05-01 16:52:21 [DEBUG] Primary screen: "DP-1" Available geometry: QRect(0,0 1920x1043)
+2025-05-01 16:52:21 [DEBUG] Saved geometry: QRect(0,0 1920x1043)
+2025-05-01 16:52:21 [DEBUG] Set geometry: QRect(0,0 1920x1043)
+2025-05-01 16:52:21 [DEBUG] Called showMaximized, maximized: true geometry: QRect(0,0 1920x1043)
+2025-05-01 16:52:21 [DEBUG] Central widget set, visible: true
+2025-05-01 16:52:21 [DEBUG] Setting up taskbar
+2025-05-01 16:52:21 [DEBUG] Taskbar set, visible: true
+2025-05-01 16:52:21 [DEBUG] Window shown, visibility: true active: false geometry: QRect(0,0 1920x1043)
+2025-05-01 16:52:21 [DEBUG] MainWindowBrick constructor completed
+2025-05-01 16:52:21 [DEBUG] Desktop shown, visible: true
+2025-05-01 16:52:27 [DEBUG] handleExit triggered
+2025-05-01 16:52:27 [DEBUG] StartupBrick shutdown
+2025-05-01 16:52:27 [DEBUG] StartupBrick destroyed
+2025-05-01 16:56:03 [DEBUG] Logging initialized to qxcentre.log
+2025-05-01 16:56:03 [DEBUG] QApplication initialized
+2025-05-01 16:56:03 [DEBUG] StartupBrick initialized
+2025-05-01 16:56:03 [DEBUG] StartupBrick initialized
+2025-05-01 16:56:03 [DEBUG] Initializing desktop
+2025-05-01 16:56:03 [DEBUG] MainWindowBrick constructor started
+2025-05-01 16:56:03 [DEBUG] Platform: "xcb" Display: ":0"
+2025-05-01 16:56:03 [DEBUG] Window manager: "X-Cinnamon"
+2025-05-01 16:56:03 [DEBUG] Primary screen: "DP-1" Available geometry: QRect(0,0 1920x1043)
+2025-05-01 16:56:03 [DEBUG] Saved geometry: QRect(0,0 1920x1043)
+2025-05-01 16:56:03 [DEBUG] Set geometry: QRect(0,0 1920x1043)
+2025-05-01 16:56:03 [DEBUG] Called showMaximized, maximized: true geometry: QRect(0,0 1920x1043)
+2025-05-01 16:56:03 [DEBUG] Central widget set, visible: true
+2025-05-01 16:56:03 [DEBUG] Setting up taskbar
+2025-05-01 16:56:03 [DEBUG] Taskbar set, visible: true
+2025-05-01 16:56:03 [DEBUG] Window shown, visibility: true active: false geometry: QRect(0,0 1920x1043)
+2025-05-01 16:56:03 [DEBUG] MainWindowBrick constructor completed
+2025-05-01 16:56:03 [DEBUG] Desktop shown, visible: true
+2025-05-01 16:56:14 [DEBUG] handleExit triggered
+2025-05-01 16:56:14 [DEBUG] StartupBrick shutdown
+2025-05-01 16:56:14 [DEBUG] StartupBrick destroyed
+2025-05-01 16:59:34 [DEBUG] Logging initialized to qxcentre.log
+2025-05-01 16:59:35 [DEBUG] QApplication initialized
+2025-05-01 16:59:35 [DEBUG] StartupBrick initialized
+2025-05-01 16:59:35 [DEBUG] StartupBrick initialized
+2025-05-01 16:59:35 [DEBUG] Initializing desktop
+2025-05-01 16:59:35 [DEBUG] ThemeBrick initialized
+2025-05-01 16:59:35 [DEBUG] MainWindowBrick constructor started
+2025-05-01 16:59:58 [DEBUG] Logging initialized to qxcentre.log
+2025-05-01 16:59:58 [DEBUG] QApplication initialized
+2025-05-01 16:59:58 [DEBUG] StartupBrick initialized
+2025-05-01 16:59:58 [DEBUG] StartupBrick initialized
+2025-05-01 16:59:58 [DEBUG] Initializing desktop
+2025-05-01 16:59:58 [DEBUG] ThemeBrick initialized
+2025-05-01 16:59:58 [DEBUG] MainWindowBrick constructor started
+2025-05-01 17:01:51 [DEBUG] Logging initialized to qxcentre.log
+2025-05-01 17:01:51 [DEBUG] QApplication initialized
+2025-05-01 17:01:51 [DEBUG] StartupBrick initialized
+2025-05-01 17:01:51 [DEBUG] StartupBrick initialized
+2025-05-01 17:01:51 [DEBUG] Initializing desktop
+2025-05-01 17:01:51 [DEBUG] ThemeBrick initialized
+2025-05-01 17:01:51 [DEBUG] MainWindowBrick constructor started
+2025-05-01 17:15:59 [DEBUG] Logging initialized to qxcentre.log
+2025-05-01 17:15:59 [DEBUG] QApplication initialized
+2025-05-01 17:15:59 [DEBUG] StartupBrick initialized
+2025-05-01 17:15:59 [DEBUG] StartupBrick initialized
+2025-05-01 17:15:59 [DEBUG] Initializing desktop
+2025-05-01 17:15:59 [DEBUG] ThemeBrick initialized
+2025-05-01 17:15:59 [DEBUG] MainWindowBrick constructor started
+2025-05-01 17:25:10 [DEBUG] Logging initialized to qxcentre.log
+2025-05-01 17:25:10 [DEBUG] QApplication initialized
+2025-05-01 17:25:10 [DEBUG] StartupBrick initialized
+2025-05-01 17:25:10 [DEBUG] StartupBrick initialized
+2025-05-01 17:25:10 [DEBUG] Initializing desktop
+2025-05-01 17:25:10 [DEBUG] ThemeBrick initialized
+2025-05-01 17:25:10 [DEBUG] MainWindowBrick constructor started
+2025-05-01 17:27:31 [DEBUG] Logging initialized to qxcentre.log
+2025-05-01 17:27:31 [DEBUG] QApplication initialized
+2025-05-01 17:27:31 [DEBUG] StartupBrick initialized
+2025-05-01 17:27:31 [DEBUG] StartupBrick initialized
+2025-05-01 17:27:31 [DEBUG] Initializing desktop
+2025-05-01 17:27:31 [DEBUG] ThemeBrick initialized
+2025-05-01 17:27:31 [DEBUG] MainWindowBrick constructor started
+2025-05-01 18:00:05 [DEBUG] Logging initialized to qxcentre.log
+2025-05-01 18:00:05 [DEBUG] QApplication initialized
+2025-05-01 18:00:05 [DEBUG] StartupBrick initialized
+2025-05-01 18:00:05 [DEBUG] StartupBrick initialized
+2025-05-01 18:00:05 [DEBUG] Initializing desktop
+2025-05-01 18:00:05 [DEBUG] ThemeBrick initialized
+2025-05-01 18:00:05 [DEBUG] MainWindowBrick constructor started
+2025-05-01 18:00:10 [DEBUG] Logging initialized to qxcentre.log
+2025-05-01 18:00:11 [DEBUG] QApplication initialized
+2025-05-01 18:00:11 [DEBUG] StartupBrick initialized
+2025-05-01 18:00:11 [DEBUG] StartupBrick initialized
+2025-05-01 18:00:11 [DEBUG] Initializing desktop
+2025-05-01 18:00:11 [DEBUG] ThemeBrick initialized
+2025-05-01 18:00:11 [DEBUG] MainWindowBrick constructor started
+2025-05-02 07:49:58 [DEBUG] Logging initialized to qxcentre.log
+2025-05-02 07:49:58 [DEBUG] QApplication initialized
+2025-05-02 07:49:58 [DEBUG] StartupBrick initialized
+2025-05-02 07:49:58 [DEBUG] StartupBrick initialized
+2025-05-02 07:49:58 [DEBUG] Initializing desktop
+2025-05-02 07:49:58 [DEBUG] ThemeBrick initialized
+2025-05-02 07:49:58 [DEBUG] MainWindowBrick constructor started
+2025-05-02 07:51:01 [DEBUG] Logging initialized to qxcentre.log
+2025-05-02 07:51:02 [DEBUG] QApplication initialized
+2025-05-02 07:51:02 [DEBUG] StartupBrick initialized
+2025-05-02 07:51:02 [DEBUG] StartupBrick initialized
+2025-05-02 07:51:02 [DEBUG] Initializing desktop
+2025-05-02 07:51:02 [DEBUG] ThemeBrick initialized
+2025-05-02 07:51:02 [DEBUG] MainWindowBrick constructor started
+2025-05-02 08:01:27 [DEBUG] Logging initialized to qxcentre.log
+2025-05-02 08:01:27 [DEBUG] QApplication initialized
+2025-05-02 08:01:27 [DEBUG] StartupBrick initialized
+2025-05-02 08:01:27 [DEBUG] StartupBrick initialized
+2025-05-02 08:01:27 [DEBUG] Initializing desktop
+2025-05-02 08:01:27 [DEBUG] ThemeBrick initialized
+2025-05-02 08:01:27 [DEBUG] MainWindowBrick constructor started
+2025-05-02 08:03:06 [DEBUG] Logging initialized to qxcentre.log
+2025-05-02 08:03:06 [DEBUG] QApplication initialized
+2025-05-02 08:03:06 [DEBUG] StartupBrick initialized
+2025-05-02 08:03:06 [DEBUG] StartupBrick initialized
+2025-05-02 08:03:06 [DEBUG] Initializing desktop
+2025-05-02 08:03:06 [DEBUG] ThemeBrick initialized
+2025-05-02 08:03:06 [DEBUG] MainWindowBrick constructor started
+2025-05-02 08:04:37 [DEBUG] Logging initialized to qxcentre.log
+2025-05-02 08:04:37 [DEBUG] QApplication initialized
+2025-05-02 08:04:37 [DEBUG] StartupBrick initialized
+2025-05-02 08:04:37 [DEBUG] StartupBrick initialized
+2025-05-02 08:04:37 [DEBUG] Initializing desktop
+2025-05-02 08:04:37 [DEBUG] ThemeBrick initialized
+2025-05-02 08:04:37 [DEBUG] MainWindowBrick constructor started
+2025-05-02 08:05:27 [DEBUG] Logging initialized to qxcentre.log
+2025-05-02 08:05:27 [DEBUG] QApplication initialized
+2025-05-02 08:05:27 [DEBUG] StartupBrick initialized
+2025-05-02 08:05:27 [DEBUG] StartupBrick initialized
+2025-05-02 08:05:27 [DEBUG] Initializing desktop
+2025-05-02 08:05:27 [DEBUG] ThemeBrick initialized
+2025-05-02 08:05:27 [DEBUG] MainWindowBrick constructor started
+2025-05-02 08:13:22 [DEBUG] Logging initialized to qxcentre.log
+2025-05-02 08:13:22 [DEBUG] QApplication initialized
+2025-05-02 08:13:22 [DEBUG] StartupBrick initialized
+2025-05-02 08:13:22 [DEBUG] StartupBrick initialized
+2025-05-02 08:13:22 [DEBUG] Initializing desktop
+2025-05-02 08:13:22 [DEBUG] ThemeBrick initialized
+2025-05-02 08:13:22 [DEBUG] MainWindowBrick constructor started
+2025-05-02 08:22:28 [DEBUG] Logging initialized to qxcentre.log
+2025-05-02 08:22:28 [DEBUG] QApplication initialized
+2025-05-02 08:22:28 [DEBUG] StartupBrick initialized
+2025-05-02 08:22:28 [DEBUG] StartupBrick initialized
+2025-05-02 08:22:28 [DEBUG] Initializing desktop
+2025-05-02 08:22:28 [DEBUG] ThemeBrick initialized
+2025-05-02 08:22:28 [DEBUG] MainWindowBrick constructor started
+2025-05-02 08:25:05 [DEBUG] Logging initialized to qxcentre.log
+2025-05-02 08:25:05 [DEBUG] QApplication initialized
+2025-05-02 08:25:05 [DEBUG] StartupBrick initialized
+2025-05-02 08:25:05 [DEBUG] StartupBrick initialized
+2025-05-02 08:25:05 [DEBUG] Initializing desktop
+2025-05-02 08:25:05 [DEBUG] ThemeBrick initialized
+2025-05-02 08:25:05 [DEBUG] MainWindowBrick constructor started
+2025-05-02 08:26:42 [DEBUG] Logging initialized to qxcentre.log
+2025-05-02 08:26:42 [DEBUG] QApplication initialized
+2025-05-02 08:26:42 [DEBUG] StartupBrick initialized
+2025-05-02 08:26:42 [DEBUG] StartupBrick initialized
+2025-05-02 08:26:42 [DEBUG] Initializing desktop
+2025-05-02 08:26:42 [DEBUG] ThemeBrick initialized
+2025-05-02 08:26:42 [DEBUG] MainWindowBrick constructor started
+2025-05-02 08:35:33 [DEBUG] Logging initialized to qxcentre.log
+2025-05-02 08:35:34 [DEBUG] QApplication initialized
+2025-05-02 08:35:34 [DEBUG] StartupBrick initialized
+2025-05-02 08:35:34 [DEBUG] StartupBrick initialized
+2025-05-02 08:35:34 [DEBUG] Initializing desktop
+2025-05-02 08:35:34 [DEBUG] ThemeBrick initialized
+2025-05-02 08:35:34 [DEBUG] MainWindowBrick constructor started
+2025-05-02 08:36:08 [DEBUG] Logging initialized to qxcentre.log
+2025-05-02 08:36:09 [DEBUG] QApplication initialized
+2025-05-02 08:36:09 [DEBUG] StartupBrick initialized
+2025-05-02 08:36:09 [DEBUG] StartupBrick initialized
+2025-05-02 08:36:09 [DEBUG] Initializing desktop
+2025-05-02 08:36:09 [DEBUG] ThemeBrick initialized
+2025-05-02 08:36:09 [DEBUG] MainWindowBrick constructor started
+2025-05-02 08:41:12 [DEBUG] Logging initialized to qxcentre.log
+2025-05-02 08:41:12 [DEBUG] QApplication initialized
+2025-05-02 08:41:12 [DEBUG] StartupBrick initialized
+2025-05-02 08:41:12 [DEBUG] StartupBrick initialized
+2025-05-02 08:41:12 [DEBUG] Initializing desktop
+2025-05-02 08:41:12 [DEBUG] ThemeBrick initialized
+2025-05-02 08:41:12 [DEBUG] MainWindowBrick constructor started
+2025-05-02 09:02:40 [DEBUG] Logging initialized to qxcentre.log
+2025-05-02 09:02:40 [DEBUG] QApplication initialized
+2025-05-02 09:02:40 [DEBUG] StartupBrick initialized
+2025-05-02 09:02:40 [DEBUG] StartupBrick initialized
+2025-05-02 09:02:40 [DEBUG] Initializing desktop
+2025-05-02 09:02:40 [DEBUG] ThemeBrick initialized
+2025-05-02 09:02:40 [DEBUG] MainWindowBrick constructor started
+2025-05-02 09:04:11 [DEBUG] Logging initialized to qxcentre.log
+2025-05-02 09:04:11 [DEBUG] QApplication initialized
+2025-05-02 09:04:11 [DEBUG] StartupBrick initialized
+2025-05-02 09:04:11 [DEBUG] StartupBrick initialized
+2025-05-02 09:04:11 [DEBUG] Initializing desktop
+2025-05-02 09:04:11 [DEBUG] ThemeBrick initialized
+2025-05-02 09:04:11 [DEBUG] MainWindowBrick constructor started
+2025-05-02 09:17:45 [DEBUG] Logging initialized to qxcentre.log
+2025-05-02 09:17:45 [DEBUG] QApplication initialized
+2025-05-02 09:17:45 [DEBUG] StartupBrick initialized
+2025-05-02 09:17:45 [DEBUG] StartupBrick initialized
+2025-05-02 09:17:45 [DEBUG] Initializing desktop
+2025-05-02 09:17:45 [DEBUG] ThemeBrick initialized
+2025-05-02 09:17:45 [DEBUG] InterlinkBrick initialized
+2025-05-02 09:17:45 [DEBUG] MainWindowBrick constructor started
+2025-05-02 09:18:38 [DEBUG] Logging initialized to qxcentre.log
+2025-05-02 09:18:38 [DEBUG] QApplication initialized
+2025-05-02 09:18:38 [DEBUG] StartupBrick initialized
+2025-05-02 09:18:38 [DEBUG] StartupBrick initialized
+2025-05-02 09:18:38 [DEBUG] Initializing desktop
+2025-05-02 09:18:38 [DEBUG] ThemeBrick initialized
+2025-05-02 09:18:38 [DEBUG] InterlinkBrick initialized
+2025-05-02 09:18:38 [DEBUG] MainWindowBrick constructor started

@@ -2,30 +2,32 @@
 #define INTERLINKBRICK_H
 
 #include <QObject>
-#include <QMap>
-#include <QPointer>
-#include <QString>
-#include "mainwindowbrick.h"
+#include <QList>
+#include "windowbrick.h"
 
 class InterlinkBrick : public QObject {
     Q_OBJECT
-
 public:
-    explicit InterlinkBrick(MainWindowBrick *parent);
+    explicit InterlinkBrick(QObject *parent = nullptr);
     ~InterlinkBrick();
 
-    void registerAppWindow(const QString &appName, QWidget *window);
-    void unregisterAppWindow(const QString &appName);
-    void restoreWindow(const QString &appName);
-    void launchAppWindow(const QString &appName);
-    QMap<QString, QPointer<QWidget>> getAppWindows() const;
+    void incrementOpenAppCount();
+    void decrementOpenAppCount();
+    void activateWindow(int index);
+    void updateTaskbarWindows();
+    void addWindow(WindowBrick *window);
+    int getOpenAppCount() const;
 
 signals:
-    void windowStateChanged();
+    void taskbarUpdated(const QStringList &windowTitles);
+    void appCountChanged(int count);
+
+private slots:
+    void handleWindowClosed(WindowBrick *window);
 
 private:
-    QMap<QString, QPointer<QWidget>> appWindows;
-    MainWindowBrick *mainWindow;
+    QList<WindowBrick*> openWindows;
+    int openAppCount;
 };
 
 #endif // INTERLINKBRICK_H
