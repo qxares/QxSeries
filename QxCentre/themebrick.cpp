@@ -47,19 +47,19 @@ bool ThemeBrick::isDarkTheme() const {
 
 void ThemeBrick::applyDarkTheme() {
     QPalette darkPalette;
-    darkPalette.setColor(QPalette::Window, QColor("#2E2E2E")); // Flat-Color-GTK dark
-    darkPalette.setColor(QPalette::WindowText, QColor("#FFFFFF"));
-    darkPalette.setColor(QPalette::Base, QColor("#2E2E2E"));
-    darkPalette.setColor(QPalette::AlternateBase, QColor("#3E3D32"));
-    darkPalette.setColor(QPalette::ToolTipBase, QColor("#75715E"));
-    darkPalette.setColor(QPalette::ToolTipText, QColor("#FFFFFF"));
-    darkPalette.setColor(QPalette::Text, QColor("#FFFFFF"));
-    darkPalette.setColor(QPalette::Button, QColor("#3E3D32"));
-    darkPalette.setColor(QPalette::ButtonText, QColor("#FFFFFF"));
-    darkPalette.setColor(QPalette::BrightText, QColor("#FFFFFF"));
-    darkPalette.setColor(QPalette::Link, QColor("#d6d6c7"));
+    darkPalette.setColor(QPalette::Window, QColor("#272822")); // Dark gray-green
+    darkPalette.setColor(QPalette::WindowText, QColor("#F8F8F2")); // Off-white
+    darkPalette.setColor(QPalette::Base, QColor("#272822")); // Dark gray-green
+    darkPalette.setColor(QPalette::AlternateBase, QColor("#3e3d33")); // Dark gray
+    darkPalette.setColor(QPalette::ToolTipBase, QColor("#75715E")); // Neutral
+    darkPalette.setColor(QPalette::ToolTipText, QColor("#F8F8F2")); // Off-white
+    darkPalette.setColor(QPalette::Text, QColor("#F8F8F2")); // Off-white
+    darkPalette.setColor(QPalette::Button, QColor("#3e3d33")); // Dark gray
+    darkPalette.setColor(QPalette::ButtonText, QColor("#F8F8F2")); // Off-white
+    darkPalette.setColor(QPalette::BrightText, QColor("#F8F8F2")); // Off-white
+    darkPalette.setColor(QPalette::Link, QColor("#d6d6c7")); // Light gray
     darkPalette.setColor(QPalette::Highlight, QColor("#66D9EF")); // Monokai accent
-    darkPalette.setColor(QPalette::HighlightedText, QColor("#FFFFFF"));
+    darkPalette.setColor(QPalette::HighlightedText, QColor("#F8F8F2")); // Off-white
     application->setPalette(darkPalette);
     application->setStyle(QStyleFactory::create("Fusion"));
 }

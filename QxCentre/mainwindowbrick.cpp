@@ -204,8 +204,8 @@ void MainWindowBrick::resizeEvent(QResizeEvent *event) {
 }
 
 void MainWindowBrick::updateCentralWidgetStyle(bool isDark) {
-    QString bgColor = isDark ? "#2E2E2E" : "#F5F5F5"; // Flat-Color-GTK colors
-    QString textColor = isDark ? "#FFFFFF" : "#000000";
+    QString bgColor = isDark ? "#272822" : "#F5F5F5"; // Dark gray-green or light
+    QString textColor = isDark ? "#F8F8F2" : "#000000"; // Off-white or black
     QString hoverColor = "#66D9EF"; // Monokai accent
     QString styleSheet = QString(
         "QWidget { background-color: %1; color: %2; }"
