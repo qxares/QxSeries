@@ -1,14 +1,31 @@
 #include "themebrick.h"
 #include <QDebug>
 #include <QStyleFactory>
+#include <QSettings>
 
 ThemeBrick::ThemeBrick(QApplication *app, QObject *parent)
-    : QObject(parent), application(app), darkThemeEnabled(false) {
+    : QObject(parent), application(app), darkThemeEnabled(true) {
     qDebug() << "ThemeBrick initialized";
+    QSettings settings("QxSeries", "QxCentre");
+    QString theme = settings.value("theme", "dark").toString();
+    darkThemeEnabled = (theme.toLower() == "dark");
+    if (darkThemeEnabled) {
+        applyDarkTheme();
+    } else {
+        applyLightTheme();
+    }
 }
 
 ThemeBrick::~ThemeBrick() {
     qDebug() << "ThemeBrick destroyed";
+}
+
+void ThemeBrick::setTheme(const QString &theme) {
+    bool enableDark = (theme.toLower() == "dark");
+    toggleDarkTheme(enableDark);
+    QSettings settings("QxSeries", "QxCentre");
+    settings.setValue("theme", enableDark ? "dark" : "light");
+    qDebug() << "Saved theme to QSettings:" << (enableDark ? "dark" : "light");
 }
 
 void ThemeBrick::toggleDarkTheme(bool enable) {
@@ -39,9 +56,9 @@ void ThemeBrick::applyDarkTheme() {
     monokaiPalette.setColor(QPalette::Text, QColor("#F8F8F2")); // Text
     monokaiPalette.setColor(QPalette::Button, QColor("#3E3D32")); // Button background
     monokaiPalette.setColor(QPalette::ButtonText, QColor("#F8F8F2")); // Button text
-    monokaiPalette.setColor(QPalette::BrightText, QColor("#F8F8F2")); // Monokai foreground (keywords)
-    monokaiPalette.setColor(QPalette::Link, QColor("#d6d6c7")); // Custom light gray
-    monokaiPalette.setColor(QPalette::Highlight, QColor("#3e3d33")); // Custom dark gray
+    monokaiPalette.setColor(QPalette::BrightText, QColor("#F8F8F2")); // Keywords (off-white)
+    monokaiPalette.setColor(QPalette::Link, QColor("#d6d6c7")); // Links (light gray)
+    monokaiPalette.setColor(QPalette::Highlight, QColor("#3e3d33")); // Selection (dark gray)
     monokaiPalette.setColor(QPalette::HighlightedText, QColor("#F8F8F2")); // Foreground for contrast
     application->setPalette(monokaiPalette);
     application->setStyle(QStyleFactory::create("Fusion"));
