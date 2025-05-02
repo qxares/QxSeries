@@ -1,0 +1,83 @@
+QxSeries App Blueprint
+A template for developing QxSeries apps (e.g., QxWrite) to integrate with QxCentre.
+Template
+
+Class: Subclass WindowBrick (e.g., WriteBrick).
+Structure:#ifndef WRITEBRICK_H
+#define WRITEBRICK_H
+
+#include "windowbrick.h"
+
+class WriteBrick : public WindowBrick {
+    Q_OBJECT
+public:
+    explicit WriteBrick(const QString &appName, QWidget *parent = nullptr)
+        : WindowBrick(appName, parent) {
+        // Initialize UI (e.g., QTextEdit)
+    }
+    void postInitialize() override {
+        // Custom initialization
+    }
+};
+
+#endif // WRITEBRICK_H
+
+
+
+Interlink Integration
+
+Launch:
+Add to QxApps menu in MainWindowBrick::setupTaskbar.
+Example:QAction *qxWriteAction = documentsMenu->addAction("QxWrite");
+connect(qxWriteAction, &QAction::triggered, this, [this]() {
+    WriteBrick *window = new WriteBrick("QxWrite", this);
+    window->initializeTheme(themeBrick->isDarkTheme());
+    window->centerWindow();
+    window->show();
+    interlinkBrick->addWindow(window);
+});
+
+
+
+
+Tracking:
+InterlinkBrick::addWindow(window): Registers app.
+windowClosed(WindowBrick*) signal: Connects to InterlinkBrick::handleWindowClosed.
+
+
+Focus:
+InterlinkBrick::activateWindow(index): Brings app to front.
+
+
+
+Behavior
+
+Theme: Inherits via initializeTheme(bool isDark).
+Geometry: Saves to QSettings (window_position/QxWrite).
+Lifecycle:
+Launch: Added to InterlinkBrick, increments app count.
+Close: Emits windowClosed, decrements count, updates taskbar.
+
+
+
+Example Workflow
+
+Create WriteBrick for QxWrite.
+Add to QxApps > QxDocuments menu.
+Launch registers with InterlinkBrick.
+Close triggers windowClosed, cleans up.
+
+Build Instructions
+
+Environment: Debian, Qt5, g++ (C++11).
+Commands:cd /home/ares/QxCentre/QxCentre
+qmake QxCentre.pro -spec linux-g++ CONFIG+=debug
+make clean
+make
+./QxCentre
+
+
+Cleanup:rm -rf *.o moc_*.cpp moc_predefs.h Makefile qrc_*.cpp *.pro.user core *.core build/ *~
+rm -f qxpersist.db qxpersist.db-journal qxdata.db QxCentre.db
+
+

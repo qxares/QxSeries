@@ -1,0 +1,243 @@
+QxCentre and QxSeries Documentation
+Overview
+QxCentre is a Qt-based desktop environment (DE) for the Aries-Desk, part of the QxSeries suite. Built with a modular Brick architecture, it provides a sleek, customizable interface with dark (#272822) and light (#FFFFFF) themes, a taskbar, and placeholders for future app and database integration. This document serves as a technical reference for QxCentre and a blueprint for developing QxSeries apps.
+Components
+Bricks
+QxCentre uses a Brick architecture, where each component is a modular class inheriting from QObject or QWidget.
+
+MainWindowBrick:
+
+Role: Core DE window, manages taskbar, themes, and app coordination.
+Key Methods:
+setupTaskbar(): Initializes QMenuBar with QxCentre, QxApps, Help menus.
+updateCentralWidgetStyle(bool isDark): Applies dark (#272822, #63634e hover) or light (#FFFFFF, #0078D7 hover) theme.
+handleExit(): Quits application.
+getThemeBrick(), getInterlinkBrick(): Access theme and interlink components.
+
+
+Files: mainwindowbrick.h, mainwindowbrick.cpp.
+
+
+ThemeBrick:
+
+Role: Manages dark and light themes, persists in QSettings.
+Key Methods:
+setTheme(QString theme): Sets theme (dark or light).
+toggleDarkTheme(bool isDark): Toggles theme, emits themeChanged.
+isDarkTheme(): Returns current theme state.
+
+
+Files: themebrick.h, themebrick.cpp.
+
+
+BaseDialogBrick:
+
+Role: Base class for dialogs, handles geometry saving and centering.
+Key Methods:
+centerWindow(): Centers dialog on screen.
+closeEvent(QCloseEvent*): Saves geometry to QSettings.
+
+
+Files: basedialogbrick.h, basedialogbrick.cpp.
+
+
+InfoDialogBrick:
+
+Role: Displays Help dialogs (About QxCentre, Documentation, Check for Updates).
+Inherits: BaseDialogBrick.
+Key Methods:
+Constructor: Sets title and message.
+show(): Displays themed dialog.
+
+
+Files: infodialogbrick.h, infodialogbrick.cpp.
+
+
+WindowBrick:
+
+Role: Template for QxSeries app windows (e.g., QxWrite).
+Key Methods:
+initializeTheme(bool isDark): Applies theme.
+centerWindow(): Centers window.
+closeEvent(QCloseEvent*): Emits windowClosed(WindowBrick*).
+
+
+Signals:
+windowClosed(WindowBrick*): Notifies InterlinkBrick on close.
+
+
+Files: windowbrick.h, windowbrick.cpp.
+
+
+InterlinkBrick:
+
+Role: Coordinates QxSeries apps, tracks open windows, manages focus, and updates taskbar.
+Key Methods:
+addWindow(WindowBrick*): Adds window to tracking.
+incrementOpenAppCount(), decrementOpenAppCount(): Tracks app count.
+activateWindow(int index): Focuses window by index.
+updateTaskbarWindows(): Emits taskbarUpdated with window titles.
+handleWindowClosed(WindowBrick*): Removes closed window.
+
+
+Signals:
+taskbarUpdated(QStringList): Updates taskbar with open windows.
+appCountChanged(int): Notifies app count changes.
+
+
+Files: interlinkbrick.h, interlinkbrick.cpp.
+
+
+
+Taskbar
+
+Structure: QMenuBar with:
+QxCentre Menu:
+Preferences > Themes > Dark/Light: Toggles theme, persists in QSettings.
+DataBase: Placeholders (New Database, Open Database, etc.).
+Exit: Quits QxCentre.
+
+
+QxApps Menu:
+QxDocuments: QxWrite, QxSheet, QxNotes (placeholders, QxWrite disabled).
+QxGraphics, QxAudio, QxVideo, QxTools, QxTech: Placeholder submenus.
+
+
+Help Menu:
+About QxCentre: Shows version and description.
+Documentation: Links to GitHub wiki.
+Check for Updates: Placeholder message.
+
+
+
+
+Styling:
+Dark: #1e1f1a background, #63634e hover.
+Light: #F0F0F0 background, #0078D7 hover.
+
+
+
+SQL Database
+
+Status: Unimplemented, placeholders in DataBase menu.
+Planned Role: Persistent storage for QxSeries apps (e.g., QxCentre.db).
+Files: None (qxpersist.db, QxCentre.db cleaned during builds).
+
+Configuration
+
+File: ~/.config/QxSeries/QxCentre.conf.
+Contents:[General]
+theme=dark
+[window_position]
+QxCentre=@Rect(0 0 1920 1043)
+About QxCentre=@Rect(810 421 300 200)
+Documentation=@Rect(810 421 300 200)
+Check for Updates=@Rect(810 421 300 200)
+
+
+
+Logging
+
+File: /home/ares/QxCentre/QxCentre/QxCentre.log.
+Format: yyyy-MM-dd hh:mm:ss [DEBUG] message.
+Examples:2025-05-02 XX:XX:XX [DEBUG] InterlinkBrick initialized
+2025-05-02 XX:XX:XX [DEBUG] Updated central widget style, dark: true bg: #272822
+
+
+
+QxSeries App Blueprint
+A template for developing QxSeries apps (e.g., QxWrite) to integrate with QxCentre.
+Template
+
+Class: Subclass WindowBrick (e.g., WriteBrick).
+Structure:#ifndef WRITEBRICK_H
+#define WRITEBRICK_H
+
+#include "windowbrick.h"
+
+class WriteBrick : public WindowBrick {
+    Q_OBJECT
+public:
+    explicit WriteBrick(const QString &appName, QWidget *parent = nullptr)
+        : WindowBrick(appName, parent) {
+        // Initialize UI (e.g., QTextEdit)
+    }
+    void postInitialize() override {
+        // Custom initialization
+    }
+};
+
+#endif // WRITEBRICK_H
+
+
+
+Interlink Integration
+
+Launch:
+Add to QxApps menu in MainWindowBrick::setupTaskbar.
+Example:QAction *qxWriteAction = documentsMenu->addAction("QxWrite");
+connect(qxWriteAction, &QAction::triggered, this, [this]() {
+    WriteBrick *window = new WriteBrick("QxWrite", this);
+    window->initializeTheme(themeBrick->isDarkTheme());
+    window->centerWindow();
+    window->show();
+    interlinkBrick->addWindow(window);
+});
+
+
+
+
+Tracking:
+InterlinkBrick::addWindow(window): Registers app.
+windowClosed(WindowBrick*) signal: Connects to InterlinkBrick::handleWindowClosed.
+
+
+Focus:
+InterlinkBrick::activateWindow(index): Brings app to front.
+
+
+
+Behavior
+
+Theme: Inherits via initializeTheme(bool isDark).
+Geometry: Saves to QSettings (window_position/QxWrite).
+Lifecycle:
+Launch: Added to InterlinkBrick, increments app count.
+Close: Emits windowClosed, decrements count, updates taskbar.
+
+
+
+Example Workflow
+
+Create WriteBrick for QxWrite.
+Add to QxApps > QxDocuments menu.
+Launch registers with InterlinkBrick.
+Close triggers windowClosed, cleans up.
+
+Build Instructions
+
+Environment: Debian, Qt5, g++ (C++11).
+Commands:cd /home/ares/QxCentre/QxCentre
+qmake QxCentre.pro -spec linux-g++ CONFIG+=debug
+make clean
+make
+./QxCentre
+
+
+Cleanup:rm -rf *.o moc_*.cpp moc_predefs.h Makefile qrc_*.cpp *.pro.user core *.core build/ *~
+rm -f qxpersist.db qxpersist.db-journal qxdata.db QxCentre.db
+
+
+
+GitHub
+
+Repository: https://github.com/qxares/QxSeries, main branch.
+Wiki: Host documentation updates.
+
+Future Work
+
+Implement QxWrite, QxSheet apps with WriteBrick, SheetBrick.
+Add taskbar window list using InterlinkBrick::taskbarUpdated.
+Integrate SQLite for DataBase menu.
+
+
