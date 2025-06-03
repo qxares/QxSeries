@@ -1,0 +1,39 @@
+Step 2: Plan the Changes
+
+Based on your input, here’s the step-by-step plan:
+
+    Fallback Session Fix:
+        Ensure fallback.desktop is correctly copied to the ISO and recognized by LightDM, matching your working QxCentre’s session setup.
+    Background Fix:
+        Set a black background for both QxCentre and the live ISO by configuring PCManFM to avoid loading a wallpaper (e.g., remove the Debian background).
+    Right-Click Menu Alignment:
+        Update the ISO’s Openbox menu to match your current menu.xml, keeping it simple as you prefer.
+    Beef Up QxCentre with Detection/Connection Foundation:
+        Install basic packages for port detection (USB, serial, parallel, Wi-Fi, NFC), disk detection (IDE, SATA, format support), external device detection (phones, cameras), and network detection (NFS, TCP/IP, IPX/SPX).
+        Add suggested dependencies to make it a robust base for future pentest and recovery tools.
+    Create a New ISO:
+        Rebuild the ISO with these changes and test it.
+    Build the DE:
+        Once the ISO is solid, start implementing the brick architecture (Function, Handler, GUI, Manager).
+
+Suggestions for a Heavy All-Round Beast
+
+    Additional Dependencies:
+        lsblk and fdisk for disk detection.
+        usbutils (e.g., lsusb) for USB detection.
+        setserial for serial port detection.
+        iw and wireless-tools for Wi-Fi detection.
+        libnfc for NFC support.
+        nmap and net-tools for network scanning and configuration.
+        libmtp for phone/camera detection.
+        parted for disk partitioning and format support.
+    These will be installed but not fully configured yet—just laying the foundation.
+
+
+
+wmctrl: Crucial for managing windows in the DE (e.g., positioning, resizing, or controlling windows programmatically in your brick architecture).
+nmap, net-tools, tcpdump: Useful for network-related features (e.g., scanning for devices, debugging connections).
+lsof, iotop, htop: Help monitor system resources while developing, ensuring the DE isn’t overloading the system.
+smartmontools, lsblk, fdisk, parted: Support disk and hardware management features (e.g., detecting drives, managing partitions).
+libmtp, gphoto2, usbutils: Enable device detection (phones, cameras) for potential DE integrations.
+rsync, testdisk, photorec, john: Provide recovery and utility functions for robustness.

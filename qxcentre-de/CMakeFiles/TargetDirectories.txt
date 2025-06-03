@@ -1,0 +1,3 @@
+/home/aries/qxcentre-de/CMakeFiles/QxCentreDE.dir
+/home/aries/qxcentre-de/CMakeFiles/edit_cache.dir
+/home/aries/qxcentre-de/CMakeFiles/rebuild_cache.dir
